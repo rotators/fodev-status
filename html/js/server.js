@@ -5,6 +5,7 @@ function start( id )
 
 	$('#logo').empty();
 	$('#link').empty();
+	$('#chart').empty();
 
 	if( id == null )
 	{
@@ -15,6 +16,12 @@ function start( id )
 	if( !fo.LoadConfig( configFile ))
 	{
 		ShowInfo( 'Invalid config file' );
+		return;
+	}
+
+	if( fo.GetServerOption( id, 'id' ) == null )
+	{
+		ShowInfo( 'Invalid server id' );
 		return;
 	}
 
@@ -33,7 +40,7 @@ function start( id )
 		// this one must be generated server-side before accessing page
 		$( '<img>',
 		{
-			src: rootDir+'/gfx/cache/'+id+'logo-placeholder.png',
+			src: rootDir+'/gfx/cache/'+id+'.logo-placeholder.png',
 			alt: fo.GetServerOption( id, 'name' )
 		}).appendTo( '#logo' );
 	}});
