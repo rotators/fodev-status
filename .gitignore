@@ -1,0 +1,14 @@
+/*.db
+/*.log
+/*.pid
+
+# local testing
+fodev.php
+/html/cache/*
+/html/data/*
+/html/css/base.css
+
+!/html/data/.htaccess
+!/html/data/config.json
+
+!empty.dir

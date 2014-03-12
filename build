@@ -1,0 +1,433 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Archive::Zip qw( :ERROR_CODES );
+use File::Basename qw( dirname );
+use File::Path qw( make_path );
+use LWP;
+use Storable;
+
+use FOstatus;
+#
+use Data::Dumper;
+
+my $time_start = time();
+my $config_file = 'html/data/config.json';
+my $data_dir = 
+my %options;
+my $fo = FOstatus->new();
+my %ping;
+
+my @save_files;
+
+# riget.info id -> fodev.net id
+sub rid2fid($)
+{
+	my( $rid ) = @_;
+
+	foreach my $fid ( keys( $fo->{Config}->{server} ))
+	{
+		next if( !exists($fo->{Config}->{server}{$fid}{librarian} ));
+
+		my $librarian = $fo->{Config}->{server}{$fid}{librarian};
+		return( $fid ) if( $rid eq $librarian );
+	}
+
+	return( undef );
+}
+
+# fodev.net id -> riget.info id
+sub fid2rid($)
+{
+	my( $ffid ) = @_;
+
+	foreach my $fid ( keys( $fo->{Config}->{server} ))
+	{
+		next if( !exists($fo->{Config}->{server}{$fid}{librarian} ));
+
+		my $rid = $fo->{Config}->{server}{$fid}{librarian};
+		return( $rid ) if( $fid eq $ffid );
+	}
+
+	return( undef );
+}
+
+# riget.info-friendly string formatting :)
+sub rtext($$$)
+{
+	my( $prefix, $rid, $suffix ) = @_;
+
+	return( sprintf( "%s%s%s%s", $prefix, $rid ne '' ? '_' : '', $rid, $suffix ));
+}
+
+sub check_db($$$)
+{
+	my( $rid, $url, $dir ) = @_;
+	my $updated = 0;
+
+	make_path( $dir );
+
+	my $ua = LWP::UserAgent->new();
+
+	my $filebase = rtext( 'updownstats', $rid, '.txt.zip' );
+	my $fileurl  = $url.'/'.$filebase;
+	my $filename = $dir.'/'.$filebase;
+
+	my $response = $ua->mirror( $fileurl, $filename );
+=for nobody
+	if( $response->is_success && $response != 304 )
+	{
+		$updated = 1;
+	}
+=cut
+
+	$filebase = rtext( 'playerStats', $rid, '.txt.zip' );
+	$fileurl  = $url.'/'.$filebase;
+	$filename = $dir.'/'.$filebase;
+
+	$response = $ua->mirror( $fileurl, $filename );
+	if( $response->is_success && $response != 304 )
+	{
+		$updated = 1;
+	}
+
+	return( $updated );
+}
+
+sub load_sql($$;$)
+{
+	my( $rid, $dir, $quiet ) = @_;
+
+	my %db;
+	my $id = rtext( 'playerStats', $rid, '' );
+	my $filename = rtext( $dir.'/playerStats', $rid, '.txt.zip' );
+	my $zip = Archive::Zip->new();
+
+	printf( "Loading database: %s\n", $filename ) if( !$quiet );
+	if( $zip->read($filename) != AZ_OK )
+	{
+		printf( "\tRead error\n" ) if( !$quiet );
+		return( %db );
+	}
+
+	if( $zip->numberOfMembers() != 1 )
+	{
+		printf( "\tWrong number of members (%d)\n", $zip->numberOfMembers() ) if( !$quiet );
+		return( %db );
+	}
+
+	my $content = ($zip->members())[0]->contents();
+
+	# Simply horrible way to load sql, isn't it?
+
+	for( split( /^/, $content ))
+	{
+		chomp;
+		s!\n!!g;
+		s!\r!!g;
+		if( /^INSERT INTO `$id` VALUES (.*)/ )
+		{
+			my $values = $1;
+			my @vals = split( /\),\(/, $values );
+			foreach my $val ( @vals )
+			{
+				if( $val =~ /([0-9]+)\,\'([0-9]+)\-([0-9]+)\-([0-9]+) ([0-9]+)\:([0-9]+)\:([0-9]+)\'\,([0-9-]+)/ )
+				{
+					my( $timestamp, $year, $month, $day, $hour, $min, $sec, $online ) = ( $1, int($2), int($3), int($4), int($5), int($6), int($7), $8 );
+					$db{pings}++;
+
+					if( !exists($db{$year}{$month}{$day}) || $db{$year}{$month}{$day} < $online )
+					{
+						$db{$year}{$month}{$day} = $online;
+					}
+				}
+			}
+		}
+	};
+
+	return( %db );
+}
+
+sub save($$;%)
+{
+	my( $db, $id, %args ) = @_;
+
+	my $filename = $fo->GetPath( $id, %args );
+	if( !defined($filename) )
+	{
+		printf( "Cannot find path id '%s'\n", $id );
+		return;
+	}
+
+	push( @save_files, $data_dir.$filename );
+
+	my %save;
+	$save{fonline}{$id} = $db;
+
+	printf( "Saved: %s\n", $filename ) if( $fo->SaveJSON( \%save, $data_dir.$filename ));
+}
+
+sub save_ymd($$;$%)
+{
+	my( $db, $id, $server, %args ) = @_;
+
+	my $filename = $fo->GetPath( $id, %args );
+	if( !defined($filename) )
+	{
+		printf( "Cannot find path id '%s'\n", $id );
+		return;
+	}
+
+	push( @save_files, $data_dir.$filename );
+
+	my @content = $fo->YMDHashToArray( $db );
+
+	my %save;
+	if( defined($server) && length($server) > 0 )
+		{ $save{fonline}{$id}{server}{$server} = \@content; }
+	else
+		{ $save{fonline}{$id} = \@content; }
+
+	printf( "Saved: %s\n", $filename ) if( $fo->SaveJSON( \%save, $data_dir.$filename ));
+}
+
+# Parse options
+if( scalar(@ARGV) )
+{
+	
+	$config_file = shift if( !$ARGV[0] =~ /^-/ );
+	foreach my $option ( @ARGV )
+	{
+		if( $option =~ /^-([a-z]+)$/ )
+		{
+			$option = $1;
+
+			$options{rebuild} = 1 if( $option eq 'r' );
+			$options{standalone} = 1 if( $option eq 's' );
+		}
+	}
+}
+
+$data_dir = dirname( $config_file ) . '/';
+
+if( !$fo->LoadConfig( $config_file ))
+{
+	print( "ERROR: invalid configuration" );
+	exit;
+}
+
+if( !$options{standalone} )
+{
+	print( "[Librarian]\n" );
+	foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
+	{
+		my $rid = fid2rid( $fid );
+		next if( !defined($rid) );
+
+		printf( "Checking %s (%s)\n", rtext( 'playerStats', $rid, '' ), rid2fid( $rid ));
+		if( check_db( $rid, 'http://riget.info/stats/', $data_dir.$fo->{Config}->{dirs}{db} ))
+		{
+			$options{rebuild} = 1;
+		}
+	}
+}
+
+if( -r 'ping.db' )
+{
+	%ping = %{ retrieve( 'ping.db' ) };
+}
+
+$options{rebuild} = 1 if( scalar(keys(%{$options{rebuild_history}})) > 0 );
+$options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'history' ));
+$options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'average' ));
+$options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'average_short' ));
+$options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'max_players' ));
+$options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'lifetime' ));
+$options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'librarian' ));
+
+if( $options{rebuild} ) # that thing slowly becomes meh
+{
+	printf( "[Rebuilding]\n" );
+
+	my(
+		%history, %server_history,
+		%average, %average_short, %server_average,
+
+		%max_players, %lifetime, %librarian, %daily
+	);
+
+	foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
+	{
+		my $rid = fid2rid( $fid );
+
+		# check librarian database
+		if( defined($rid) )
+		{
+			%server_history = load_sql( $rid, $data_dir.$fo->{Config}->{dirs}{db}, 1 );
+			$librarian{server}{$fid} = $server_history{pings};
+			delete( $server_history{pings} );
+		}
+
+		# check own database
+		foreach my $year ( sort{$a <=> $b} keys(%ping) )
+		{
+			next if( !($year =~ /^[0-9]+$/ ));
+			foreach my $month ( sort{$a <=> $b} keys($ping{$year}) )
+			{
+				next if( !($month =~ /^[0-9]+$/ ));
+				foreach my $day ( sort{$a <=> $b} keys($ping{$year}{$month}) )
+				{
+					next if( !($day =~ /^[0-9]+$/ ));
+					next if(!exists($ping{$year}{$month}{$day}{$fid}) ||
+						!defined($ping{$year}{$month}{$day}{$fid}));
+
+					my $online = int($ping{$year}{$month}{$day}{$fid});
+
+					if( !exists($server_history{$year}{$month}{$day}) || $server_history{$year}{$month}{$day} < $online )
+					{
+						$server_history{$year}{$month}{$day} = $online;
+					}
+				}
+			}
+		}
+
+		save_ymd( \%server_history, 'server_history', $fid, ( ID => $fid ))
+			if( scalar(keys(%server_history)) );
+
+		foreach my $year ( sort{$a <=> $b} keys(%server_history) )
+		{
+			next if( !($year =~ /^[0-9]+$/ ));
+			foreach my $month ( sort{$a <=> $b} keys($server_history{$year}) )
+			{
+				next if( !($month =~ /^[0-9]+$/ ));
+				foreach my $day ( sort{$a <=> $b} keys($server_history{$year}{$month}) )
+				{
+					next if( !($day =~ /^[0-9]+$/ ));
+					my $online = $server_history{$year}{$month}{$day};
+					$online = int($online);
+
+					if( !exists($lifetime{server}{$fid}{introduced}) )
+					{
+						$lifetime{server}{$fid}{introduced} = $fo->Timestamp( $year, $month, $day );
+						$lifetime{server}{$fid}{days} = int(0);
+					}
+
+					if( !exists($history{$year}{$month}{$day}) )
+					{
+						$history{$year}{$month}{$day} = $online;
+					}
+					else
+					{
+						$history{$year}{$month}{$day} += $online;
+					}
+
+					if( $online >= 0 )
+					{
+						$average_short{server}{$fid}{days}++;
+						$average_short{server}{$fid}{players} += $online;
+
+						if( exists($average_short{server}{$fid}{players}) && exists($average_short{server}{$fid}{days}) )
+						{
+							$server_average{$year}{$month}{$day} = int( $average_short{server}{$fid}{players} / $average_short{server}{$fid}{days} )
+						}
+
+						$daily{$year}{$month}{$day}{server}{$fid}{players} = $online;
+
+						$lifetime{server}{$fid}{days}++;
+					}
+
+					if( !exists( $max_players{server}{$fid} ) || $online >= $max_players{server}{$fid}{players} )
+					{
+						$max_players{server}{$fid}{timestamp} = $fo->Timestamp( $year, $month, $day );
+						$max_players{server}{$fid}{players} = $online;
+					}
+				}
+			}
+		}
+
+		if( exists($average_short{server}{$fid}{players}) && exists($average_short{server}{$fid}{days}) )
+		{
+			my $players = $average_short{server}{$fid}{players};
+			my $days = $average_short{server}{$fid}{days};
+			$average_short{server}{$fid} = int( $players / $days );
+		}
+		else
+		{
+			delete($average_short{server}{$fid});
+		}
+
+		save_ymd( \%server_average, 'server_average', $fid, ( ID => $fid ))
+			if( scalar(keys(%server_average)) );
+		%server_average = ();
+
+		%server_history = ();
+	}
+
+	save_ymd( \%history, 'history' );		%history = ();
+	save( \%librarian, 'librarian' );		%librarian = ();
+	save( \%average_short, 'average_short' );	%average_short = ();
+	save( \%max_players, 'max_players' );		%max_players = ();
+	save( \%lifetime, 'lifetime' );			%lifetime = ();
+
+	foreach my $year ( sort{$a <=> $b} keys(%daily) )
+	{
+		next if( !($year =~ /^[0-9]+$/ ));
+		foreach my $month ( sort{$a <=> $b} keys($daily{$year}) )
+		{
+			next if( !($month =~ /^[0-9]+$/ ));
+			foreach my $day ( sort{$a <=> $b} keys($daily{$year}{$month}) )
+			{
+				next if( !($day =~ /^[0-9]+$/ ));
+
+				foreach my $server ( keys( $daily{$year}{$month}{$day}{server} ))
+				{
+					$daily{$year}{$month}{$day}{servers}++;
+					$daily{$year}{$month}{$day}{players} +=
+						$daily{$year}{$month}{$day}{server}{$server}{players};
+				}
+				
+				$average{players} += $daily{$year}{$month}{$day}{players};
+				$average{days}++;
+
+				$average{$year}{$month}{$day} = int( $average{players} / $average{days} );
+
+				$daily{$year}{$month}{$day}{date}{year} = int($year);
+				$daily{$year}{$month}{$day}{date}{month} = int($month);
+				$daily{$year}{$month}{$day}{date}{day} = int($day);
+
+				save( $daily{$year}{$month}{$day}, 'day_summary',
+					( YEAR => $year, MONTH => $month, DAY => $day ));
+			}
+		}
+	}
+	%daily = ();
+
+	delete($average{players});
+	delete($average{days});
+
+	save_ymd( \%average, 'average' );
+
+	print( "[Packing]\n" );
+	push( @save_files, $config_file );
+
+	my $zip = Archive::Zip->new();
+
+	foreach my $file ( @save_files )
+	{
+		my $zipName = $file;
+		$zipName =~ s!^$data_dir!!;
+		$zip->addFile( $file, $zipName )->desiredCompressionLevel( 9 );
+	}
+
+	$zip->writeToFileNamed( $data_dir.'fonline-status.zip' );
+}
+
+my $time_end = time();
+
+
+print( "Finished" );
+printf(" in %ds", $time_end - $time_start ) if( $time_end - $time_start > 0 );
+print( "\n" );
+1;

@@ -1,0 +1,6 @@
+Options +Indexes
+php_flag engine off
+AddType text/plain php
+AddType text/plain pl
+
+RewriteEngine Off

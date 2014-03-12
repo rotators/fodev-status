@@ -1,0 +1,40 @@
+<?php
+
+include( 'lib/FOstatus.php' );
+include( 'lib/FOnlineFont.php' );
+
+$img = NULL;
+
+$fo = new FOstatus();
+$status = json_decode( file_get_contents( 'data/status.json' ), true );
+if( $status != NULL && $status['fonline']['status']['servers'] > 0 )
+{
+	$img = imagecreatefrompng( 'gfx/online.png' );
+
+	$font_big     = new FOnlineFont( 'fonts/Big.fofnt' );
+	$font_default = new FOnlineFont( 'fonts/Default.fofnt' );
+
+	$img_fonline = $font_big->TextToImage( 'FOnline', 0, 255, 0 );
+	$img_servers = $font_default->TextToImage( 'Servers: '.$status['fonline']['status']['servers'], 0, 255, 0 );
+	$img_players = $font_default->TextToImage( 'Players: '.$status['fonline']['status']['players'], 0, 255, 0 );
+
+	imagecopy( $img, $img_fonline, 30, 14, 0, 0, imagesx($img_fonline), imagesy($img_fonline) );
+	imagecopy( $img, $img_servers, 141, 16, 0, 0, imagesx($img_servers), imagesy($img_servers) );
+	imagecopy( $img, $img_players, 141, 26, 0, 0, imagesx($img_players), imagesy($img_players) );
+}
+else
+{
+	$img = imagecreatefrompng( 'gfx/offline.png' );
+
+	$font_big     = new FOnlineFont( 'fonts/Big.fofnt' );
+	$img_fonline = $font_big->TextToImage( 'FOnline', 180, 0, 0 );
+
+	imagecopy( $img, $img_fonline, (imagesx($img)/2)-(imagesx($img_fonline)/2), 14, 0, 0, imagesx($img_fonline), imagesy($img_fonline) );
+}
+
+header( "Content-Type: image/png" );
+
+imagepng($img);
+imagedestroy($img);
+
+?>

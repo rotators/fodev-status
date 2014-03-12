@@ -1,0 +1,163 @@
+html, body
+{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background: #333;
+}
+
+#header
+{
+	height: 20px;
+	text-align: center;
+	vertical-align: middle;
+	border-bottom: 1px solid #333;
+	margin-bottom: 5px;
+}
+
+article
+{
+	margin: 0 auto;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 5px;
+	width: 90%;
+	background-color: #191919;
+	min-height: 90%;
+	display: block;
+}
+
+footer, #info
+{
+	border-top: 1px solid #2b2b2b;
+}
+
+#info
+{
+	text-align: center;
+}
+
+footer
+{
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	font-size: 0.8em;
+	background-color: #191919;
+}
+
+button
+{
+	border: 1px solid #555;
+	border-radius: 3px;
+}
+
+button:hover
+{
+	border: 1px solid #555;
+	color: #aaa;
+}
+
+#footer
+{
+	position: relative;
+	padding: 2px 5px 2px 5px;
+}
+
+#server_status
+{
+	width: 220px !important;
+	height: 60px !important;
+	display: inline-block;
+	margin: 2px;
+	cursor: default;
+	line-height: 12px;
+	font-size: 11px;
+	vertical-align: top;
+	background-repeat: no-repeat;
+	border-radius: 15px;
+	border-style: groove;
+}
+
+#server_status .stats
+{
+	position: relative;
+	margin: 0;
+	top: 5px;
+	left: 0px;
+	text-align: center;
+}
+
+#server_status .links
+{
+	position: relative;
+	top: 8px;
+	padding-left: 15px;
+	text-align: left;
+}
+
+#server_status.online
+{
+	/* background-image: url(../gfx/online.png); */
+	border-color: #0c1;
+	background-color: #004500;
+	color: #0c1;
+}
+
+#server_status.offline, #server_status.closed, #server_status.singleplayer
+{
+	line-height: 17px;
+}
+
+#server_status.offline, #server_status.closed
+{
+	/* background-image: url(../gfx/offline.png); */
+	border-color: #c40000;
+	background-color: #300000;
+	color: #c40000;
+}
+
+#server_status.closed .stats:first-line
+{
+	text-decoration: line-through;
+}
+
+.center
+{
+	text-align: center;
+}
+
+img.center
+{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.right
+{
+	text-align: right;
+}
+
+a:focus, a:active
+{
+	outline: none;
+}
+
+@font-face
+{
+	font-family: 'JH_FalloutRegular';
+	src:  url( '../fonts/jh_fallout-webfont.eot' );
+	src:  local( ' ' ),
+		url('../fonts/jh_fallout-webfont.woff') format('woff'),
+		url('../fonts/jh_fallout-webfont.ttf') format('truetype');
+	font-weight: small;
+	font-style: lighter;
+}
+
+.font_fallout
+{
+	font-family: 'JH_FalloutRegular';
+	font-size: 8px;
+	color: rgb( 2, 238, 0 );
+}

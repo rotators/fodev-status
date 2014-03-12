@@ -1,0 +1,82 @@
+#! /bin/bash
+#
+# Launcher for all status-related programs
+#
+# Usage:
+#	/path/to/status.cron [program_to_launch] [/path/to/config.json] <arguments>
+
+# Get arguments
+me=$0
+app=$1
+config_file=$2
+arguments=($*)
+arguments=${arguments[@]:2}
+
+my_dir=`dirname $me`
+my_log=$me.log
+
+# Go to own directory
+cd $my_dir
+
+# editing production code? what can possibly go wrong?
+if [ -f status.stop ]; then
+	exit
+fi
+
+# Remove old logfile
+if [ -f $my_log ]; then
+	rm -f $my_log
+fi
+
+# Check arguments
+if [ "x$app" == "x" ]; then
+	echo "$me [application] [config_file]" > $my_log
+	exit
+elif [ ! -f $app ]; then
+	echo "Application '$app' does not exist" > $my_log
+	exit
+elif [ ! -x $app ]; then
+	echo "Application '$app' cannot be executed" > $my_log
+	exit
+elif [ ! -z $config_file ] && [ ! -f $config_file ]; then
+	echo "Missing config file : $config_file" > $my_log
+	exit
+fi
+
+# Check if application is already running; exit if it is
+pidfile="$app.pid"
+
+if [ -r $pidfile ]; then
+	pid=`cat $pidfile`
+	if `kill -CHLD $pid >/dev/null 2>&1`; then
+		exit 0
+	fi
+	rm -f $pidfile
+fi
+
+# Run application
+./$app $config_file $arguments >$app.log 2>$app.error.log &
+echo $! > $pidfile
+chmod 644 $pidfile
+if [ -f $app.log ]; then
+	chmod 600 $app.log
+fi
+if [ -f $app.error.log ]; then
+	chmod 600 $app.error.log
+fi
+
+# Wait for background application(s)
+wait
+
+# Remove empty files
+if [ ! -s $app.log ]; then
+	rm -f $app.log
+fi
+if [ ! -s $app.error.log ]; then
+	rm -f $app.error.log
+fi
+
+# Remove pidfile
+if [ -f $pidfile ]; then
+	rm -f $pidfile
+fi

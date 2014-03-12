@@ -1,0 +1,190 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use File::Basename qw( dirname );
+use IO::Socket;
+use FOstatus;
+#
+use Data::Dumper;
+
+$| = 1;
+my $time_start = time();
+
+my $fo = FOstatus->new;
+
+my $me = $0;
+my $config_file = shift || 'html/data/config.json';
+
+sub ping_server($$)
+{
+	my( $server, $fid ) = @_;
+	my( $conn_timeout, $read_timeout ) = ( 15, 15 );
+
+	$conn_timeout = $server->{timeout}{connect} if( exists($server->{timeout}{connect}) );
+	$read_timeout = $server->{timeout}{read} if( exists($server->{timeout}{read}) );
+
+	my %status = (
+		'players'	=> int( -1 ),
+		'uptime'	=> int( -1 ),
+		'checked'	=> int( -1 )
+	);
+
+	my $host = $server->{host};
+	my $port = $server->{port};
+
+	return( %status ) if( uc($host) eq 'UNKNOWN' || uc($host) eq 'HIDDEN' );
+	return( %status ) if( $port <= 1024 || $port >= 65535 );
+
+	$status{checked} = time();
+	my $timer_start = time();
+	my $socket = IO::Socket::INET->new(
+		PeerAddr => $host,
+		PeerPort => $port,
+		Proto    => 'tcp',
+		Timeout  => $conn_timeout,
+		Blocking => 0
+	);
+	my $timer_end = time();
+	$status{_connect} = $timer_end - $timer_start;
+
+	if( $socket )
+	{
+		my $select = new IO::Select($socket);
+
+		if( $socket->send( pack( 'L', 0xFFFFFFFF )))
+		{
+			my( $read );
+			$timer_start = time();
+			my @can_read = $select->can_read($read_timeout);
+			if( scalar( @can_read ))
+			{
+				$socket->recv( $read, 16 );
+			}
+			$timer_end = time();
+			close( $socket );
+			$status{_read} = $timer_end - $timer_start;
+
+			if( scalar( @can_read ) && length( $read ) == 16 )
+			{
+				my( $players, $uptime, $reserved1, $reserved2) = unpack( 'L4' , $read );
+				$status{players} = int($players);
+				$status{uptime} = int($uptime);
+
+				return( %status );
+			}
+		}
+	}
+
+	return( %status );
+}
+
+sub save($$)
+{
+	my( $db, $filename ) = @_;
+
+	printf( "Saved: %s\n", $filename ) if( $fo->SaveJSON( $db, $filename ));
+}
+
+my $data_dir = dirname( $config_file ) . '/';
+if( !$fo->LoadConfig( $config_file ))
+{
+	print( STDERR "ERROR : invalid configuration\n" );
+	exit;
+}
+
+use Storable;
+my( %db, $db_rebuild );
+if( -f 'ping.db' )
+{
+	print( "[Load]\n" );
+	%db = %{ retrieve( 'ping.db' )};
+}
+
+my %result = (
+	'fonline' =>
+	{
+		'status' =>
+		{
+			'servers' => int( 0 ),
+			'players' => int( 0 )
+		}
+	}
+);
+print( "[Ping]\n" );
+foreach my $fid ( sort{$fo->{Config}->{server}{$a}{name} cmp $fo->{Config}->{server}{$b}{name}} keys( $fo->{Config}->{server} ))
+{
+	my $server = $fo->{Config}->{server}{$fid};
+
+	next if( !exists($server->{host}) || !exists($server->{port}) );
+	next if( uc($server->{host}) eq 'UNKNOWN' );
+	next if( uc($server->{host}) eq 'HIDDEN' );
+	next if( $server->{closed} );
+	next if( $server->{singleplayer} );
+
+	my $ping_start = time();
+	my %status = ping_server( $server, $fid );
+	my $ping_end = time();
+
+	printf( "%s : ", $server->{name} );
+	if( $status{uptime} > 0 )
+	{
+		printf( "%d player%s", $status{players}, $status{players} != 1 ? 's' : '' );
+	}
+	else
+		{ print( "offline" ); }
+	
+	if( $ping_end - $ping_start > 1 )
+	{
+		printf( " (total: %ds", $ping_end - $ping_start );
+		printf( ", connect: %ds", $status{_connect} ) if( $status{_connect}||0 > 0 );
+		printf( ", read: %ds", $status{_read} ) if( $status{_read}||0 > 0 );
+		print( ")" );
+	}
+	print( "\n" );
+	delete( $status{_connect} );
+	delete( $status{_read} );
+
+	$result{fonline}{status}{server}{$fid} = \%status;
+	$result{fonline}{status}{servers}++ if( $status{uptime} >= 0 );
+	$result{fonline}{status}{players} += $status{players} if( $status{players} > 0 );
+}
+
+save( \%result, $data_dir.$fo->GetPath( 'status' ));
+
+foreach my $fid ( sort{$a cmp $b} keys($result{fonline}{status}{server}) )
+{
+	my $server = $result{fonline}{status}{server}{$fid};
+	next if( $server->{players} < 0 );
+
+	my @localtime = localtime($server->{checked});
+	my $year = $localtime[5]+1900;
+	my $month = $localtime[4]+1;
+	my $day = $localtime[3];
+
+	if( !exists($db{$year}{$month}{$day}{$fid}) || $db{$year}{$month}{$day}{$fid} < $server->{players} )
+	{
+		print( "[Save]\n" ) if( !exists($db{rebuild}) );
+		$db{rebuild} = 1;
+
+		printf( "%s: %d -> %d\n",
+			$fid, $db{$year}{$month}{$day}{$fid} || 0, $server->{players}
+		);
+		$db{$year}{$month}{$day}{$fid} = int( $server->{players} );
+	}
+}
+
+if( exists($db{rebuild}) )
+{
+	delete( $db{rebuild} );
+	store( \%db, 'ping.db' );
+}
+
+
+my $time_end = time();
+
+print( "[Finish]\n" );
+printf("Time: %ds\n", $time_end - $time_start ) if( $time_end - $time_start > 0 );
+
+1;

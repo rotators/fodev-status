@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Storable;
+use Data::Dumper;
+
+if( -f 'ping.db' )
+{
+	my %db;
+	$db{'ping.db'} = retrieve( 'ping.db' );
+	my $d = Data::Dumper->new( [%db] );
+	print $d->Terse(1)->Sortkeys(1)->Dump();
+}
+
+1;
+
