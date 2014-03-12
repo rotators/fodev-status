@@ -1,3 +1,2 @@
-INSTALL
-=======
-
+FOnline servers status
+======================

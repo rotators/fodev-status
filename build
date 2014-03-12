@@ -196,8 +196,7 @@ sub save_ymd($$;$%)
 # Parse options
 if( scalar(@ARGV) )
 {
-	
-	$config_file = shift if( !$ARGV[0] =~ /^-/ );
+	$config_file = shift if( !($ARGV[0] =~ /^-/) );
 	foreach my $option ( @ARGV )
 	{
 		if( $option =~ /^-([a-z]+)$/ )
