@@ -3,6 +3,9 @@ function start( id )
 	$('#footer').hide();
 	ShowInfo( 'Loading...' );
 
+	$('#logo').empty();
+	$('#link').empty();
+
 	if( id == null )
 	{
 		ShowInfo( 'Server id not given' );
@@ -14,6 +17,38 @@ function start( id )
 		ShowInfo( 'Invalid config file' );
 		return;
 	}
+
+	// try to load server logo
+	$.ajax({ url: rootDir+'/gfx/logo/'+id+'.png', type: 'HEAD',
+	success: function()
+	{
+		$( '<img>',
+		{
+			src: rootDir+'/gfx/logo/'+id+'.png',
+			alt: fo.GetServerOption( id, 'name' )
+		}).appendTo( '#logo' );
+	},
+	error: function()
+	{
+		// this one must be generated server-side before accessing page
+		$( '<img>',
+		{
+			src: rootDir+'/gfx/cache/'+id+'logo-placeholder.png',
+			alt: fo.GetServerOption( id, 'name' )
+		}).appendTo( '#logo' );
+	}});
+
+	// add a server link (if a available)
+	var link = null;
+	$.each( ['website','link'], function( idx, weblink )
+	{
+		var value = fo.GetServerOption( id, weblink );
+		if( value != null )
+		{
+			$( '<a>', { href: value, text: value }).appendTo( '#link' );
+			return( false ); // break;
+		}
+	});
 
 	var chart = foCharts.CreateTimeline( 'fonline', 'chart' );
 	chart.chart.height = 300;
