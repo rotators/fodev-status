@@ -53,12 +53,12 @@ function getData( year, month, day )
 		{
 			if( jsonData.server[server.id] != null )
 			{
-				var name = fo.GetServerOption( server.id,'name' );
 				var players = parseInt( jsonData.server[server.id].players );
 				if( players > 0 )
 				{
 					var data = {
-						name: name,
+						id: server.id,
+						name: fo.GetServerOption( server.id,'name' ),
 						y: players
 					};
 

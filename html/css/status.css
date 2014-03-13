@@ -46,6 +46,13 @@ footer
 	background-color: #191919;
 }
 
+#footer
+{
+	position: relative;
+	padding: 2px 5px 2px 5px;
+	text-align: right;
+}
+
 button
 {
 	border: 1px solid #555;
@@ -58,11 +65,6 @@ button:hover
 	color: #aaa;
 }
 
-#footer
-{
-	position: relative;
-	padding: 2px 5px 2px 5px;
-}
 
 #server_status
 {

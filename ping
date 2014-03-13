@@ -117,11 +117,12 @@ foreach my $fid ( sort{$fo->{Config}->{server}{$a}{name} cmp $fo->{Config}->{ser
 {
 	my $server = $fo->{Config}->{server}{$fid};
 
-	next if( !exists($server->{host}) || !exists($server->{port}) );
-	next if( uc($server->{host}) eq 'UNKNOWN' );
-	next if( uc($server->{host}) eq 'HIDDEN' );
 	next if( $server->{closed} );
 	next if( $server->{singleplayer} );
+
+	next if( !exists($server->{host}) || !exists($server->{port}) );
+	next if( uc($server->{host}) eq 'UNKNOWN' );
+	next if( $server->{port} == 0 );
 
 	my $ping_start = time();
 	my %status = ping_server( $server, $fid );

@@ -25,10 +25,7 @@ class Players extends FOstatusModule
 			$this->js();
 
 			FOstatusUI::content( "\n<div id='chart'></div>" );
-			FOstatusUI::footer( "\n\t<div class='right'>
-		<input type='checkbox' name='auto_update' checked /> Auto update
-	</div>"
-			);
+			FOstatusUI::footer( "\n\t\t<input type='checkbox' name='auto_update' checked /> Auto update" );
 
 		});
 	}

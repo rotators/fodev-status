@@ -8,22 +8,20 @@
 					"port": 2238,
 					"link": "http://fodev.net/forum/index.php/topic,29522.0.html"
 				},
+				"fallen": {
+					"name": "Battle of the Fallen",
+					"host": "93.79.236.160",
+					"port": 4000,
+					"link": "http://fonline.ru/forum/threads/3845/"
+				},
 				"fo2238": {
 					"name": "FOnline: 2238",
-					"host": "UNKNOWN",
-					"port": 0,
 					"website": "http://fo2238.fodev.net/",
 					"source": "https://github.com/rotators/fo2238/",
 					"librarian": "",
 					"irc": "#2238",
 					"color": "#00aa00",
 					"closed": true
-				},
-				"fallen": {
-					"name": "Battle of the Fallen",
-					"host": "93.79.236.160",
-					"port": 4000,
-					"link": "http://fonline.ru/forum/threads/3845/"
 				},
 				"fode": {
 					"name": "Desert Europe",
@@ -120,8 +118,6 @@
 				},
 				"survivors": {
 					"name": "Survivors",
-					"host": "UNKNOWN",
-					"port": 0,
 					"link": "http://fodev.net/forum/index.php/topic,29400.0.html",
 					"closed": true
 				},
@@ -156,13 +152,10 @@
 				},
 				"wasteland": {
 					"name": "Wasteland 2155",
-					"host": "UNKNOWN",
-					"port": 0,
 					"website": "http://wasteland2155.net/",
 					"closed": true
 				}
 			},
-			"irc": "hollow.forestnet.org",
 			"dirs": {
 				"average": "average",
 				"db": "database",

@@ -20,6 +20,7 @@ class Librarian extends FOstatusModule
 			FOstatusUI::addFOstatus( $this );
 
 			FOstatusUI::content( "<div id='table'></div>" );
+			FOstatusUI::footer( "<a href='http://riget.info/index.php?page=fonlineProjects'>Librarian homepage</a>" );
 		});
 	}
 }

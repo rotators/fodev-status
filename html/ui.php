@@ -35,8 +35,11 @@ class FOstatusUI
 	private static $jsFOstatusCharts = false;
 	private static $jsFOstatusModule = false;
 
+	// cached 
 	private static $fodev_buttons = NULL;
 
+	// navigation menu
+	// uses data passed to menu()
 	private static $menu = array();
 
 	private static $arguments = array();
@@ -90,10 +93,10 @@ class FOstatusUI
 			self::content( $format, 'File', $file );
 		if( $line )
 			self::content( $format, 'Line', $line );
-		self::content( $format, 'Slim', $slimRunning ? 'true' : 'false' );
+		self::content( $format, 'Slim', $slimRunning ? 'enabled' : 'disabled' );
 
 		self::content( "\n\t</table>" );
-			if( $trace )
+		if( $trace )
 		{
 			$rtn = "";
 			$count = 0;
@@ -269,12 +272,6 @@ $(document).ready( function()
 			self::response( "\n</body>\n</html>\n" );
 		}, 1 );
 
-		// html:head
-		// builds <head>
-		//	opens <head>
-		//	calls stylesheet builder
-		//	calls javascript builder
-		//	closes <head>
 		self::$Slim->hook( 'html:head', function()
 		{
 			$title = NULL;
@@ -316,8 +313,6 @@ $(document).ready( function()
 			self::response( "\n</head>" );
 		}, 1 );
 
-		// html:head:css
-		// builds stylesheet part of <head>
 		self::$Slim->hook( 'html:head:css', function()
 		{
 			if( file_exists( 'css/base.css' ))
@@ -328,26 +323,19 @@ $(document).ready( function()
 			self::response( "\n\t<link rel='stylesheet' href='".self::$Root."/css/status.css' />" );
 		}, 1 );
 
-		// html:head:js
-		// builds javascript part of <head>
-		//	no default actions
-
-		// html:body
 		self::$Slim->hook( 'html:body', function()
 		{
 			self::response( "\n<nav id='fodev'>" );
 
 			self::response( self::$fodev_buttons );
 
-			self::response( "\n</nav>" );
+			self::response( "\n</nav> <!-- #fodev -->" );
 
 
 		}, 1 );
 
 		self::$Slim->hook( 'html:body', function()
 		{
-//			self::response( "\n<div id='content'>" );
-
 			self::response( "\n<article>" );
 
 			if( count(self::$menu) )
@@ -362,17 +350,13 @@ $(document).ready( function()
 				self::response( "\n\t\t<strong>&#171;</strong>\n\t\t%s\n\t\t<strong>&#187;</strong>",
 					implode( "\n\t\t<strong>&#183;</strong>\n\t\t", array_keys( self::$menu )));
 
-				self::response( "\n\t</nav> <!-- header -->" );
+				self::response( "\n\t</nav> <!-- #header -->" );
 			}
 
 			if( isset(self::$content) )
 				self::response( self::$content );
 
-//			self::response( "\n<p></p>" );
-
 			self::response( "\n</article>" );
-
-//			self::response( "\n</div> <!-- content -->" );
 
 			if( isset(self::$footer) || self::$jsFOstatusModule )
 			{
@@ -384,9 +368,8 @@ $(document).ready( function()
 				if( isset(self::$footer) )
 				{
 					self::response( "\n\t<div id='footer'>" );
-					//self::$Slim->applyHook( 'html:footer' );
 					self::response( self::$footer );
-					self::response( "\n\t</div> <!-- footer -->" );
+					self::response( "\n\t</div> <!-- #footer -->" );
 				}
 
 				self::response( "\n</footer>" );
@@ -631,17 +614,16 @@ $(document).ready( function()
 		$footer = NULL;
 
 		if( count($elements) == 1 )
-			$footer = sprintf( "\n\t\t<div class = 'right'>%s</div>", $elements[0] );
+			$footer = sprintf( "\n\t\t%s", $elements[0] );
 		else
 		{
-			$footer = sprintf( "\n\t\t<div class = 'right'>\n\t\t\t&#171;\n\t\t\t%s\n\t\t\t&#187;</div>",
-				implode( "\n\t\t\t&#183;\n\t\t\t", $elements ));
+			$footer = sprintf( "\n\t\t&#171;\n\t\t%s\n\t\t&#187;",
+				implode( "\n\t\t&#183;\n\t\t", $elements ));
 		}
 
 		if( $footer != NULL )
 			self::footer( $footer );
 	}
-
 };
 
 ?>

@@ -25,28 +25,28 @@ function start( id )
 		return;
 	}
 
+	var tmp = null;
+
 	// try to load server logo
-	$.ajax({ url: rootDir+'/gfx/logo/'+id+'.png', type: 'HEAD',
+	tmp = rootDir+'/gfx/logo/'+id+'.png';
+	$.ajax({ url: tmp, type: 'HEAD', async: false,
 	success: function()
 	{
-		$( '<img>',
-		{
-			src: rootDir+'/gfx/logo/'+id+'.png',
-			alt: fo.GetServerOption( id, 'name' )
-		}).appendTo( '#logo' );
+		// all is fine
 	},
 	error: function()
 	{
 		// this one must be generated server-side before accessing page
-		$( '<img>',
-		{
-			src: rootDir+'/gfx/cache/'+id+'.logo-placeholder.png',
-			alt: fo.GetServerOption( id, 'name' )
-		}).appendTo( '#logo' );
+		tmp = rootDir+'/cache/'+id+'.logo-placeholder.png';
 	}});
 
+	$( '<img>',
+	{
+		src: tmp,
+		alt: fo.GetServerOption( id, 'name' )
+	}).appendTo( '#logo' );
+
 	// add a server link (if a available)
-	var link = null;
 	$.each( ['website','link'], function( idx, weblink )
 	{
 		var value = fo.GetServerOption( id, weblink );

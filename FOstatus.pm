@@ -1,5 +1,3 @@
-# Perl version of fostatus.js
-
 package FOstatus;
 
 use Date::Calc qw( Add_Delta_Days Date_to_Days Date_to_Time );
@@ -120,16 +118,7 @@ sub YMDHashToArray($$)
 	my( $self, $db ) = @_;
 
 	my @content;
-=for nobody
-	my( $old_content, $new_content ) = ( '', '' );
 
-	if( open( my $file, '<', $filename ))
-	{
-		local $/;
-		$old_content = <$file>;
-		close( $file );
-	}
-=cut
 	my $last_day = undef;
 	foreach my $year ( sort{$a <=> $b} keys($db) )
 	{
@@ -150,7 +139,6 @@ sub YMDHashToArray($$)
 						$last_day = Date_to_Days( $lost_year, $lost_month, $lost_day );
 						my @result = ( $self->Timestamp( $lost_year, $lost_month, $lost_day ), undef );
 						push( @content, \@result );
-						#push( @content, sprintf( "%s,null", $self->Timestamp( $lost_year, $lost_month, $lost_day )));
 					}
 				}
 				$last_day = Date_to_Days( $year, $month, $day );
@@ -159,33 +147,17 @@ sub YMDHashToArray($$)
 				$online = undef if( $online < 0 );
 				my @result = ( int($self->Timestamp( $year, $month, $day )), $online );
 				push( @content, \@result );
-				#push( @content, sprintf( "%s,%s", $self->Timestamp( $year, $month, $day ), $online ));
 			}
 		}
 	}
-=for nobody
-	$new_content = sprintf( "[[%s]]", join( "],[", @content ));
-	@content = ();
 
-	return( 0 ) if( $old_content eq $new_content );
-
-	make_path( dirname( $filename ));
-	if( open( my $file, '>', $filename ))
-	{
-		printf( $file $new_content );
-		close( $file );
-		return( 1 );
-	}
-
-	return( 0 );
-=cut
 	return( @content );
 }
 
 sub Timestamp($$$)
 {
 	my( $self, $year, $month, $day ) = @_;
-	return( Date_to_Time( $year, $month, $day, 0, 0, 0 ));# * 1000 );
+	return( Date_to_Time( $year, $month, $day, 0, 0, 0 ));
 }
 
 1;

@@ -30,6 +30,8 @@ class Server extends FOstatusModule
 				return;
 			}
 
+			$this->serverLogo( $server_user );
+
 			$jsArguments = array( $server_user );
 
 			FOstatusUI::jsArguments( $jsArguments );
@@ -63,12 +65,9 @@ class Server extends FOstatusModule
 
 	private function serverLogo( $id )
 	{
-		foreach( array( 'png', 'gif', 'jpg' ) as $extension )
-		{
-			$file = sprintf( "gfx/logo/%s.%s", $id, $extension );
-			if( file_exists( $file ))
-				return( $file );
-		}
+		$file = sprintf( "gfx/logo/%s.png", $id );
+		if( file_exists( $file ))
+			return( $file );
 
 		$file = sprintf( "cache/%s.logo-placeholder.png", $id );
 
@@ -89,7 +88,7 @@ class Server extends FOstatusModule
 				if( !$font->TextValid( $name ))
 					continue;
 
-				$image = $font->TextToImage( $name, 0, 255, 0 );
+				$image = $font->TextToImage( $name, 2, 238, 0 );
 				if( $image == NULL )
 					continue;
 

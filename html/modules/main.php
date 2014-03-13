@@ -32,11 +32,9 @@ class Main extends FOstatusModule
 	<br><br>" );
 
 			FOstatusUI::footer( "
-	<div class='right'>
 		<input type='checkbox' id='auto_update' checked='checked' /> Auto update
 		<input type='checkbox' id='show_offline' checked='checked' /> Show offline servers
-		<input type='checkbox' id='show_closed'/> Show closed servers
-	</div>" 
+		<input type='checkbox' id='show_closed'/> Show closed servers"
 			);
 		});
 		
