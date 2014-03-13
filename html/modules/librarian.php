@@ -8,11 +8,17 @@ if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_ex
 
 class Librarian extends FOstatusModule
 {
-	public function init()
+	public function __construct()
 	{
 		if( !file_exists( 'data/'.parent::$FO->GetPath( 'librarian' )))
+		{
+			$this->Dispose = true;
 			return;
+		}
+	}
 
+	public function init()
+	{
 		parent::$Slim->get( '/librarian/', function()
 		{
 			FOstatusUI::title( "Librarian" );

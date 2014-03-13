@@ -8,13 +8,17 @@ if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_ex
 
 class Players extends FOstatusModule
 {
-	public function init()
+	public function __construct()
 	{
 		if( !file_exists( 'data/'.parent::$FO->GetPath( 'status' )))
 		{
-			$this->Hidden = true;
+			$this->Dispose = true;
 			return;
 		}
+	}
+
+	public function init()
+	{
 
 		$this->Description = "Current players distribution";
 

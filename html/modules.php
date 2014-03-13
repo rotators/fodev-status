@@ -27,8 +27,9 @@ abstract class FOStatusModule
 	// without leading/trailing slash
 	public $RoutesInfo = array();
 
-	// if true, module won't be listed
-	public $Hidden = false;
+	// if true, module won't be initialized and kept in instances list
+	// need to be changed in module constructor to take effect
+	public $Dispose = false;
 
 	// module author (html)
 	public $Author = NULL;
@@ -61,7 +62,7 @@ abstract class FOStatusModule
 			if( is_subclass_of( $class, 'FOstatusModule' ))
 			{
 				$module = new $class();
-				if( $module )
+				if( $module && !$module->Dispose )
 				{
 					array_push( self::$Instances, $module );
 				}

@@ -92,9 +92,6 @@ class About extends FOstatusModule
 
 		foreach( FOstatusModule::$Instances as $instance )
 		{
-			if( $instance->Hidden )
-				continue;
-
 			$className = get_class( $instance );
 			if( !$className )
 				continue;
