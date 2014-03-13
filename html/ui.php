@@ -47,10 +47,10 @@ class FOstatusUI
 	private static $content = NULL;
 	private static $footer = NULL;
 
-	public static function initialize( \Slim\Slim $slim )
+	public static function initialize( $root, \Slim\Slim $slim )
 	{
+		self::$Root = $root;
 		self::$Slim = $slim;
-		self::$Root = self::$Slim->request->getRootUri();
 
 		self::initHooks();
 		self::initError();

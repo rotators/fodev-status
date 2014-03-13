@@ -50,10 +50,10 @@ abstract class FOStatusModule
 
 	// various module tools
 
-	public static function initialize( \Slim\Slim $app, FOstatus $status )
+	public static function initialize( $root, \Slim\Slim $app, FOstatus $status )
 	{
+		self::$Root = $root;
 		self::$Slim = $app;
-		self::$Root = self::$Slim->request->getRootUri();
 
 		self::$FO = $status;
 

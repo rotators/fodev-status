@@ -17,17 +17,14 @@ $app->config( array(
 	'templates.path'	=> '.',
 ));
 
-$app->get( 'index.php', function() use( $app )
-{
-	$app->redirect( $app->request->getRootUri(), 303 );
-});
-
 define( 'FODEV:STATUS', 1 );
 
 include( 'modules.php' );
 include( 'ui.php' );
 
-FOstatusUI::initialize( $app );
+$root = dirname( $_SERVER['SCRIPT_NAME'] );
+
+FOstatusUI::initialize( $root, $app );
 
 // all errors are supposed to be displayed by UI
 
@@ -64,7 +61,7 @@ foreach( array_merge( glob( "modules/*.php" ), glob( "modules/*/*.php" )) as $fi
 $fo = new FOstatus();
 if( $fo->LoadConfig( 'data/config.json' ))
 {
-	FOstatusModule::initialize( $app, $fo );
+	FOstatusModule::initialize( $root, $app, $fo );
 }
 
 $app->run();
