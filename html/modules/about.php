@@ -27,9 +27,10 @@ class About extends FOstatusModule
 			$this->aboutModules();
 		});
 
+		$this->RoutesInfo['modules'] = "Shortcut";
 		parent::$Slim->get( '/modules/', function()
 		{
-			parent::$Slim->redirect( parent::$Root.'/about/modules/' );
+			parent::$Slim->redirect( parent::$Root.'/about/modules/', 303 );
 		});
 	}
 
@@ -43,10 +44,11 @@ class About extends FOstatusModule
 		$software = array(
 			'*1'			=> "\n\t<hr>",
 			'Perl'			=> 'http://www.perl.org/',
-			'Slim'			=> 'http://www.slimframework.com/',
+			'PHP'			=> 'https://php.net/',
+			'Slim'			=> 'http://slimframework.com/',
 			'FOnlineFont'		=> 'https://github.com/wipe2238/fowww/blob/master/class/FOnlineFont.php',
 			'*2'			=> "\n\t<hr>",
-			'jQuery'		=> 'http://jquery.com/',
+			'jQuery'		=> 'https://jquery.com/',
 			'Highcharts'		=> 'http://www.highcharts.com/products/highcharts/',
 			'Highstock'		=> 'http://www.highcharts.com/products/highstock/',
 		);
@@ -90,7 +92,13 @@ class About extends FOstatusModule
 				date ("j F Y, H:i", filemtime( $class->getFileName() )));
 		}
 
-		foreach( FOstatusModule::$Instances as $instance )
+		$instances = parent::$Instances;
+		usort( $instances, function( $a, $b )
+		{
+			return( get_class( $a ) > get_class( $b ) ? 1 : -1 );
+		});
+
+		foreach( $instances as $instance )
 		{
 			$className = get_class( $instance );
 			if( !$className )
@@ -111,10 +119,10 @@ class About extends FOstatusModule
 				$parents[] = $parent->getName();
 				$pClass = $parent;
 			}
-			array_pop( $parents );
+			array_pop( $parents ); // cut 'FOstatusModule' from list
 			if( count($parents) )
 			{
-				FOstatusUI::content( " : %s", implode( ' -> ', $parents ));
+				FOstatusUI::content( " : %s", implode( ' -&gt; ', $parents ));
 			}
 			FOstatusUI::content( "\n<br/>" );
 
