@@ -6,7 +6,8 @@ if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ))
 	exit;
 }
 
-include_once( '../fodev.php' );
+if( file_exists( '../fodev.php' ) && is_readable( '../fodev.php' ))
+	include_once( '../fodev.php' );
 
 class FOstatusUI
 {
@@ -160,11 +161,14 @@ class FOstatusUI
 
 	private static function initFOdev()
 	{
-		// prepare fodev navigation panel
-		ob_start();
-		fodev_buttons( 'status' );
-		self::$fodev_buttons .= ob_get_contents();
-		ob_end_clean();
+		if( function_exists( 'fodev_buttons' ))
+		{
+			// prepare fodev navigation panel
+			ob_start();
+			fodev_buttons( 'status' );
+			self::$fodev_buttons .= ob_get_contents();
+			ob_end_clean();
+		}
 	}
 
 	private static function initNotFound()
@@ -326,13 +330,12 @@ $(document).ready( function()
 
 		self::$Slim->hook( 'html:body', function()
 		{
-			self::response( "\n<nav id='fodev'>" );
-
-			self::response( self::$fodev_buttons );
-
-			self::response( "\n</nav> <!-- #fodev -->" );
-
-
+			if( isset(self::$fodev_buttons) )
+			{
+				self::response( "\n<nav id='fodev'>" );
+				self::response( self::$fodev_buttons );
+				self::response( "\n</nav> <!-- #fodev -->" );
+			}
 		}, 1 );
 
 		self::$Slim->hook( 'html:body', function()
