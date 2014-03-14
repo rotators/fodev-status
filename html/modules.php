@@ -48,7 +48,6 @@ abstract class FOStatusModule
 	// FOstatus object
 	public static $FO = NULL;
 
-	// various module tools
 
 	public static function initialize( $root, \Slim\Slim $app, FOstatus $status )
 	{
@@ -94,6 +93,8 @@ abstract class FOStatusModule
 
 		return( $routes );
 	}
+
+	// various module tools
 
 	public static function isModule( $name )
 	{
@@ -177,6 +178,25 @@ abstract class FOStatusModule
 
 			return( false );
 		}
+
+		return( true );
+	}
+
+	public function validPathFO( $path )
+	{
+		if( !isset($path) || !is_string( $path ))
+			return( false );
+
+		$path = self::$FO->GetPath( $path );
+		if( !isset($path) )
+			return( false );
+
+		$path = 'data/' . $path;
+		if( !is_file( $path ))
+			return( false );
+
+		if( !is_readable( $path ))
+			return( false );
 
 		return( true );
 	}

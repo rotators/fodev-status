@@ -8,6 +8,15 @@ if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_ex
 
 class History extends FOstatusModule
 {
+	public function __construct()
+	{
+		if( !$this->validPathFO( 'history' ))
+		{
+			$this->Dispose = true;
+			return;
+		}
+	}
+
 	public function init()
 	{
 		$this->Description = "Server(s) history";

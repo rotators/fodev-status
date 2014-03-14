@@ -8,6 +8,15 @@ if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_ex
 
 class Average extends FOstatusModule
 {
+	public function __construct()
+	{
+		if( !$this->validPathFO( 'average' ))
+		{
+			$this->Dispose = true;
+			return;
+		}
+	}
+
 	public function init()
 	{
 		$this->Description = "Server(s) average players";

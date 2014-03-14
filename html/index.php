@@ -26,7 +26,7 @@ $root = dirname( $_SERVER['SCRIPT_NAME'] );
 
 FOstatusUI::initialize( $root, $app );
 
-// all errors are supposed to be displayed by UI
+// prepare errors catchers
 
 error_reporting( -1 );
 
@@ -63,6 +63,7 @@ if( $fo->LoadConfig( 'data/config.json' ))
 {
 	FOstatusModule::initialize( $root, $app, $fo );
 }
+//TODO: else
 
 $app->run();
 

@@ -84,7 +84,7 @@ function start( id )
 			color: '#b1000d',
 			extract: true,
 			series: 'server_history',
-		},
+		}
 	};
 
 	$.each( setup, function( idx, config )
@@ -97,6 +97,9 @@ function start( id )
 		{
 			fo.LoadJSON( dataDir+fo.GetPath( idx ), idx, function( jsonData )
 			{
+				if( jsonData.server == null || jsonData.server[id] == null )
+					return;
+
 				var serverMax = jsonData.server[id].players;
 				seriesOptions = {
 					data: [{

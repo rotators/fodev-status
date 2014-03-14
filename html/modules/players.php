@@ -10,7 +10,7 @@ class Players extends FOstatusModule
 {
 	public function __construct()
 	{
-		if( !file_exists( 'data/'.parent::$FO->GetPath( 'status' )))
+		if( !$this->validPathFO( 'status' ))
 		{
 			$this->Dispose = true;
 			return;

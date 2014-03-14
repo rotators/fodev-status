@@ -15,7 +15,7 @@ use Data::Dumper;
 
 my $time_start = time();
 my $config_file = 'html/data/config.json';
-my $data_dir = 
+my $data_dir = dirname( $config_file ) . '/';
 my %options;
 my $fo = FOstatus->new();
 my %ping;
@@ -238,7 +238,6 @@ if( -r 'ping.db' )
 	%ping = %{ retrieve( 'ping.db' ) };
 }
 
-$options{rebuild} = 1 if( scalar(keys(%{$options{rebuild_history}})) > 0 );
 $options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'history' ));
 $options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'average' ));
 $options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'average_short' ));

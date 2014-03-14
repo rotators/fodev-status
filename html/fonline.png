@@ -7,7 +7,7 @@ $img = NULL;
 
 $fo = new FOstatus();
 $status = json_decode( file_get_contents( 'data/status.json' ), true );
-if( $status != NULL && $status['fonline']['status']['servers'] > 0 )
+if( $status != NULL && isset($status['fonline']['status']['servers']) && $status['fonline']['status']['servers'] > 0 )
 {
 	$img = imagecreatefrompng( 'gfx/online.png' );
 

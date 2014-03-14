@@ -50,7 +50,7 @@ class Server extends FOstatusModule
 
 			if( count($compare) )
 			{
-				FOstatusUI::footer( "\n\t<div class='right'>\n\tCompare with other servers: %s\n\t</div>",
+				FOstatusUI::footer( "\n\tCompare with other servers: %s",
 					join( ', ', $compare ));
 			}
 

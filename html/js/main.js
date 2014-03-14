@@ -17,7 +17,6 @@ function start()
 	});
 
 	$('#multiplayer').show();
-
 //	soon
 //	$('#singleplayer').show();
 

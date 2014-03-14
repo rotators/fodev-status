@@ -11,6 +11,7 @@ function start( /* servers */ )
 			var visible = foCharts.GetVisibleSeries( chart );
 			var url = rootDir+'/history/'+visible.join(',')+(visible.length>0?'/':'');
 
+			// TODO: remove series from chart and use history.pushState() instead?
 			console.log( 'Redirecting: '+url );
 			window.location = url;
 		}

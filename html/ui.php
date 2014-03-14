@@ -316,11 +316,12 @@ $(document).ready( function()
 		self::$Slim->hook( 'html:head:css', function()
 		{
 			if( file_exists( 'css/base.css' ))
-				self::response( "\n\t<link rel='stylesheet' href='".self::$Root."/css/base.css' />" );
+				self::response( "\n\t<link rel='stylesheet' href='".self::$Root."/css/base.css' type='text/css' />" );
 			else
 				self::response( "\n\t<link rel='stylesheet' href='http://fodev.net/forum/Themes/blackened/css/index.css?fin20' type='text/css' />" );
 
-			self::response( "\n\t<link rel='stylesheet' href='".self::$Root."/css/status.css' />" );
+			if( file_exists( 'css/fostatus.css' ))
+				self::response( "\n\t<link rel='stylesheet' href='".self::$Root."/css/fostatus.css' type='text/css' />" );
 		}, 1 );
 
 		self::$Slim->hook( 'html:body', function()
@@ -415,7 +416,7 @@ $(document).ready( function()
 	{
 		self::$Slim->hook( 'html:head:js', function() use( $url )
 		{
-			self::response( "\n\t<script src='%s'></script>", $url );
+			self::response( "\n\t<script src='%s' type='text/javascript'></script>", $url );
 		}, $priority );
 	}
 
@@ -496,7 +497,7 @@ $(document).ready( function()
 	}
 
 	// adds fostatus*.js to generated page
-	// if module itself is passed, try to add his own script
+	// if module itself is passed, try to add his own script and stylesheet
 	public static function addFOstatus( FOstatusModule $module = NULL, $charts = true )
 	{
 		if( self::$jsFOstatus )
@@ -538,6 +539,15 @@ $(document).ready( function()
 					self::addJquery();
 					self::$jsFOstatusModule = true;
 					self::addLocalScript( $url, 7 );
+				}
+
+				if( file_exists( "css/$module.css" ))
+				{
+					self::$Slim->hook( 'html:head:css', function() use( $url )
+					{
+						self::response( "\n\t<link rel='stylesheet' href='%s/%s' type='text/css' />",
+							self::$Root, $url );
+					}, 2 );
 				}
 			}
 		}

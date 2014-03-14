@@ -88,6 +88,78 @@ FOstatus.prototype.LoadConfig = function( url )
 	return( result );
 };
 
+FOstatus.prototype.CheckConfig = function( data, skip_base )
+{
+	if( data == null )
+	{
+		console.log( "CheckConfig: data is null" );
+		return( false );
+	}
+
+	skip_base = this.defaultArgument( skip_base, false );
+
+	var result = null, config = null;
+
+	if( skip_base )
+	{
+		console.log( "CheckConfig: skipping base structure check" );
+		config = data;
+	}
+	else
+	{
+
+		if( data.fonline == null )
+		{
+			console.log( "CheckConfig: missing fonline" );
+			return( false );
+		}
+
+		if( data.fonline.config == null )
+		{
+			console.log( "CheckConfig: missing fonline::config" )
+			return( false );
+		}
+
+		config = data.fonline.config
+	}
+
+	if( config.server == null )
+	{
+		console.log( "CheckConfig: missing fonline::config::server" );
+		return( false );
+	}
+
+	$.each( config.server, function( idx, server )
+	{
+		if( server.name == null )
+		{
+			console.log( "CheckConfig: missing fonline::config::server::"+idx+"::name" );
+			result = false;
+			return( false ); // break;
+		}
+
+		if( server.host != null && server.port == null )
+		{
+			console.log( "CheckConfig: fonline::config::server::"+id+" : host set, port is null" );
+			result = false;
+			return( false ); // break;
+		}
+
+		if( server.host == null && server.port != null )
+		{
+			console.log( "CheckConfig: fonline::config::server::"+id+" : host is null, port is set" );
+			result = false;
+			return( false ); // break;
+		}
+	});
+
+	if( result != null )
+		return( result )
+
+	console.log( "CheckConfig: OK" );
+	return( true );
+}
+
 FOstatus.prototype.GetServer = function( want_id )
 {
 	if( want_id == null )

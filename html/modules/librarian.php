@@ -10,7 +10,7 @@ class Librarian extends FOstatusModule
 {
 	public function __construct()
 	{
-		if( !file_exists( 'data/'.parent::$FO->GetPath( 'librarian' )))
+		if( !$this->validPathFO( 'librarian' ))
 		{
 			$this->Dispose = true;
 			return;

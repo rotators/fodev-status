@@ -1,5 +1,6 @@
-Options +Indexes
 php_flag engine off
+
+Options +Indexes
 AddType text/plain php
 AddType text/plain pl
 
