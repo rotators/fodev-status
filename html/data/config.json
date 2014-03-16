@@ -1,20 +1,26 @@
 {
-	"fonline": {
-		"config": {
-			"server": {
-				"asylum": {
+	"fonline":
+	{
+		"config":
+		{
+			"server":
+			{
+				"asylum":
+				{
 					"name": "New Asylum",
 					"host": "fonewasylum.servegame.com",
 					"port": 2238,
 					"link": "http://fodev.net/forum/index.php/topic,29522.0.html"
 				},
-				"fallen": {
+				"fallen":
+				{
 					"name": "Battle of the Fallen",
 					"host": "93.79.236.160",
 					"port": 4000,
 					"link": "http://fonline.ru/forum/threads/3845/"
 				},
-				"fo2238": {
+				"fo2238":
+				{
 					"name": "FOnline: 2238",
 					"website": "http://fo2238.fodev.net/",
 					"source": "https://github.com/rotators/fo2238/",
@@ -23,7 +29,8 @@
 					"color": "#00aa00",
 					"closed": true
 				},
-				"fode": {
+				"fode":
+				{
 					"name": "Desert Europe",
 					"host": "game.fode.eu",
 					"port": 2250,
@@ -32,7 +39,8 @@
 					"irc": "#FODE",
 					"color": "#0e5e7e"
 				},
-				"fonline2": {
+				"fonline2":
+				{
 					"name": "FOnline 2",
 					"host": "game.fonline2.com",
 					"port": 4000,
@@ -41,7 +49,8 @@
 					"irc": "#FO2",
 					"color": "#705055"
 				},
-				"goon": {
+				"goon":
+				{
 					"name": "Goon Haven",
 					"host": "goonhaven.ru",
 					"port": 5568,
@@ -49,33 +58,45 @@
 					"librarian": "gh",
 					"color": "#a1a400"
 				},
-				"justlife": {
+				"justlife":
+				{
 					"name": "Just Life",
 					"host": "fo.just-gaming.ru",
 					"port": 4000,
 					"website": "http://fo7.3nx.ru/"
 				},
-				"lastfrontier": {
+				"lastfrontier":
+				{
 					"name": "Last Frontier",
 					"host": "UNKNOWN",
 					"port": 0,
 					"website": "http://lastfrontier.ru/",
 					"closed": true
 				},
-				"lasthope": {
+				"lasthope":
+				{
 					"name": "Last Hope",
 					"host": "217.199.212.124",
 					"port": 4000,
 					"website": "http://deimosland.com"
 				},
-				"laststand": {
+				"laststand":
+				{
 					"name": "Last Stand",
 					"host": "fonlineforfun.zapto.org",
 					"port": 4000,
 					"website": "http://fols.your-talk.com/forum",
 					"link": "http://fodev.net/forum/index.php/topic,29390.0.html"
 				},
-				"phoenix" : {
+				"nextday":
+				{
+					"name": "Next Day",
+					"host": "62.75.213.100",
+					"port": 4000,
+					"website": "http://www.fonextday.ru/"
+				},
+				"phoenix" :
+				{
 					"name": "Ashes of Phoenix BETA",
 					"host": "play.fonline-aop.net",
 					"port": 4000,
@@ -85,14 +106,16 @@
 					"irc": "#AshesOfPhoenix",
 					"color": "#2f8aa9"
 				},
-				"racial": {
+				"racial":
+				{
 					"name": "Racial Wars",
 					"host": "fonline.dyndns.info",
 					"port": 4000,
 					"website": "http://fonlinerw.sosbb.ru/",
 					"source": "http://code.google.com/p/fonline-racial-wars/"
 				},
-				"reloaded": {
+				"reloaded":
+				{
 					"name": "Reloaded",
 					"host": "play.fonline-reloaded.net",
 					"port": 2238,
@@ -102,7 +125,8 @@
 					"irc": "#Reloaded",
 					"color": "#70a08a"
 				},
-				"requiem": {
+				"requiem":
+				{
 					"name": "Requiem",
 					"host": "188.138.11.57",
 					"port": 6112,
@@ -110,28 +134,33 @@
 					"librarian": "requiem",
 					"color": "#5c009a"
 				},
-				"roleplay": {
+				"roleplay":
+				{
 					"name": "Roleplay",
 					"host": "195.222.127.183",
 					"port": 4000,
 					"website": "http://tnf.net.ru/"
 				},
-				"survivors": {
+				"survivors":
+				{
 					"name": "Survivors",
 					"link": "http://fodev.net/forum/index.php/topic,29400.0.html",
 					"closed": true
 				},
-				"tangut": {
+				"tangut":
+				{
 					"name": "The Tangut Prophecy",
 					"link": "http://www.moddb.com/mods/the-tangut-prophecy/",
 					"link_fodev": "http://fodev.net/forum/index.php/topic,28470.0.html",
 					"singleplayer": true
 				},
-				"tla2": {
+				"tla2":
+				{
 					"name": "TLA mk2",
 					"host": "tlamk2server.no-ip.org",
 					"port": 4000,
-					"timeout": {
+					"timeout":
+					{
 						"connect": 30
 					},
 					"website": "http://tlamk2.ru/",
@@ -140,29 +169,34 @@
 					"irc": "#TLAmk2",
 					"color": "#a5000f"
 				},
-				"van_buren": {
+				"van_buren":
+				{
 					"name": "Van Buren",
 					"link": "http://fodev.net/forum/index.php/topic,29525.0.html",
 					"singleplayer": true
 				},
-				"what_remains": {
+				"what_remains":
+				{
 					"name": "What Remains",
 					"link": "http://www.rpgcodex.net/forums/index.php?forums/what-remains.43/",
 					"singleplayer": true
 				},
-				"wasteland": {
+				"wasteland":
+				{
 					"name": "Wasteland 2155",
 					"website": "http://wasteland2155.net/",
 					"closed": true
 				}
 			},
-			"dirs": {
+			"dirs":
+			{
 				"average": "average",
 				"db": "database",
 				"history": "history",
 				"misc": "misc"
 			},
-			"files": {
+			"files":
+			{
 				"status": "status.json",
 				"history": "{DIR:history}/servers/all.json",
 				"server_history": "{DIR:history}/servers/{ID}.json",
