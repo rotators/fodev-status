@@ -82,7 +82,6 @@ class FOstatusUI
 		$line = $e->getLine();
 		$trace = $e->getTrace();
 
-
 		$format = "\n\t\t<tr>\n\t\t\t<td><strong>%s</strong></td>\n\t\t\t<td>%s</td>\n\t\t</tr>";
 		self::content( "\n\t<table>\n\t\t<thead>\n\t\t\t<tr>\n\t\t\t\t<th style='text-align: left;'>Details</th>\n\t\t\t</tr>\n\t\t</thead>" );
 		self::content( $format, 'Type', get_class($e) );
@@ -544,7 +543,8 @@ $(document).ready( function()
 					self::addLocalScript( $url, 7 );
 				}
 
-				if( file_exists( "css/$module.css" ))
+				$url = "css/$module.css";
+				if( file_exists( $url ))
 				{
 					self::$Slim->hook( 'html:head:css', function() use( $url )
 					{

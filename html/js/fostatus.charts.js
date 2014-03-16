@@ -109,13 +109,16 @@ FOstatusCharts.prototype.CreateTimeline = function( name, container, title, subt
 		enabled: true,
 		selected: 5
 	};
+	chart.xAxis = {
+		type: 'datetime',
+	};
 	chart.yAxis = {
 		min: 0,
 		lineWidth: 1
 	};
-
 	chart.tooltip = {
-		shared: true
+		shared: true,
+		xDateFormat: '%e %B %Y'
 	};
 	chart.navigator =
 	{
@@ -131,6 +134,11 @@ FOstatusCharts.prototype.CreateTimeline = function( name, container, title, subt
 	{
 		series:
 		{
+			dataGrouping: {
+				dateTimeLabelFormats: {
+					day: ['%e %B %Y']
+				}
+			},
 			pointRange: 24 * 3600 * 1000,
 			pointInterval: 24 * 3600 * 1000,
 			connectNulls: false,

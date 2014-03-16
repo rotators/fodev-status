@@ -20,6 +20,13 @@ class About extends FOstatusModule
 			$this->aboutSoftware();
 		});
 
+		$this->RoutesInfo['about/config'] = "Informations about configuration format";
+		parent::$Slim->get( '/about/config/', function()
+		{
+
+			$this->aboutConfig();
+		});
+
 		$this->RoutesInfo['about/modules'] = "Auto-generated informations about used modules";
 		parent::$Slim->get( '/about/modules/', function()
 		{
@@ -193,6 +200,114 @@ class About extends FOstatusModule
 					$instance->Info );
 			}
 		}
+	}
+
+	private function aboutConfig()
+	{
+		$context = array(
+			'server' => array(
+				'!'			=> 'Game definition',
+				'='			=> 'test',
+				'=id'			=> 'Virtual. Set to server identifier when returning array of servers',
+				'=address'		=> 'Server will be checked only if both fields are set',
+				'=url'			=> 'If <strong>website</strong> is set, <strong>link</strong> should be ignored',
+				'=noping'		=> 'If true, server status will not be checked',
+				'=color'		=> 'Should be respected by all types of charts',
+				'id@id'			=> '',
+				'name*'			=> 'Server name',
+				'host@address'		=> 'Game address',
+				'port@address'		=> 'Game port',
+				'website@url'		=> 'Address of official game site',
+				'link@url'		=> 'Place where to look for general informations about game - forum thread, games listings sites, etc.',
+				'source'		=> 'Link to game source',
+				'librarian'		=> 'Internal server ID set by Librarian. used to download and parse server database',
+				'irc'			=> 'IRC channel, on ForestNet network, for given server, must start with "<strong>#</strong>"',
+				'color@color'		=> 'Color of server used when drawing charts',
+				'singleplayer@noping'	=> 'Boolean. Defines singleplayer-only game',
+				'closed@noping'		=> 'Boolean. Server is no longer online, or not yet open for public'
+			),
+			'files' => array(
+				'!'			=> 'Contains paths to all available data files<br>When property contains string like "<strong>{DIR:name}</strong>", config parser must replace it with property <strong>name</strong> in <strong>dirs</strong> section',
+				'?'			=> 'TODO'
+			),
+			'dirs' => array(
+				'!'			=> 'Dirs definitions, used when parsing entries from <strong>files</strong> section',
+				''			=> 'Properties in this section are not supposed to be used directly as they are just a simple replacements, and may change without warning'
+			)
+		);
+
+		FOstatusUI::content( "\n\t<table>" );
+		foreach( $context as $context_name => $context_info )
+		{
+			FOstatusUI::content( "\n\t\t<tr>\n\t\t\t<td>%s</td>\n\t\t\t<td></td>\n\t\t\t<td>%s</td>\n\t\t\t<td></td>\n\t\t</tr>",
+				$context_name,
+				isset( $context[$context_name]['!'])
+					? $context[$context_name]['!']
+					: ''
+			);
+			FOstatusUI::content( "\n\t\t<tr>\n\t\t\t<td>{</td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t</tr>" );
+
+			$info = array();
+			foreach( $context_info as $var_name => $var_description )
+			{
+				$required = false;
+				$general = NULL;
+				
+				if( $var_name == '!' )
+					continue; // already checked
+				elseif( substr($var_name,0,1) == '=' )
+				{
+					$name = substr( $var_name, 1 );
+					if( $name )
+						$info[$name] = $var_description;
+					continue;
+				}
+				else
+				{
+					FOstatusUI::content( "\n\t\t<tr>" );
+					$infos = array();
+					if( substr( $var_name, -1 ) == '*' )
+					{
+						$required = true;
+						$var_name = substr( $var_name, 0, -1 );
+						FOstatusUI::content( "\n\t\t\t<td>(required)</td>" );
+					}
+					else
+						FOstatusUI::content( "\n\t\t\t<td></td>" );
+
+					$expl = explode( '@', $var_name, 2 );
+
+					if( count($expl) > 1 )
+					{
+						$var_name = $expl[0];
+						$infos = explode( ',', $expl[1] );
+					}
+
+					FOstatusUI::content( "\n\t\t\t<td>%s</td>\n\t\t\t<td>%s</td>",
+						$var_name, $var_description );
+
+					if( count($infos) )
+					{
+						$useInfo = array();
+						foreach( $infos as $extra )
+						{
+							if( isset($info[$extra]) )
+							{
+								array_push( $useInfo, $info[$extra] );
+							}
+						}
+						FOstatusUI::content( "\n\t\t\t<td>%s</td> ",
+							implode( '<br>', $useInfo ));
+					}
+					else
+						FOstatusUI::content( "\n\t\t\t<td></td>" );
+
+					FOstatusUI::content( "\n\t\t</tr>" );
+				}
+			}
+			FOstatusUI::content( "\n\t\t<tr>\n\t\t\t<td>}</td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t</tr>" );
+		}
+		FOstatusUI::content( "\n\t</table>" );
 	}
 };
 
