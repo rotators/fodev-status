@@ -11,6 +11,11 @@ if( file_exists( '../fodev.php' ) && is_readable( '../fodev.php' ))
 
 class FOstatusUI
 {
+	// Description
+	public static $CoreDescription = 'Rendering functions';
+
+	// if true, main rendering hook won't be executed
+	public static $Disable = false;
 
 	private static $Slim = NULL;
 	private static $Root = NULL;
@@ -208,6 +213,9 @@ class FOstatusUI
 		// main rendering hook
 		self::$Slim->hook( 'html', function()
 		{
+			if( self::$Disable )
+				return;
+
 			self::response( "<!DOCTYPE html>\n<html lang='en'>" );
 
 			self::$Slim->applyHook( 'html:head' );

@@ -87,16 +87,20 @@ class About extends FOstatusModule
 	{
 		FOstatusUI::title( 'About : modules' );
 
-		FOstatusUI::content( "\n<strong id='Core'>Core</strong><br/>" );
-
-		if( isset(parent::$CoreDescription) )
-			FOstatusUI::content( "\nDescription: %s<br/>", parent::$CoreDescription );
-
-		$class = new ReflectionClass( 'FOstatusModule' );
-		if( $class )
+		foreach( array( 'Core' => 'FOstatusModule', 'UI' => 'FOstatusUI' ) as $coreName => $coreClass )
 		{
-			FOstatusUI::content( "\nLast update: %s<br/>",
-				date ("j F Y, H:i", filemtime( $class->getFileName() )));
+			FOstatusUI::content( "\n<hr>\n<strong id='%s'>%s</strong><br/>",
+				$coreName, $coreName );
+
+			if( isset($coreClass::$CoreDescription) )
+				FOstatusUI::content( "\nDescription: %s<br/>", $coreClass::$CoreDescription );
+
+			$class = new ReflectionClass( $coreClass );
+			if( $class )
+			{
+				FOstatusUI::content( "\nLast update: %s<br/>",
+					date ("j F Y, H:i", filemtime( $class->getFileName() )));
+			}
 		}
 
 		$instances = parent::$Instances;

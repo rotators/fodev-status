@@ -63,7 +63,7 @@ class Server extends FOstatusModule
 		FOstatusUI::addFOstatus( $this );
 	}
 
-	private function serverLogo( $id )
+	public function serverLogo( $id )
 	{
 		$file = sprintf( "gfx/logo/%s.png", $id );
 		if( file_exists( $file ))
