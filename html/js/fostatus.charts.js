@@ -189,6 +189,27 @@ FOstatusCharts.prototype.CreatePercentPie = function( name, container, title, su
 	return( chart );
 }
 
+FOstatusCharts.prototype.CreateStackedColumn = function( name, container, title, subtitle )
+{
+	var chart = this.BaseChart( name, container, title, subtitle );
+
+	chart.chart.type = 'column';
+
+	chart.xAxis =
+	{
+		categories: []
+	};
+	chart.plotOptions =
+	{
+		column:
+		{
+			stacking: 'normal'
+		}
+	};
+
+	return( chart );
+}
+
 FOstatusCharts.prototype.GetVisibleSeries = function( chart )
 {
 	var result = [];

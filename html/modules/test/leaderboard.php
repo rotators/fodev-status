@@ -13,6 +13,8 @@ class Leaderboard extends FOstatusModule
 		parent::$Slim->get( '/test/leaderboard/', function()
 		{
 			$this->js();
+
+			FOstatusUI::content( "\n\t<div id='chart'></div>" );
 		});
 	}
 

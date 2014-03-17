@@ -93,7 +93,8 @@
 					"name": "Next Day",
 					"host": "62.75.213.100",
 					"port": 4000,
-					"website": "http://www.fonextday.ru/"
+					"website": "http://www.fonextday.ru/",
+					"irc": "#nextday"
 				},
 				"phoenix" :
 				{

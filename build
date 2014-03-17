@@ -309,7 +309,9 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 					if( !exists($lifetime{server}{$fid}{introduced}) )
 					{
 						$lifetime{server}{$fid}{introduced} = $fo->Timestamp( $year, $month, $day );
-						$lifetime{server}{$fid}{days} = int(0);
+						$lifetime{server}{$fid}{days_known} =
+						$lifetime{server}{$fid}{days_online} =
+						int(0);
 					}
 
 					if( !exists($history{$year}{$month}{$day}) )
@@ -320,6 +322,8 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 					{
 						$history{$year}{$month}{$day} += $online;
 					}
+
+					$lifetime{server}{$fid}{days_known}++;
 
 					if( $online >= 0 )
 					{
@@ -333,7 +337,7 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 
 						$daily{$year}{$month}{$day}{server}{$fid}{players} = $online;
 
-						$lifetime{server}{$fid}{days}++;
+						$lifetime{server}{$fid}{days_online}++;
 					}
 
 					if( !exists( $max_players{server}{$fid} ) || $online >= $max_players{server}{$fid}{players} )
