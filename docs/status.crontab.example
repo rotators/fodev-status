@@ -11,10 +11,10 @@
 #	command line
 
 # Ping servers every minute (or at least try to)
-*  * * * * /path/to/status.cron ping /path/to/config.json
+*    * * * * /path/to/status.cron ping /path/to/config.json
 
 # Librarian databases dumps are updated at 04:03
-15 4 * * * /path/to/status.cron build /path/to/config.json
+15   4 * * * /path/to/status.cron build /path/to/config.json
 
 # Rebuild without using external sources
-0  * * * * /path/to/status.cron build /path/to/config.json -s -r
+*/10 * * * * /path/to/status.cron build /path/to/config.json -s -r

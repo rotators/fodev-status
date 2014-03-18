@@ -126,6 +126,7 @@ FOstatusCharts.prototype.CreateTimeline = function( name, container, title, subt
 			{
 				dateTimeLabelFormats:
 				{
+					hour: ['%e %B %Y'],
 					day: ['%e %B %Y']
 				}
 			},
