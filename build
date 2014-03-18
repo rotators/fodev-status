@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Archive::Zip qw( :ERROR_CODES );
+use Date::Calc qw( Delta_Days Time_to_Date );
 use File::Basename qw( dirname );
 use File::Path qw( make_path );
 use LWP;
@@ -294,20 +295,26 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 		save_ymd( \%server_history, 'server_history', $fid, ( ID => $fid ))
 			if( scalar(keys(%server_history)) );
 
+		my( $first_year, $first_month, $first_day, $last_year, $last_month, $last_day );
 		foreach my $year ( sort{$a <=> $b} keys(%server_history) )
 		{
 			next if( !($year =~ /^[0-9]+$/ ));
+
 			foreach my $month ( sort{$a <=> $b} keys($server_history{$year}) )
 			{
 				next if( !($month =~ /^[0-9]+$/ ));
+
 				foreach my $day ( sort{$a <=> $b} keys($server_history{$year}{$month}) )
 				{
 					next if( !($day =~ /^[0-9]+$/ ));
-					my $online = $server_history{$year}{$month}{$day};
-					$online = int($online);
+
+					( $last_year, $last_month, $last_day ) = ( $year, $month, $day );
+
+					my $online = int( $server_history{$year}{$month}{$day} );
 
 					if( !exists($lifetime{server}{$fid}{introduced}) )
 					{
+						( $first_year, $first_month, $first_day ) = ( $year, $month, $day );
 						$lifetime{server}{$fid}{introduced} = $fo->Timestamp( $year, $month, $day );
 						$lifetime{server}{$fid}{days_known} =
 						$lifetime{server}{$fid}{days_online} =
@@ -315,15 +322,9 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 					}
 
 					if( !exists($history{$year}{$month}{$day}) )
-					{
-						$history{$year}{$month}{$day} = $online;
-					}
+						{ $history{$year}{$month}{$day} = $online; }
 					else
-					{
-						$history{$year}{$month}{$day} += $online;
-					}
-
-					$lifetime{server}{$fid}{days_known}++;
+						{ $history{$year}{$month}{$day} += $online; }
 
 					if( $online >= 0 )
 					{
@@ -347,6 +348,12 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 					}
 				}
 			}
+		}
+
+		if( exists($lifetime{server}{$fid}) )
+		{
+			my $delta = Delta_Days( $first_year, $first_month, $first_day, $last_year, $last_month, $last_day );
+			$lifetime{server}{$fid}{days_known} = int($delta+1);
 		}
 
 		if( exists($average_short{server}{$fid}{players}) && exists($average_short{server}{$fid}{days}) )

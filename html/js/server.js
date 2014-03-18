@@ -71,17 +71,17 @@ function start( id )
 		server_history:
 		{
 			name: 'Players',
-			color: '#4f83b0',
+			color: fo.GetOption( 'colors', 'players' ),
 		},
 		server_average:
 		{
 			name: 'Average',
-			color: '#45ab89'
+			color: fo.GetOption( 'colors', 'average' ),
 		},
 		max_players:
 		{
 			name: 'Server record',
-			color: '#b1000d',
+			color: fo.GetOption( 'colors', 'record' ),
 			extract: true,
 			series: 'server_history',
 		}

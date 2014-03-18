@@ -51,7 +51,7 @@ class Average extends FOstatusModule
 
 	private function content()
 	{
-		FOstatusUI::content( "\n\t<div id='chart'></div>" );
+		FOstatusUI::contentStatic( 'chart' );
 	}
 };
 

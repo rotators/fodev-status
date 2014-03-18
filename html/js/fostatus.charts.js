@@ -35,9 +35,15 @@ FOstatusCharts.prototype.BaseChart = function( name, container, title, subtitle 
 			animation: true,
 			backgroundColor: null
 		},
+		colors: [ '#ffffff' ],
 		credits:
 		{
 			enabled: false
+		},
+		exporting:
+		{
+			enabled: true,
+			scale: 2
 		},
 		legend:
 		{
@@ -62,13 +68,8 @@ FOstatusCharts.prototype.BaseChart = function( name, container, title, subtitle 
 			showDuration: 1000,
 			hideDuration: 1000
 		},
-		exporting:
-		{
-			enabled: true,
-			scale: 2
-		},
 		spacingLeft: 10,
-		spacingRight: 10,
+		spacingRight: 10
 	};
 
 	if( title != null )
@@ -78,7 +79,9 @@ FOstatusCharts.prototype.BaseChart = function( name, container, title, subtitle 
 			text: title,
 			style:
 			{
-				color: '#00FF00'
+				color: '#fafafa',
+//				fontFamily: 'JH_FalloutRegular',
+//				fontSize: '10px'
 			}
 		};
 	}
@@ -90,7 +93,9 @@ FOstatusCharts.prototype.BaseChart = function( name, container, title, subtitle 
 			text: subtitle,
 			style:
 			{
-				color: '#00AA00'
+				color: '#aeaeae',
+//				fontFamily: 'JH_FalloutRegular',
+//				fontSize: '9px'
 			}
 		}
 	}
@@ -101,25 +106,8 @@ FOstatusCharts.prototype.BaseChart = function( name, container, title, subtitle 
 FOstatusCharts.prototype.CreateTimeline = function( name, container, title, subtitle, yAxisName )
 {
 	var chart = this.BaseChart( name, container, title, subtitle );
-	chart.chart.type = 'spline';
 
-	chart.spacingLeft = 10;
-	chart.spacingRight = 10;
-	chart.rangeSelector = {
-		enabled: true,
-		selected: 5
-	};
-	chart.xAxis = {
-		type: 'datetime',
-	};
-	chart.yAxis = {
-		min: 0,
-		lineWidth: 1
-	};
-	chart.tooltip = {
-		shared: true,
-		xDateFormat: '%e %B %Y'
-	};
+	chart.chart.type = 'spline';
 	chart.navigator =
 	{
 		enabled: true,
@@ -134,8 +122,10 @@ FOstatusCharts.prototype.CreateTimeline = function( name, container, title, subt
 	{
 		series:
 		{
-			dataGrouping: {
-				dateTimeLabelFormats: {
+			dataGrouping:
+			{
+				dateTimeLabelFormats:
+				{
 					day: ['%e %B %Y']
 				}
 			},
@@ -144,6 +134,79 @@ FOstatusCharts.prototype.CreateTimeline = function( name, container, title, subt
 			connectNulls: false,
 			shadow: true
 		}
+	};
+	chart.rangeSelector =
+	{
+		enabled: true,
+		selected: 5,
+		buttonTheme:
+		{
+			fill: 'none',
+			stroke: '#c0c0c0',
+			style:
+			{
+				color: '#c0c0c0'
+			},
+			states:
+			{
+				hover:
+				{
+					fill: 'none',
+					stroke: '#c0c0c0',
+					style:
+					{
+						color: '#ffffff'
+					}
+				},
+				select:
+				{
+					fill: '#c0c0c0',
+					stroke: '#c0c0c0',
+					style:
+					{
+						color: '#000000'
+					}
+				}
+			}
+		},
+		inputDateFormat: '%e %b %Y',
+		inputEditDateFormat: '%d.%m.%Y',
+		inputDateParser: function( value )
+		{
+			// what a crap
+			value = value.split('.');
+			return( new Date(
+				parseInt(value[2]),
+				parseInt(value[1])-1,
+				parseInt(value[0])+1
+			));
+		},
+		inputStyle:
+		{
+			color: '#aaaaaa'
+		}
+	};
+	chart.scrollbar =
+	{
+		rifleColor: '#191919',
+		trackBackgroundColor: 'none',
+		trackBorderColor: 'none',
+	}
+	chart.spacingLeft = 10;
+	chart.spacingRight = 10;
+	chart.tooltip =
+	{
+		shared: true,
+		xDateFormat: '%e %B %Y'
+	};
+	chart.xAxis =
+	{
+		type: 'datetime',
+	};
+	chart.yAxis =
+	{
+		min: 0,
+		lineWidth: 1
 	};
 
 	if( yAxisName != null )
@@ -168,16 +231,16 @@ FOstatusCharts.prototype.CreatePercentPie = function( name, container, title, su
 		pie: {
 			borderColor: '#cacaca',
 			allowPointSelect: true,
-			cursor: "pointer",
+			cursor: 'pointer',
 			dataLabels: {
 				enabled: true,
-				format: "{point.name} ({point.percentage:.1f}%)"
+				format: '{point.name} ({point.percentage:.1f}%)'
 			},
 			showInLegend: true
 		}
 	};
 	chart.tooltip = {
-		pointFormat: "{series.name}: <strong>{point.y}</strong>"
+		pointFormat: '{series.name}: <strong>{point.y}</strong>'
 	};
 	chart.series = [{
 		type: 'pie',

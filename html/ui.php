@@ -33,6 +33,9 @@ class FOstatusUI
 	public static $vHighcharts = '3.0.9';
 	public static $vHighstock = '1.3.9';
 
+	// enable/disable charts exporting
+	public static $chartsExport = false;
+
 	// keeps track of already added scripts
 	private static $jsJquery = false;
 	private static $jsHighcharts = false;
@@ -455,7 +458,8 @@ $(document).ready( function()
 
 		$url .= '.js';
 
-		self::addScript( $url, 2 );
+		self::addScript( $url, -9999 );
+
 	}
 
 	// add highcharts to generated page
@@ -472,6 +476,7 @@ $(document).ready( function()
 		if( isset(self::$vHighcharts) )
 			$url .= self::$vHighcharts . '/';
 
+		$base_url = $url;
 		$url .= 'highcharts';
 
 		if( !self::$useMinimizedJS )
@@ -479,7 +484,19 @@ $(document).ready( function()
 
 		$url .= '.js';
 
-		self::addScript( $url, 3 );
+		self::addScript( $url, -9998 );
+
+		if( self::$chartsExport )
+		{
+			$url = $base_url . 'modules/exporting';
+
+			if( !self::$useMinimizedJS )
+				$url .= '.src';
+
+			$url .= '.js';
+
+			self::addScript( $url, -9996 );
+		}
 	}
 
 	// add highstock to generated page
@@ -496,6 +513,7 @@ $(document).ready( function()
 		if( isset(self::$vHighstock) )
 			$url .= self::$vHighstock . '/';
 
+		$base_url = $url;
 		$url .= 'highstock';
 
 		if( !self::$useMinimizedJS )
@@ -503,7 +521,19 @@ $(document).ready( function()
 
 		$url .= '.js';
 
-		self::addScript( $url, 4 );
+		self::addScript( $url, -9997 );
+
+		if( self::$chartsExport )
+		{
+			$url = $base_url . 'modules/exporting';
+
+			if( !self::$useMinimizedJS )
+				$url .= '.src';
+
+			$url .= '.js';
+
+			self::addScript( $url, -9995 );
+		}
 	}
 
 	// adds fostatus*.js to generated page
@@ -519,7 +549,7 @@ $(document).ready( function()
 		if( self::$useMinimizedJS && file_exists( 'js/fostatus.min.js' ))
 			$url = 'fostatus.min.js';
 
-		self::addLocalScript( $url, 5 );
+		self::addLocalScript( $url, -9994 );
 
 		if( $charts )
 		{
@@ -529,7 +559,7 @@ $(document).ready( function()
 			if( self::$useMinimizedJS && file_exists( 'js/fostatus.charts.min.js' ))
 				$url = 'fostatus.charts.min.js';
 
-			self::addLocalScript( $url, 6 );
+			self::addLocalScript( $url, -9993 );
 		}
 
 		if( isset($module) && is_subclass_of( $module, 'FOstatusModule' ))
@@ -548,7 +578,7 @@ $(document).ready( function()
 				{
 					self::addJquery();
 					self::$jsFOstatusModule = true;
-					self::addLocalScript( $url, 7 );
+					self::addLocalScript( $url, -9992 );
 				}
 
 				$url = "css/$module.css";
@@ -594,6 +624,17 @@ $(document).ready( function()
 			self::$content = '';
 
 		self::$content .= $args;
+	}
+
+	public static function contentStatic( $name )
+	{
+		if( !isset($name) )
+			return;
+
+		if( !file_exists( "static/$name.html" ))
+			return;
+
+		self::content( "\n%s", file_get_contents( "static/$name.html" ));
 	}
 
 	public static function footer( $format )

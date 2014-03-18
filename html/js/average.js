@@ -9,7 +9,7 @@ function start( /* servers */ )
 		if( hidden.length > 0 )
 		{
 			var visible = foCharts.GetVisibleSeries( chart );
-			var url = rootDir+'/history/'+visible.join(',')+(visible.length>0?'/':'');
+			var url = rootDir+'/average/'+visible.join(',')+(visible.length>0?'/':'');
 
 			console.log( 'Redirecting: '+url );
 			window.location = url;

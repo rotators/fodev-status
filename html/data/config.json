@@ -94,7 +94,8 @@
 					"host": "62.75.213.100",
 					"port": 4000,
 					"website": "http://www.fonextday.ru/",
-					"irc": "#nextday"
+					"irc": "#NextDay",
+					"color": "#ca9d00"
 				},
 				"phoenix" :
 				{
@@ -189,6 +190,19 @@
 					"closed": true
 				}
 			},
+			"files":
+			{
+				"average": "{DIR:average}/all.json",
+				"average_short": "{DIR:average}/short.json",
+				"day_summary": "{DIR:history}/{YEAR}/{MONTH}/{DAY}.json",
+				"history": "{DIR:history}/all.json",
+				"librarian": "{DIR:misc}/librarian.json",
+				"lifetime": "{DIR:misc}/lifetime.json",
+				"max_players": "{DIR:misc}/max_players.json",
+				"server_average": "{DIR:average}/{ID}.json",
+				"server_history": "{DIR:history}/{ID}.json",
+				"status": "status.json"
+			},
 			"dirs":
 			{
 				"average": "average",
@@ -196,18 +210,12 @@
 				"history": "history",
 				"misc": "misc"
 			},
-			"files":
+			"colors":
 			{
-				"status": "status.json",
-				"history": "{DIR:history}/servers/all.json",
-				"server_history": "{DIR:history}/servers/{ID}.json",
-				"day_summary": "{DIR:history}/{YEAR}/{MONTH}/{DAY}.json",
-				"lifetime": "{DIR:misc}/lifetime.json",
-				"average_short": "{DIR:average}/short.json",
-				"average": "{DIR:average}/servers/all.json",
-				"server_average": "{DIR:average}/servers/{ID}.json",
-				"max_players": "{DIR:misc}/max_players.json",
-				"librarian": "{DIR:misc}/librarian.json"
+				"availability": "#522332",
+				"average": "#45ab89",
+				"players": "#4f83b0",
+				"record": "#b1000d"
 			}
 		}
 	}

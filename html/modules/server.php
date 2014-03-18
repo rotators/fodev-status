@@ -38,9 +38,9 @@ class Server extends FOstatusModule
 
 			FOstatusUI::content( "
 	<div id='logo' class='center'></div>
-	<div id='link' class='center font_fallout'></div>
-	<div id='chart'></div>"
+	<div id='link' class='center font_fallout'></div>"
 			);
+			FOstatusUI::contentStatic( 'chart' );
 
 			$compare = array();
 			if( $this->isModule( 'History' ))
@@ -71,9 +71,9 @@ class Server extends FOstatusModule
 
 		$file = sprintf( "cache/%s.logo-placeholder.png", $id );
 
-		/*if( file_exists( $file ))
+		if( file_exists( $file ))
 			return( $file );
-		else*/if( isset(parent::$FO->Config['server'][$id]['name']) )
+		elseif( isset(parent::$FO->Config['server'][$id]['name']) )
 		{
 			$name = parent::$FO->Config['server'][$id]['name'];
 

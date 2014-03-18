@@ -20,14 +20,21 @@ function start()
 	[
 		{
 			name: 'Availability',
+			color: fo.GetOption( 'colors', 'availability' ),
+			tooltip:
+			{
+				valueSuffix: "%"
+			},
 			data: []
 		},
 		{
 			name: 'Maximum players',
+			color: fo.GetOption( 'colors', 'players' ),
 			data: []
 		},
 		{
 			name: 'Average players',
+			color: fo.GetOption( 'colors', 'average' ),
 			data: []
 		}
 	];
@@ -43,7 +50,8 @@ function start()
 		if( lifetime != null && lifetime.server[server.id] != null )
 		{
 			add = true;
-			data.push( (lifetime.server[server.id].days_online * 100)/lifetime.server[server.id].days_known );
+			var percent = (lifetime.server[server.id].days_online * 100)/lifetime.server[server.id].days_known;
+			data.push( parseInt(percent) );
 		}
 		else
 			data.push( 0 );
@@ -53,17 +61,22 @@ function start()
 			add = true;
 			data.push( players.server[server.id].players );
 		}
+		else
+			data.push( 0 );
 
 		if( average != null && average.server[server.id] != null )
 		{
 			add = true;
 			data.push( average.server[server.id] );
 		}
+		else
+			data.push( 0 );
 
 		if( !add )
 			return( true ); // continue;
 
 		chart.xAxis.categories.push( server.name );
+
 		server_data.push( data );
 	});
 
@@ -74,6 +87,7 @@ function start()
 			chart.series[idx].data.push( data );
 		});
 	});
+	server_data = null;
 
 	chart = new Highcharts.Chart( chart );
 }

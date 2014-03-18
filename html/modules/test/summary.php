@@ -18,7 +18,7 @@ class Summary extends FOstatusModule
 		{
 			$this->js();
 
-			FOstatusUI::content( "\n\t<div id='chart'></div>" );
+			FOstatusUI::contentStatic( 'chart' );
 		});
 	}
 

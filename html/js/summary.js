@@ -18,7 +18,7 @@ function start()
 			data: foCharts.ConvertTimestampArray( jsonData ),
 			name: 'Players',
 			id: 'players',
-			color: '#4f83b0',
+			color: fo.GetOption( 'colors', 'players' )
 		};
 
 		chart.addSeries( seriesOptions, true ).update();
@@ -31,7 +31,7 @@ function start()
 			data: foCharts.ConvertTimestampArray( jsonData ),
 			name: 'Average',
 			id: 'average',
-			color: '#45ab89',
+			color: fo.GetOption( 'colors', 'average' )
 		};
 
 		chart.addSeries( seriesOptions, true ).update();
@@ -46,7 +46,8 @@ function start()
 			type: 'flags',
 			shape: 'squarepin',
 			onSeries: 'players',
-			name: 'Servers record'
+			name: 'Servers records',
+			color: fo.GetOption( 'colors', 'record' )
 		};
 		var records = [];
 

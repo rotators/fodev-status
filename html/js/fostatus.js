@@ -184,6 +184,20 @@ FOstatus.prototype.GetServer = function( want_id )
 	return( result );
 };
 
+FOstatus.prototype.GetOption = function( category, option )
+{
+	if( category == null || option == null )
+		return( null );
+
+	if( this.Config == null || this.Config[category] == null )
+		return( null );
+
+	if( this.Config[category][option] != null )
+		return( this.Config[category][option] );
+
+	return( null );
+}
+
 FOstatus.prototype.GetServerOption = function( server_id, option )
 {
 	if( server_id == null || option == null )
