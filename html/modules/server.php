@@ -36,10 +36,7 @@ class Server extends FOstatusModule
 
 			FOstatusUI::jsArguments( $jsArguments );
 
-			FOstatusUI::content( "
-	<div id='logo' class='center'></div>
-	<div id='link' class='center font_fallout'></div>"
-			);
+			FOstatusUI::contentStatic( 'server' );
 			FOstatusUI::contentStatic( 'chart' );
 
 			$compare = array();

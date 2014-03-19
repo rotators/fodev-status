@@ -55,33 +55,6 @@ class History extends FOstatusModule
 	{
 		FOstatusUI::contentStatic( 'chart' );
 	}
-
-	protected function footer( $servers )
-	{
-		$elements = array();
-		if( $servers !== true )
-			array_push( $elements, "<a href='".parent::$Root."/history/'>All servers</a>" );
-
-		if( $servers === true || (is_array($servers) && count($servers) > 1) )
-			array_push( $elements, "<button id='remove_hidden' type='button'>Remove hidden servers</button>" );
-
-		if( $this->isModule( 'Server' ))
-		{
-			if( $servers !== true && is_array($servers) && count($servers) == 1 )
-				array_push( $elements, "<a href='".parent::$Root."/server/".$servers[0]."/'>Server page</a>" );
-		}
-
-		if( count($elements) == 1 )
-		{
-			FOstatusUI::footer( "\n\t\t<div class = 'right'>%s</div>",
-				$elements[0] );
-		}
-		elseif( count($elements) > 1 )
-		{
-			FOstatusUI::footer( "\n\t\t<div class = 'right'>\n\t\t\t&#171;\n\t\t\t%s\n\t\t\t&#187;</div>",
-				implode( "\n\t\t\t&#183;\n\t\t\t", $elements ));
-		}
-	}
 };
 
 ?>

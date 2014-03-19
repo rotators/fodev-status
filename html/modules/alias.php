@@ -10,6 +10,8 @@ class Alias extends FOstatusModule
 {
 	public function init()
 	{
+		if( $this->isModule( 'About' ))
+			$this->addAlias( 'm', 'about/modules' );
 		if( $this->isModule( 'Average' ))
 			$this->addAlias( 'a', 'average' );
 		if( $this->isModule( 'History' ))
@@ -22,7 +24,7 @@ class Alias extends FOstatusModule
 
 	public function addAlias( $from, $to )
 	{
-		if( preg_match( '!^[a-z]+$!', $from ) && preg_match( '!^[a-z]+$!', $to ))
+		if( preg_match( '!^[a-z]+$!', $from ) && preg_match( '!^[a-z/]+$!', $to ))
 		{
 			$this->RoutesInfo[$from] = sprintf( "-> <a href='%s/%s/'>%s/</a>",
 				parent::$Root, $to, $to );

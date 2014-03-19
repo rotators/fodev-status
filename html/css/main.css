@@ -38,7 +38,7 @@
 	color: #0c1;
 }
 
-#server_status.offline, #server_status.closed, #server_status.singleplayer
+#server_status.offline.not_seen, #server_status.closed, #server_status.singleplayer
 {
 	line-height: 17px;
 }

@@ -199,8 +199,9 @@
 				"librarian": "{DIR:misc}/librarian.json",
 				"lifetime": "{DIR:misc}/lifetime.json",
 				"max_players": "{DIR:misc}/max_players.json",
-				"server_average": "{DIR:average}/{ID}.json",
-				"server_history": "{DIR:history}/{ID}.json",
+				"servers": "{DIR:misc}/servers.json",
+				"server_average": "{DIR:average}/server_{ID}.json",
+				"server_history": "{DIR:history}/server_{ID}.json",
 				"status": "status.json"
 			},
 			"dirs":

@@ -11,6 +11,19 @@ function start()
 
 	chart = Highcharts.StockChart( chart );
 
+	ShowInfo( 'Loading servers...' );
+	fo.LoadJSON( dataDir+fo.GetPath( 'servers' ), 'servers', function( jsonData )
+	{
+		var seriesOptions = {
+			data: foCharts.ConvertTimestampArray( jsonData ),
+			name: 'Servers',
+			id: 'servers',
+			color: fo.GetOption( 'colors', 'servers' )
+		};
+
+		chart.addSeries( seriesOptions, true ).update();
+	});
+
 	ShowInfo( 'Loading history...' );
 	fo.LoadJSON( dataDir+fo.GetPath( 'history' ), 'history', function( jsonData )
 	{
@@ -95,5 +108,4 @@ function start()
 	ShowInfo( 'Finishing...' );
 	chart.redraw();
 	HideInfo();
-	console.log( Highcharts );
 }

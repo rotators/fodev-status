@@ -658,6 +658,17 @@ $(document).ready( function()
 		self::$footer .= $args;
 	}
 
+	public static function footerStatic( $name )
+	{
+		if( !isset($name) )
+			return;
+
+		if( !file_exists( "static/$name.html" ))
+			return;
+
+		self::footer( "\n%s", file_get_contents( "static/$name.html" ));
+	}
+
 	public static function footerTimeline( array $servers, $path )
 	{
 		$elements = array();

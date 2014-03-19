@@ -242,6 +242,7 @@ if( -r 'ping.db' )
 $options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'history' ));
 $options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'average' ));
 $options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'average_short' ));
+$options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'servers' ));
 $options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'max_players' ));
 $options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'lifetime' ));
 $options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'librarian' ));
@@ -254,7 +255,7 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 		%history, %server_history,
 		%average, %average_short, %server_average,
 
-		%max_players, %lifetime, %librarian, %daily
+		%servers, %max_players, %lifetime, %librarian, %daily
 	);
 
 	foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
@@ -308,14 +309,13 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 				{
 					next if( !($day =~ /^[0-9]+$/ ));
 
-					( $last_year, $last_month, $last_day ) = ( $year, $month, $day );
-
 					my $online = int( $server_history{$year}{$month}{$day} );
 
 					if( !exists($lifetime{server}{$fid}{introduced}) )
 					{
 						( $first_year, $first_month, $first_day ) = ( $year, $month, $day );
 						$lifetime{server}{$fid}{introduced} = $fo->Timestamp( $year, $month, $day );
+						$lifetime{server}{$fid}{seen} =
 						$lifetime{server}{$fid}{days_known} =
 						$lifetime{server}{$fid}{days_online} =
 						int(0);
@@ -328,13 +328,18 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 
 					if( $online >= 0 )
 					{
+						( $last_year, $last_month, $last_day ) = ( $year, $month, $day );
+
+						if( !exists($servers{$year}{$month}{$day}) )
+							{ $servers{$year}{$month}{$day} = int(1); }
+						else
+							{ $servers{$year}{$month}{$day}++; }
+
 						$average_short{server}{$fid}{days}++;
 						$average_short{server}{$fid}{players} += $online;
 
 						if( exists($average_short{server}{$fid}{players}) && exists($average_short{server}{$fid}{days}) )
-						{
-							$server_average{$year}{$month}{$day} = int( $average_short{server}{$fid}{players} / $average_short{server}{$fid}{days} )
-						}
+							{ $server_average{$year}{$month}{$day} = int( $average_short{server}{$fid}{players} / $average_short{server}{$fid}{days} ); }
 
 						$daily{$year}{$month}{$day}{server}{$fid}{players} = $online;
 
@@ -354,6 +359,7 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 		{
 			my $delta = Delta_Days( $first_year, $first_month, $first_day, $last_year, $last_month, $last_day );
 			$lifetime{server}{$fid}{days_known} = int($delta+1);
+			$lifetime{server}{$fid}{seen} = $fo->Timestamp( $last_year, $last_month, $last_day );
 		}
 
 		if( exists($average_short{server}{$fid}{players}) && exists($average_short{server}{$fid}{days}) )
@@ -363,9 +369,7 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 			$average_short{server}{$fid} = int( $players / $days );
 		}
 		else
-		{
-			delete($average_short{server}{$fid});
-		}
+			{ delete($average_short{server}{$fid}); }
 
 		save_ymd( \%server_average, 'server_average', $fid, ( ID => $fid ))
 			if( scalar(keys(%server_average)) );
@@ -374,6 +378,7 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 		%server_history = ();
 	}
 
+	save_ymd( \%servers, 'servers' );		%servers = ();
 	save_ymd( \%history, 'history' );		%history = ();
 	save( \%librarian, 'librarian' );		%librarian = ();
 	save( \%average_short, 'average_short' );	%average_short = ();

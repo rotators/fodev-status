@@ -51,9 +51,13 @@ function update( first_time )
 			return;
 		}
 
+		// optional data
 		var average = fo.LoadJSON( dataDir+fo.GetPath( 'average_short' ), 'average_short' );
 		if( average.server == null )
 			average = null;
+		var lifetime = fo.LoadJSON( dataDir+fo.GetPath( 'lifetime' ), 'lifetime' );
+		if( lifetime.server == null )
+			lifetime = null;
 
 		// cache results until all servers are parsed
 		var divs_multiplayer = [], divs_singleplayer = [];
@@ -124,16 +128,35 @@ function update( first_time )
 				}
 				else
 				{
-					div.addClass( 'offline' );
 					content += 'Offline';
+					div.addClass( 'offline' );
 					if( !show_offline )
 						div.hide();
 				}
 
-				if( !singleplayer && average != null && average.server[server.id] != null )
-					content += ' (average players: '+average.server[server.id]+')';
-			}
+				if( !singleplayer )
+				{
+					if( average != null && average.server[server.id] != null )
+						content += ' (average players: '+average.server[server.id]+')';
 
+					if( !closed  )
+					{
+						if( lifetime != null && lifetime.server[server.id] != null && lifetime.server[server.id].seen != null )
+						{
+							content += '<br>Last seen: ';
+							var seen = new Date( lifetime.server[server.id].seen * 1000 );
+							var now = new Date();
+							var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+							if( now.getFullYear() == seen.getFullYear() && now.getMonth() == seen.getMonth() && now.getDate() == seen.getDate() )
+								content += 'Today';
+							else
+								content += seen.getDate()+' '+months[seen.getMonth()]+' '+seen.getFullYear();
+						}
+						else
+							div.addClass( 'not_seen' );
+					}
+				}
+			}
 
 			// append server status
 			if( content != null )

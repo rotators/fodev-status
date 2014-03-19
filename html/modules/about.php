@@ -33,12 +33,6 @@ class About extends FOstatusModule
 
 			$this->aboutModules();
 		});
-
-		$this->RoutesInfo['modules'] = "Shortcut";
-		parent::$Slim->get( '/modules/', function()
-		{
-			parent::$Slim->redirect( parent::$Root.'/about/modules/', 303 );
-		});
 	}
 
 	private function aboutMain()

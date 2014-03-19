@@ -48,7 +48,6 @@ abstract class FOStatusModule
 	// FOstatus object
 	public static $FO = NULL;
 
-
 	public static function initialize( $root, \Slim\Slim $app, FOstatus $status )
 	{
 		self::$Root = $root;
