@@ -47,7 +47,7 @@ class About extends FOstatusModule
 			'Perl'			=> 'http://www.perl.org/',
 			'PHP'			=> 'https://php.net/',
 			'Slim'			=> 'http://slimframework.com/',
-			'FOnlineFont'		=> 'https://github.com/wipe2238/fowww/blob/master/class/FOnlineFont.php',
+			'FOnlineFont'		=> 'https://github.com/wipe2238/fowww/blob/master/FOnlineFont.php',
 			'*2'			=> "\n\t<hr>",
 			'jQuery'		=> 'https://jquery.com/',
 			'Highcharts'		=> 'http://www.highcharts.com/products/highcharts/',

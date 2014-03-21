@@ -6,7 +6,7 @@ if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_ex
 	exit;
 }
 
-include( 'lib/FOnlineFont.php' );
+include( 'lib/fowww/FOnlineFont.php' );
 
 class Server extends FOstatusModule
 {
