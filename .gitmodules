@@ -1,0 +1,3 @@
+[submodule "html/lib/fowww"]
+	path = html/lib/fowww
+	url = https://github.com/wipe2238/fowww.git
