@@ -44,7 +44,7 @@ function start()
 	{
 		formatter: function()
 		{
-			var color = chart.colors[0];
+			var color = '#ffffff';
 			var name = this.value;
 			var server = fo.GetServerByName( name );
 			if( server != null )

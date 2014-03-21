@@ -35,8 +35,9 @@ function update( first_time )
 
 	ShowInfo( (first_time ? 'Load' : 'Updat')+'ing...' );
 
-	show_offline = $('#show_offline').prop( 'checked' );
-	show_closed = $('#show_closed').prop( 'checked' );
+	var show_offline = $('#show_offline').prop( 'checked' );
+	var show_closed = $('#show_closed').prop( 'checked' );
+	var show_singleplayer = $('#show_singleplayer').prop( 'checked' );
 
 	if( !fo.LoadConfig( configFile ))
 	{
@@ -119,6 +120,8 @@ function update( first_time )
 				{
 					content += 'Singleplayer';
 					div.addClass( 'singleplayer' );
+					if( !show_singleplayer )
+						div.hide();
 				}
 				else if( closed )
 				{
