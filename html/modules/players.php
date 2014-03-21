@@ -1,6 +1,6 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'FOstatusUI' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
@@ -22,7 +22,7 @@ class Players extends FOstatusModule
 
 		$this->Description = "Current players distribution";
 
-		FOstatusUI::menu( 'players', 'Players', 10 );
+		UI::menu( 'players', 'Players', 10 );
 
 		parent::$Slim->get( '/players/', function()
 		{
@@ -30,15 +30,15 @@ class Players extends FOstatusModule
 
 			parent::$Slim->expires( '+1 minute' );
 
-			FOstatusUI::contentStatic( 'chart' );
-			FOstatusUI::footerStatic( 'players_footer' );
+			UI::contentStatic( 'chart' );
+			UI::footerStatic( 'players_footer' );
 		});
 	}
 
 	private function js()
 	{
-		FOstatusUI::addHighcharts();
-		FOstatusUI::addFOstatus( $this );
+		UI::addHighcharts();
+		UI::addFOstatus( $this );
 	}
 };
 

@@ -1,6 +1,6 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'FOstatusUI' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
@@ -12,15 +12,15 @@ class Main extends FOstatusModule
 	{
 		$this->Description = "Main page";
 
-		FOstatusUI::menu( '/', 'Home', 0 );
+		UI::menu( '/', 'Home', 0 );
 		parent::$Slim->get( '/', function()
 		{
 			parent::$Slim->expires( '+1 minute' );
 
-			FOstatusUI::addFOstatus( $this, false );
+			UI::addFOstatus( $this, false );
 
-			FOstatusUI::contentStatic( 'main' );
-			FOstatusUI::footerStatic( 'main_footer' );
+			UI::contentStatic( 'main' );
+			UI::footerStatic( 'main_footer' );
 		});
 		
 	}

@@ -1,6 +1,6 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'FOstatusUI' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
@@ -21,12 +21,12 @@ class Librarian extends FOstatusModule
 	{
 		parent::$Slim->get( '/librarian/', function()
 		{
-			FOstatusUI::title( "Librarian" );
+			UI::title( "Librarian" );
 
-			FOstatusUI::addFOstatus( $this );
+			UI::addFOstatus( $this );
 
-			FOstatusUI::contentStatic( 'librarian' );
-			FOstatusUI::footerStatic(  'librarian_footer' );
+			UI::contentStatic( 'librarian' );
+			UI::footerStatic(  'librarian_footer' );
 		});
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
@@ -16,7 +16,7 @@ class PlayFOnline extends FOstatusModule
 		{
 			parent::$Slim->response->headers->set( 'Content-Type',  'application/json' );
 
-			FOstatusUI::$Disable = true;
+			UI::$Disable = true;
 			$json = array();
 			foreach( array( 'config', 'status', 'logo' ) as $id )
 			{
@@ -54,7 +54,7 @@ class PlayFOnline extends FOstatusModule
 					}
 				}
 			}
-			FOstatusUI::response( json_encode( $json,  JSON_UNESCAPED_SLASHES ));
+			UI::response( json_encode( $json,  JSON_UNESCAPED_SLASHES ));
 		});
 	}
 };

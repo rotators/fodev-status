@@ -1,6 +1,6 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'FOstatusUI' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
@@ -21,14 +21,14 @@ class Average extends FOstatusModule
 	{
 		$this->Description = "Server(s) average players";
 
-		FOstatusUI::menu( 'average', 'Average', 60 );
+		UI::menu( 'average', 'Average', 60 );
 		parent::$Slim->get( '/average/', function()
 		{
 			parent::$Slim->expires( '+10 minutes' );
 
 			$this->js();
 			$this->content();
-			FOstatusUI::footerTimeline( array(), '/average/' );
+			UI::footerTimeline( array(), '/average/' );
 		});
 
 		parent::$Slim->get( '/average/:servers/', function( $servers_user )
@@ -39,23 +39,23 @@ class Average extends FOstatusModule
 
 			parent::$Slim->expires( '+10 minutes' );
 
-			FOstatusUI::jsArguments( $servers );
+			UI::jsArguments( $servers );
 
 			$this->js();
 			$this->content();
-			FOstatusUI::footerTimeline( $servers, '/average/' );
+			UI::footerTimeline( $servers, '/average/' );
 		});
 	}
 
 	private function js()
 	{
-		FOstatusUI::addHighstock();
-		FOstatusUI::addFOstatus( $this );
+		UI::addHighstock();
+		UI::addFOstatus( $this );
 	}
 
 	private function content()
 	{
-		FOstatusUI::contentStatic( 'chart' );
+		UI::contentStatic( 'chart' );
 	}
 };
 

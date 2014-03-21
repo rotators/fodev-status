@@ -1,6 +1,6 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'FOstatusUI' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
@@ -21,7 +21,7 @@ class History extends FOstatusModule
 	{
 		$this->Description = "Server(s) history";
 
-		FOstatusUI::menu( 'history', 'History', 50 );
+		UI::menu( 'history', 'History', 50 );
 		$this->RoutesInfo['history'] = 'History of all servers';
 		parent::$Slim->get( '/history/', function()
 		{
@@ -29,7 +29,7 @@ class History extends FOstatusModule
 
 			$this->js();
 			$this->content();
-			FOstatusUI::footerTimeline( array(), '/history/' );
+			UI::footerTimeline( array(), '/history/' );
 		});
 
 		$this->RoutesInfo['history/:servers'] = 'History of selected server(s) only';
@@ -41,23 +41,23 @@ class History extends FOstatusModule
 			if( !$this->filterServers( $servers_user, $servers, '/history/', false ))
 				return;
 
-			FOstatusUI::jsArguments( $servers );
+			UI::jsArguments( $servers );
 
 			$this->js();
 			$this->content();
-			FOstatusUI::footerTimeline( $servers, '/history/' );
+			UI::footerTimeline( $servers, '/history/' );
 		});
 	}
 
 	private function js()
 	{
-		FOstatusUI::addHighstock();
-		FOstatusUI::addFOstatus( $this );
+		UI::addHighstock();
+		UI::addFOstatus( $this );
 	}
 
 	private function content()
 	{
-		FOstatusUI::contentStatic( 'chart' );
+		UI::contentStatic( 'chart' );
 	}
 };
 

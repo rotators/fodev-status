@@ -1,6 +1,6 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'FOstatusUI' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
@@ -10,11 +10,11 @@ class About extends FOstatusModule
 {
 	public function init()
 	{
-		FOstatusUI::menu( 'about','About', 999 );
+		UI::menu( 'about','About', 999 );
 
 		parent::$Slim->get( '/about/', function()
 		{
-			FOstatusUI::title( 'About' );
+			UI::title( 'About' );
 
 			$this->aboutMain();
 			$this->aboutSoftware();
@@ -37,7 +37,7 @@ class About extends FOstatusModule
 
 	private function aboutMain()
 	{
-		FOstatusUI::content( "<a href='modules/'>Modules info</a><br/>\n" );
+		UI::content( "<a href='modules/'>Modules info</a><br/>\n" );
 	}
 
 	private function aboutSoftware()
@@ -58,18 +58,18 @@ class About extends FOstatusModule
 		{
 			$info = explode( '|', $name, 2 );
 
-			if( $name == 'jQuery' && isset(FOstatusUI::$vJquery) )
-				array_push( $info, "(v" . FOstatusUI::$vJquery . ")" );
-			if( $name == 'Highcharts' && isset(FOstatusUI::$vHighcharts ))
-				array_push( $info, "(v" . FOstatusUI::$vHighcharts . ")" );
-			if( $name == 'Highstock' && isset(FOstatusUI::$vHighstock ))
-				array_push( $info, "(v" . FOstatusUI::$vHighstock . ")" );
+			if( $name == 'jQuery' && isset(UI::$vJquery) )
+				array_push( $info, "(v" . UI::$vJquery . ")" );
+			if( $name == 'Highcharts' && isset(UI::$vHighcharts ))
+				array_push( $info, "(v" . UI::$vHighcharts . ")" );
+			if( $name == 'Highstock' && isset(UI::$vHighstock ))
+				array_push( $info, "(v" . UI::$vHighstock . ")" );
 
 			if( $name[0] == '*' )
-				FOstatusUI::content( $link );
+				UI::content( $link );
 			else
 			{
-				FOstatusUI::content( "\n\t<a href='%s'>%s</a>%s%s<br>",
+				UI::content( "\n\t<a href='%s'>%s</a>%s%s<br>",
 					$link, $info[0],
 					isset($info[1]) ? " $info[1]" : "",
 					isset($info[2]) ? " $info[2]" : "" );
@@ -79,20 +79,20 @@ class About extends FOstatusModule
 
 	private function aboutModules()
 	{
-		FOstatusUI::title( 'About : modules' );
+		UI::title( 'About : modules' );
 
-		foreach( array( 'Core' => 'FOstatusModule', 'UI' => 'FOstatusUI' ) as $coreName => $coreClass )
+		foreach( array( 'Core' => 'FOstatusModule', 'UI' => 'UI' ) as $coreName => $coreClass )
 		{
-			FOstatusUI::content( "\n<hr>\n<strong id='%s'>%s</strong><br/>",
+			UI::content( "\n<hr>\n<strong id='%s'>%s</strong><br/>",
 				$coreName, $coreName );
 
 			if( isset($coreClass::$CoreDescription) )
-				FOstatusUI::content( "\nDescription: %s<br/>", $coreClass::$CoreDescription );
+				UI::content( "\nDescription: %s<br/>", $coreClass::$CoreDescription );
 
 			$class = new ReflectionClass( $coreClass );
 			if( $class )
 			{
-				FOstatusUI::content( "\nLast update: %s<br/>",
+				UI::content( "\nLast update: %s<br/>",
 					date ("j F Y, H:i", filemtime( $class->getFileName() )));
 			}
 		}
@@ -109,9 +109,9 @@ class About extends FOstatusModule
 			if( !$className )
 				continue;
 
-			FOstatusUI::content( "\n<hr/>" );
+			UI::content( "\n<hr/>" );
 
-			FOstatusUI::content( "\nModule: <strong id='%s'>%s</strong>",
+			UI::content( "\nModule: <strong id='%s'>%s</strong>",
 				$className, $className
 			);
 
@@ -127,32 +127,32 @@ class About extends FOstatusModule
 			array_pop( $parents ); // cut 'FOstatusModule' from list
 			if( count($parents) )
 			{
-				FOstatusUI::content( " : %s", implode( ' -&gt; ', $parents ));
+				UI::content( " : %s", implode( ' -&gt; ', $parents ));
 			}
-			FOstatusUI::content( "\n<br/>" );
+			UI::content( "\n<br/>" );
 
 			if( isset($instance->Author) )
-				FOstatusUI::content( "\nAuthor: %s<br/>", $instance->Author );
+				UI::content( "\nAuthor: %s<br/>", $instance->Author );
 
 			if( isset($instance->Version) )
-				FOstatusUI::content( "\nVersion: %s<br/>", $instance->Version );
+				UI::content( "\nVersion: %s<br/>", $instance->Version );
 
-			FOstatusUI::content( "\nLast update: %s<br/>",
+			UI::content( "\nLast update: %s<br/>",
 				date ("j F Y, H:i", filemtime( $class->getFileName() ))
 			);
 
 			if( isset($instance->Description) )
-				FOstatusUI::content( "\nDescription: %s<br/>",
+				UI::content( "\nDescription: %s<br/>",
 					$instance->Description );
 
 			if( count($instance->Routes) )
 			{
-				FOstatusUI::content( "\nProvides:<br/>" );
-				FOstatusUI::content( "\n<table>" );
+				UI::content( "\nProvides:<br/>" );
+				UI::content( "\n<table>" );
 				foreach( $instance->Routes as $route )
 				{
 					// remove leading/trailing slash(es)
-					FOstatusUI::content( "\n\t<tr>" );
+					UI::content( "\n\t<tr>" );
 					if( preg_match( '!^[/]+(.*)$!', $route, $match ))
 						$route = $match[1];
 					if( preg_match( '!^(.*)[/]+$!', $route, $match ))
@@ -169,32 +169,32 @@ class About extends FOstatusModule
 							$route = str_replace( ":$m", "<strong>[</strong>$m<strong>]</strong>", $route );
 						}
 						$route = str_replace( "_", " ", $route );
-						FOstatusUI::content( "\n\t\t<td>$route/</td>" );
+						UI::content( "\n\t\t<td>$route/</td>" );
 					}
 					else
-						FOstatusUI::content(
+						UI::content(
 							"\n\t\t<td><a href='%s/%s'>%s/</a></td>",
 							parent::$Root,
 							$route != '' ? "$route/" : '',
 							$route
 						);
 					if( isset($instance->RoutesInfo[$rawRoute]) )
-						FOstatusUI::content( "\n\t\t<td>%s</td>",
+						UI::content( "\n\t\t<td>%s</td>",
 							$instance->RoutesInfo[$rawRoute] );
 					/*
 					else
-						FOstatusUI::content( "\t\t<td>%s</td>",
+						UI::content( "\t\t<td>%s</td>",
 							"route&lt;$rawRoute&gt;" );
 					*/
 
-					FOstatusUI::content( "\n\t</tr>" );
+					UI::content( "\n\t</tr>" );
 				}
-				FOstatusUI::content( "\n</table>" );
+				UI::content( "\n</table>" );
 			}
 
 			if( isset($instance->Info) )
 			{
-				FOstatusUI::content( "\nAdditional informations:<br/>\n%s<br/>",
+				UI::content( "\nAdditional informations:<br/>\n%s<br/>",
 					$instance->Info );
 			}
 		}
@@ -234,16 +234,16 @@ class About extends FOstatusModule
 			)
 		);
 
-		FOstatusUI::content( "\n\t<table>" );
+		UI::content( "\n\t<table>" );
 		foreach( $context as $context_name => $context_info )
 		{
-			FOstatusUI::content( "\n\t\t<tr>\n\t\t\t<td>%s</td>\n\t\t\t<td></td>\n\t\t\t<td>%s</td>\n\t\t\t<td></td>\n\t\t</tr>",
+			UI::content( "\n\t\t<tr>\n\t\t\t<td>%s</td>\n\t\t\t<td></td>\n\t\t\t<td>%s</td>\n\t\t\t<td></td>\n\t\t</tr>",
 				$context_name,
 				isset( $context[$context_name]['!'])
 					? $context[$context_name]['!']
 					: ''
 			);
-			FOstatusUI::content( "\n\t\t<tr>\n\t\t\t<td>{</td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t</tr>" );
+			UI::content( "\n\t\t<tr>\n\t\t\t<td>{</td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t</tr>" );
 
 			$info = array();
 			foreach( $context_info as $var_name => $var_description )
@@ -262,16 +262,16 @@ class About extends FOstatusModule
 				}
 				else
 				{
-					FOstatusUI::content( "\n\t\t<tr>" );
+					UI::content( "\n\t\t<tr>" );
 					$infos = array();
 					if( substr( $var_name, -1 ) == '*' )
 					{
 						$required = true;
 						$var_name = substr( $var_name, 0, -1 );
-						FOstatusUI::content( "\n\t\t\t<td>(required)</td>" );
+						UI::content( "\n\t\t\t<td>(required)</td>" );
 					}
 					else
-						FOstatusUI::content( "\n\t\t\t<td></td>" );
+						UI::content( "\n\t\t\t<td></td>" );
 
 					$expl = explode( '@', $var_name, 2 );
 
@@ -281,7 +281,7 @@ class About extends FOstatusModule
 						$infos = explode( ',', $expl[1] );
 					}
 
-					FOstatusUI::content( "\n\t\t\t<td>%s</td>\n\t\t\t<td>%s</td>",
+					UI::content( "\n\t\t\t<td>%s</td>\n\t\t\t<td>%s</td>",
 						$var_name, $var_description );
 
 					if( count($infos) )
@@ -294,18 +294,18 @@ class About extends FOstatusModule
 								array_push( $useInfo, $info[$extra] );
 							}
 						}
-						FOstatusUI::content( "\n\t\t\t<td>%s</td> ",
+						UI::content( "\n\t\t\t<td>%s</td> ",
 							implode( '<br>', $useInfo ));
 					}
 					else
-						FOstatusUI::content( "\n\t\t\t<td></td>" );
+						UI::content( "\n\t\t\t<td></td>" );
 
-					FOstatusUI::content( "\n\t\t</tr>" );
+					UI::content( "\n\t\t</tr>" );
 				}
 			}
-			FOstatusUI::content( "\n\t\t<tr>\n\t\t\t<td>}</td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t</tr>" );
+			UI::content( "\n\t\t<tr>\n\t\t\t<td>}</td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t</tr>" );
 		}
-		FOstatusUI::content( "\n\t</table>" );
+		UI::content( "\n\t</table>" );
 	}
 };
 

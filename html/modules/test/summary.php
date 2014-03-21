@@ -1,6 +1,6 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'FOstatusUI' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
@@ -12,7 +12,7 @@ class Summary extends FOstatusModule
 	{
 		$this->Description = "\"FOnline in one picture\"";
 
-//		FOstatusUI::menu( 'fonline', 'Summary', 5 );
+//		UI::menu( 'fonline', 'Summary', 5 );
 
 		parent::$Slim->get( '/test/fonline/', function()
 		{
@@ -20,14 +20,14 @@ class Summary extends FOstatusModule
 
 			$this->js();
 
-			FOstatusUI::contentStatic( 'chart' );
+			UI::contentStatic( 'chart' );
 		});
 	}
 
 	private function js()
 	{
-		FOstatusUI::addHighstock();
-		FOstatusUI::addFOstatus( $this );
+		UI::addHighstock();
+		UI::addFOstatus( $this );
 	}
 };
 

@@ -1,6 +1,6 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'FOstatusUI' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
@@ -16,14 +16,14 @@ class Leaderboard extends FOstatusModule
 
 			$this->js();
 
-			FOstatusUI::contentStatic( 'chart' );
+			UI::contentStatic( 'chart' );
 		});
 	}
 
 	private function js()
 	{
-		FOstatusUI::addHighcharts();
-		FOstatusUI::addFOstatus( $this );
+		UI::addHighcharts();
+		UI::addFOstatus( $this );
 	}
 };
 

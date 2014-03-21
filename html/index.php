@@ -24,7 +24,7 @@ include( 'ui.php' );
 
 $root = dirname( $_SERVER['SCRIPT_NAME'] );
 
-FOstatusUI::initialize( $root, $app );
+UI::initialize( $root, $app );
 
 // prepare errors catchers
 
@@ -32,13 +32,13 @@ error_reporting( -1 );
 
 set_exception_handler( function( Exception $e )
 {
-	FOstatusUI::ExceptionHandler( $e, false );
+	UI::ExceptionHandler( $e, false );
 });
 
 set_error_handler( function( $errno, $errstr, $errfile, $errline )
 {
 	$e = new ErrorException( $errstr, $errno, NULL, $errfile, $errline );
-	FOstatusUI::ExceptionHandler( $e, false );
+	UI::ExceptionHandler( $e, false );
 });
 
 register_shutdown_function( function()
@@ -47,7 +47,7 @@ register_shutdown_function( function()
 	if( count($error) )
 	{
 		$e = new ErrorException( $error['message'], NULL /*$error['type']*/, NULL, $error['file'], $error['line'] );
-		FOstatusUI::ExceptionHandler( $e, false );
+		UI::ExceptionHandler( $e, false );
 	}
 });
 

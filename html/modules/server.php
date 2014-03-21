@@ -1,6 +1,6 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'FOstatusUI' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
@@ -15,7 +15,7 @@ class Server extends FOstatusModule
 		parent::$Slim->get( '/server/:server/', function( $server_user )
 		{
 			if( isset(parent::$FO->Config['server'][$server_user]['name']) )
-				FOstatusUI::title( parent::$FO->Config['server'][$server_user]['name'] );
+				UI::title( parent::$FO->Config['server'][$server_user]['name'] );
 
 			$this->js();
 
@@ -25,7 +25,7 @@ class Server extends FOstatusModule
 			if( !isset($server) )
 			{
 				// TODO
-				FOStatusUI::content( 'server not found' );
+				UI::content( 'server not found' );
 
 				return;
 			}
@@ -36,10 +36,10 @@ class Server extends FOstatusModule
 
 			$jsArguments = array( $server_user );
 
-			FOstatusUI::jsArguments( $jsArguments );
+			UI::jsArguments( $jsArguments );
 
-			FOstatusUI::contentStatic( 'server' );
-			FOstatusUI::contentStatic( 'chart' );
+			UI::contentStatic( 'server' );
+			UI::contentStatic( 'chart' );
 
 			$compare = array();
 			if( $this->isModule( 'History' ))
@@ -49,7 +49,7 @@ class Server extends FOstatusModule
 
 			if( count($compare) )
 			{
-				FOstatusUI::footer( "\n\tCompare with other servers: %s",
+				UI::footer( "\n\tCompare with other servers: %s",
 					join( ', ', $compare ));
 			}
 
@@ -58,8 +58,8 @@ class Server extends FOstatusModule
 
 	private function js()
 	{
-		FOstatusUI::addHighstock();
-		FOstatusUI::addFOstatus( $this );
+		UI::addHighstock();
+		UI::addFOstatus( $this );
 	}
 
 	public function serverLogo( $id )

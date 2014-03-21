@@ -9,7 +9,7 @@ if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ))
 if( file_exists( '../fodev.php' ) && is_readable( '../fodev.php' ))
 	include_once( '../fodev.php' );
 
-class FOstatusUI
+class UI
 {
 	// Description
 	public static $CoreDescription = 'Rendering functions';
@@ -75,7 +75,7 @@ class FOstatusUI
 	{
 		self::$Slim->config( 'debug', false );
 
-		self::$Slim->error( 'FOstatusUI::ExceptionHandler' );
+		self::$Slim->error( 'UI::ExceptionHandler' );
 	}
 
 	public static function ExceptionHandler( Exception $e, $slimRunning = true )
