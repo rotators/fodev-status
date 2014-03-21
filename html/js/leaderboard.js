@@ -1,5 +1,7 @@
 function start()
 {
+	ShowInfo( '&#666;' );
+
 	if( !fo.LoadConfig( configFile ))
 	{
 		return;

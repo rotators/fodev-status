@@ -16,6 +16,8 @@ class Summary extends FOstatusModule
 
 		parent::$Slim->get( '/test/fonline/', function()
 		{
+			parent::$Slim->expires( '+10 minutes' );
+
 			$this->js();
 
 			FOstatusUI::contentStatic( 'chart' );

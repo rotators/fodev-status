@@ -24,6 +24,8 @@ class Average extends FOstatusModule
 		FOstatusUI::menu( 'average', 'Average', 60 );
 		parent::$Slim->get( '/average/', function()
 		{
+			parent::$Slim->expires( '+10 minutes' );
+
 			$this->js();
 			$this->content();
 			FOstatusUI::footerTimeline( array(), '/average/' );
@@ -34,6 +36,8 @@ class Average extends FOstatusModule
 			$servers = array();
 			if( !$this->filterServers( $servers_user, $servers, '/average/', false ))
 				return;
+
+			parent::$Slim->expires( '+10 minutes' );
 
 			FOstatusUI::jsArguments( $servers );
 

@@ -29,11 +29,11 @@ FOstatusCharts.prototype.BaseChart = function( name, container, title, subtitle 
 	{
 		chart:
 		{
+			animation: true,
+			backgroundColor: null,
 			id: name,
 			renderTo: container,
-			shadow: true,
-			animation: true,
-			backgroundColor: null
+			shadow: true
 		},
 		colors: [ '#ffffff' ],
 		credits:
@@ -63,11 +63,11 @@ FOstatusCharts.prototype.BaseChart = function( name, container, title, subtitle 
 				color: '#5e5e5e'
 			}
 		},
-		loading:
-		{
-			showDuration: 1000,
-			hideDuration: 1000
-		},
+//		loading:
+//		{
+//			showDuration: 1000,
+//			hideDuration: 1000
+//		},
 		spacingLeft: 10,
 		spacingRight: 10
 	};
@@ -122,6 +122,9 @@ FOstatusCharts.prototype.CreateTimeline = function( name, container, title, subt
 	{
 		series:
 		{
+			pointRange: 24 * 3600 * 1000,
+			pointInterval: 24 * 3600 * 1000,
+			connectNulls: false,
 			dataGrouping:
 			{
 				dateTimeLabelFormats:
@@ -130,9 +133,6 @@ FOstatusCharts.prototype.CreateTimeline = function( name, container, title, subt
 					day: ['%e %B %Y']
 				}
 			},
-			pointRange: 24 * 3600 * 1000,
-			pointInterval: 24 * 3600 * 1000,
-			connectNulls: false,
 			shadow: true
 		}
 	};

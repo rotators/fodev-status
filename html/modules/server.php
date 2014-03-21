@@ -30,6 +30,8 @@ class Server extends FOstatusModule
 				return;
 			}
 
+			parent::$Slim->expires( '+10 minutes' );
+
 			$this->serverLogo( $server_user );
 
 			$jsArguments = array( $server_user );

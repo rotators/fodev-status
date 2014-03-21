@@ -103,7 +103,7 @@ function start( /* servers */ )
 						seriesOptions[option] = value;
 				});
 
-				series = chart.addSeries( seriesOptions, false );
+				series = chart.addSeries( seriesOptions, true );
 			}
 
 			if( series )

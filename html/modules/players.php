@@ -28,6 +28,8 @@ class Players extends FOstatusModule
 		{
 			$this->js();
 
+			parent::$Slim->expires( '+1 minute' );
+
 			FOstatusUI::contentStatic( 'chart' );
 			FOstatusUI::footerStatic( 'players_footer' );
 		});

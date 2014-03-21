@@ -3,10 +3,12 @@
 /*.pid
 
 # local testing
-fodev.php
 /html/cache/*
 /html/data/*
 /html/css/base.css
+
+# fodev.net-specific
+fodev.php
 
 !/html/data/.htaccess
 !/html/data/config.json

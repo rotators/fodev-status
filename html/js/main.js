@@ -1,7 +1,6 @@
 function start()
 {
-	$('#multiplayer').hide();
-	$('#singleplayer').hide();
+	$('#games').hide();
 	$('#footer').hide();
 
 	update( true );
@@ -16,10 +15,12 @@ function start()
 		$('#server_status.closed').toggle();
 	});
 
-	$('#multiplayer').show();
-//	soon
-//	$('#singleplayer').show();
+	$('#show_singleplayer').click( function()
+	{
+		$('#server_status.singleplayer').toggle();
+	});
 
+	$('#games').show();
 	$('#footer').show();
 
 	setInterval( update, 60000 );
@@ -60,7 +61,7 @@ function update( first_time )
 			lifetime = null;
 
 		// cache results until all servers are parsed
-		var divs_multiplayer = [], divs_singleplayer = [];
+		var divs = [];
 
 		$.each( fo.GetServersArray( 'name' ), function( idx, server )
 		{
@@ -192,19 +193,12 @@ function update( first_time )
 
 			div.append( [stats,links] );
 
-			if( singleplayer )
-				divs_singleplayer.push( div );
-			else
-				divs_multiplayer.push( div );
+			divs.push( div );
 		});
 
-		$('#multiplayer_list').empty();
-		$('#singleplayer_list').empty();
-		if( divs_multiplayer.length > 0 )
-			$('#multiplayer_list').append( divs_multiplayer );
-
-		if( divs_singleplayer.length > 0 )
-			$('#singleplayer_list').append( divs_singleplayer );
+		$('#games_list').empty();
+		if( divs.length > 0 )
+			$('#games_list').append( divs );
 
 		$('#online_servers').text( status.servers );
 		$('#online_players').text( status.players );

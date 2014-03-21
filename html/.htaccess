@@ -5,6 +5,11 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [QSA,L]
 
+<Files ".git*">
+	Order allow,deny
+	Deny from all
+</Files>
+
 <Files "fonline.png">
-    ForceType application/x-httpd-php
+	ForceType application/x-httpd-php
 </Files>

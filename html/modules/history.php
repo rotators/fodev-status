@@ -25,6 +25,8 @@ class History extends FOstatusModule
 		$this->RoutesInfo['history'] = 'History of all servers';
 		parent::$Slim->get( '/history/', function()
 		{
+			parent::$Slim->expires( '+10 minutes' );
+
 			$this->js();
 			$this->content();
 			FOstatusUI::footerTimeline( array(), '/history/' );
@@ -33,6 +35,8 @@ class History extends FOstatusModule
 		$this->RoutesInfo['history/:servers'] = 'History of selected server(s) only';
 		parent::$Slim->get( '/history/:servers/', function( $servers_user )
 		{
+			parent::$Slim->expires( '+10 minutes' );
+
 			$servers = array();
 			if( !$this->filterServers( $servers_user, $servers, '/history/', false ))
 				return;

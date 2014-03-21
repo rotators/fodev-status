@@ -30,8 +30,8 @@ class FOstatusUI
 
 	// external dependencies versions; if not set, latest available version is used
 	public static $vJquery = '1.11.0';
-	public static $vHighcharts = '3.0.9';
-	public static $vHighstock = '1.3.9';
+	public static $vHighcharts = '3.0.9'; // 3.0.10 legend issues
+	public static $vHighstock = '1.3.9';  // 1.3.10 legend issues
 
 	// enable/disable charts exporting
 	public static $chartsExport = false;

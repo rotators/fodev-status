@@ -104,18 +104,19 @@ function start( /* servers */ )
 						seriesOptions[option] = value;
 				});
 
-				series = chart.addSeries( seriesOptions, false );
+				series = chart.addSeries( seriesOptions, true, true );
 			}
 
 			if( series )
 			{
-				series.update();
+				series.update( true );
 				series.xAxis.setExtremes();
 			}
 		});
 	});
 
 	ShowInfo( 'Loaded' );
+	chart.redraw();
 	chart.reflow();
 	HideInfo();
 	$('#footer').show();

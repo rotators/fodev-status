@@ -1,12 +1,18 @@
+#games
+{
+	width: 100%;
+}
+
 #server_status
 {
-	width: 220px !important;
+	width: 216px !important;
 	height: 60px !important;
 	display: inline-block;
 	margin: 2px;
 	cursor: default;
 	line-height: 12px;
 	font-size: 11px;
+	word-spacing: -2px;
 	vertical-align: top;
 	background-repeat: no-repeat;
 	border-radius: 15px;
@@ -28,11 +34,11 @@
 	top: 8px;
 	padding-left: 15px;
 	text-align: left;
+	word-spacing: normal;
 }
 
 #server_status.online
 {
-	/* background-image: url(../gfx/online.png); */
 	border-color: #0c1;
 	background-color: #004500;
 	color: #0c1;
@@ -45,7 +51,6 @@
 
 #server_status.offline, #server_status.closed
 {
-	/* background-image: url(../gfx/offline.png); */
 	border-color: #c40000;
 	background-color: #300000;
 	color: #c40000;
@@ -54,4 +59,10 @@
 #server_status.closed .stats:first-line
 {
 	text-decoration: line-through;
+}
+
+#server_status.singleplayer
+{
+	color: #0090c0;
+	border-color: #0090c0;
 }

@@ -12,6 +12,8 @@ class Leaderboard extends FOstatusModule
 	{
 		parent::$Slim->get( '/test/leaderboard/', function()
 		{
+			parent::$Slim->expires( '+10 minutes' );
+
 			$this->js();
 
 			FOstatusUI::contentStatic( 'chart' );

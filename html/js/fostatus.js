@@ -233,10 +233,13 @@ FOstatus.prototype.GetServersArray = function( sorting, ascending )
 	{
 		servers = servers.sort( function( a, b )
 		{
+			if( a[sorting] == b[sorting] )
+				return( 0 );
+
 			if( ascending )
-				return (a[sorting] > b[sorting]) ? 1 : ((a[sorting] < b[sorting]) ? -1 : 0);
+				return( a[sorting].toLowerCase() > b[sorting].toLowerCase() ? 1 :  -1 );
 			else
-				return (b[sorting] > a[sorting]) ? 1 : ((b[sorting] < a[sorting]) ? -1 : 0);
+				return( b[sorting].toLowerCase() > a[sorting].toLowerCase() ? 1 :  -1 );
 		});
 	}
 
