@@ -185,6 +185,14 @@ sub save_ymd($$;$%)
 
 	my @content = $fo->YMDHashToArray( $db );
 
+	if( $id eq 'server_history' || $id eq 'server_average' )
+	{
+		while( !defined( $content[$#content][1] ))
+		{
+			pop( @content );
+		}
+	}
+
 	my %save;
 	if( defined($server) && length($server) > 0 )
 		{ $save{fonline}{$id}{server}{$server} = \@content; }
