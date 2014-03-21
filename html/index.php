@@ -1,7 +1,7 @@
 <?php
 
-include( 'lib/Slim/Slim.php' );
-include( 'lib/Slim/Middleware.php' );
+include( 'lib/slim/Slim/Slim.php' );
+include( 'lib/slim/Slim/Middleware.php' );
 include( 'lib/FOstatus.php' );
 
 date_default_timezone_set( 'Europe/Berlin' );
