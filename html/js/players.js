@@ -18,7 +18,7 @@ function start()
 	chart.series[0].data = getData();
 	chart = new Highcharts.Chart( chart );
 
-	setInterval( update, 30000 );
+	setInterval( update, 60000 );
 	HideInfo();
 	$('#footer').show();
 }

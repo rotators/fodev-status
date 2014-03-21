@@ -229,21 +229,25 @@ FOstatusCharts.prototype.CreatePercentPie = function( name, container, title, su
 
 	chart.plotOptions =
 	{
-		pie: {
+		pie:
+		{
 			borderColor: '#cacaca',
 			allowPointSelect: true,
 			cursor: 'pointer',
-			dataLabels: {
+			dataLabels:
+			{
 				enabled: true,
 				format: '{point.name} ({point.percentage:.1f}%)'
 			},
 			showInLegend: true
 		}
 	};
-	chart.tooltip = {
+	chart.tooltip =
+	{
 		pointFormat: '{series.name}: <strong>{point.y}</strong>'
 	};
-	chart.series = [{
+	chart.series =
+	[{
 		type: 'pie',
 	}];
 

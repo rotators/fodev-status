@@ -158,25 +158,48 @@ FOstatus.prototype.CheckConfig = function( data, skip_base )
 
 	console.log( "CheckConfig: OK" );
 	return( true );
-}
+};
 
-FOstatus.prototype.GetServer = function( want_id )
+FOstatus.prototype.GetServer = function( id )
 {
-	if( want_id == null )
+	if( id == null )
 		return( null );
 
 	var result = null;
 
 	if( this.Config != null && this.Config.server != null )
 	{
+		$.each( this.Config.server, function( server_id, server )
+		{
+			if( server_id == id )
+			{
+				result = server;
+				result.id = server_id;
+
+				return( false ); // break;
+			}
+		});
+	}
+
+	return( result );
+};
+
+FOstatus.prototype.GetServerByName = function( name )
+{
+	if( name == null )
+		return( null );
+
+	var result = null;
+	if( this.Config != null && this.Config.server != null )
+	{
 		$.each( this.Config.server, function( id, server )
 		{
-			if( id == want_id )
+			if( server.name == name )
 			{
 				result = server;
 				result.id = id;
 
-				return( result );
+				return( false ); // break;
 			}
 		});
 	}
@@ -196,7 +219,7 @@ FOstatus.prototype.GetOption = function( category, option )
 		return( this.Config[category][option] );
 
 	return( null );
-}
+};
 
 FOstatus.prototype.GetServerOption = function( server_id, option )
 {

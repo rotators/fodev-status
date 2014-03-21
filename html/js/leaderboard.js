@@ -40,6 +40,21 @@ function start()
 			data: []
 		}
 	];
+	chart.xAxis.labels =
+	{
+		formatter: function()
+		{
+			var color = chart.colors[0];
+			var name = this.value;
+			var server = fo.GetServerByName( name );
+			if( server != null )
+			{
+				if( server.color != null )
+					color = server.color;
+			}
+			return( '<span style="fill: '+color+';">'+name+'</span>' );
+		}
+	}
 
 	var server_data = [];
 	$.each( fo.GetServersArray( 'name' ), function( idx, server )
@@ -78,7 +93,6 @@ function start()
 			return( true ); // continue;
 
 		chart.xAxis.categories.push( server.name );
-
 		server_data.push( data );
 	});
 
