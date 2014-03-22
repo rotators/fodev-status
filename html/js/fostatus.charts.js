@@ -237,7 +237,7 @@ FOstatusCharts.prototype.CreatePercentPie = function( name, container, title, su
 			dataLabels:
 			{
 				enabled: true,
-				format: '{point.name} ({point.percentage:.1f}%)'
+				format: '<span style="fill: {point.color}">{point.name}</span> ({point.percentage:.1f}%)'
 			},
 			showInLegend: true
 		}

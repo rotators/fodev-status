@@ -10,7 +10,9 @@ class Leaderboard extends FOstatusModule
 {
 	public function init()
 	{
-		parent::$Slim->get( '/test/leaderboard/', function()
+		UI::menu( 'leaderboard', 'Leaderboard', 70 );
+
+		parent::$Slim->get( '/leaderboard/', function()
 		{
 			parent::$Slim->expires( '+10 minutes' );
 
