@@ -19,6 +19,7 @@ class Leaderboard extends FOstatusModule
 			$this->js();
 
 			UI::contentStatic( 'chart' );
+			UI::footerStatic( 'leaderboard_footer' );
 		});
 	}
 

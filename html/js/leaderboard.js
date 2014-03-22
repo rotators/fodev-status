@@ -1,17 +1,21 @@
+var chart, lifetime, players, average;
+
 function start()
 {
-	ShowInfo( '&#666;' );
+	$('#footer').hide();
+	ShowInfo( 'Loading...' );
 
 	if( !fo.LoadConfig( configFile ))
 	{
+		ShowInfo( 'Invalid config file' );
 		return;
 	}
 
-	var lifetime = fo.LoadJSON( dataDir+fo.GetPath( 'lifetime' ), 'lifetime' );
-	var players = fo.LoadJSON( dataDir+fo.GetPath( 'max_players' ), 'max_players' );
-	var average = fo.LoadJSON( dataDir+fo.GetPath( 'average_short' ), 'average_short' );
+	lifetime = fo.LoadJSON( dataDir+fo.GetPath( 'lifetime' ), 'lifetime' );
+	players = fo.LoadJSON( dataDir+fo.GetPath( 'max_players' ), 'max_players' );
+	average = fo.LoadJSON( dataDir+fo.GetPath( 'average_short' ), 'average_short' );
 
-	var chart = foCharts.CreateStackedColumn(
+	chart = foCharts.CreateStackedColumn(
 		'fonline',
 		'chart',
 		'FOnline',
@@ -56,6 +60,23 @@ function start()
 		}
 	}
 
+	chart = new Highcharts.Chart( chart );
+	update();
+
+	$('#show_closed').click( function()
+	{
+		update();
+	});
+
+	$('#footer').show();
+	HideInfo();
+}
+
+function update()
+{
+	var show_closed = $('#show_closed').prop( 'checked' );
+
+	var server_name = [];
 	var server_data = [];
 	$.each( fo.GetServersArray( 'name' ), function( idx, server )
 	{
@@ -92,18 +113,22 @@ function start()
 		if( !add )
 			return( true ); // continue;
 
-		chart.xAxis.categories.push( server.name );
-		server_data.push( data );
+		if( !show_closed && server.closed != null && server.closed == true )
+			return( true ); // continue;
+
+		server_name.push( server.name );
+		$.each( data, function( idx, rData )
+		{
+			if( server_data[idx] == null )
+				server_data.push( [] );
+			server_data[idx].push( rData );
+		});
 	});
+
+	chart.xAxis[0].setCategories( server_name );
 
 	$.each( server_data, function( idx, serverData )
 	{
-		$.each( serverData, function( idx, data )
-		{
-			chart.series[idx].data.push( data );
-		});
+		chart.series[idx].setData( serverData, true );
 	});
-	server_data = null;
-
-	chart = new Highcharts.Chart( chart );
 }
