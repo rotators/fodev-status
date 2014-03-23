@@ -35,7 +35,7 @@ function drawChart()
 	{
 		$.each( fo.GetServersArray( 'name' ), function( i, server )
 		{
-			if( data.server[server.id] != null && data.server[server.id].players >= 0 )
+			if( data.server[server.id] != null && data.server[server.id].players > 0 )
 			{
 				chart_data.push([ server.name, data.server[server.id].players ]);
 				if( server.color != null )
