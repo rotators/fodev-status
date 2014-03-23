@@ -8,13 +8,21 @@ if( !defined( 'FODEV:STATUS' ))
 
 abstract class FOStatusModule
 {
-	//+++ informations for About module +++//
-
 	// modules objects
 	public static $Instances = array();
 
 	// Root URI
 	public static $Root = NULL;
+
+	// Slim object
+	public static $Slim = NULL;
+
+	// FOstatus object
+	public static $FO = NULL;
+
+	private static $ModulesRoot = NULL;
+
+	//+++ informations for About module +++//
 
 	// Description
 	public static $CoreDescription = 'Base modules functionality';
@@ -42,18 +50,38 @@ abstract class FOStatusModule
 
 	//--- informations for About module ---//
 
-	// Slim object
-	public static $Slim = NULL;
-
-	// FOstatus object
-	public static $FO = NULL;
-
-	public static function initialize( $root, \Slim\Slim $app, FOstatus $status )
+	public static function initialize( $root, $modules, \Slim\Slim $app, FOstatus $status )
 	{
 		self::$Root = $root;
-		self::$Slim = $app;
 
+		self::$Slim = $app;
 		self::$FO = $status;
+
+		if( preg_match( '!^[a-z]+$!', $modules ) && is_dir( $modules ))
+		{
+			self::$ModulesRoot = $modules;
+
+			foreach( glob( "$modules/*", GLOB_ONLYDIR | GLOB_ERR ) as $dir )
+			{
+				$base = basename( $dir );
+
+				if( !preg_match( '!^[a-z]+$!', $base ))
+					continue;
+
+				$file = sprintf( "%s/%s/%s.php",
+					self::$ModulesRoot, $base, $base );
+
+				if( !file_exists( $file ) || !is_readable( $file ))
+					continue;
+
+				include_once( $file );
+			}
+		}
+		else
+		{
+			user_error( "Invalid modules directory" );
+			exit;
+		}
 
 		foreach( get_declared_classes() as $class )
 		{
@@ -117,6 +145,23 @@ abstract class FOStatusModule
 		}
 
 		return( NULL );
+	}
+
+	public static function getModulesNames()
+	{
+		$sortedInstances = self::$Instances;
+		usort( $sortedInstances, function( $a, $b )
+		{
+			return( get_class( $a ) > get_class( $b ) ? 1 : -1 );
+		});
+
+		$modules = array();
+		foreach( $sortedInstances as $instance )
+		{
+			array_push( $modules, get_class( $instance ) );
+		}
+
+		return( $modules );
 	}
 
 	public function bytesToSize( $size, $precision = 2 )

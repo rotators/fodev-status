@@ -53,15 +53,10 @@ register_shutdown_function( function()
 
 // from this point, ALL errors should be catched and displayed by UI
 
-foreach( array_merge( glob( "modules/*.php" ), glob( "modules/*/*.php" )) as $filename )
-{
-	include_once( $filename );
-}
-
 $fo = new FOstatus();
 if( $fo->LoadConfig( 'data/config.json' ))
 {
-	FOstatusModule::initialize( $root, $app, $fo );
+	FOstatusModule::initialize( $root, 'modules', $app, $fo );
 }
 //TODO: else
 

@@ -167,8 +167,8 @@ function update( first_time )
 				stats.append( content );
 
 			content = [];
-			// always assume that Server module is available
-			if( average != null && average.server[server.id] != null )
+			if( $.inArray( 'Server', siteModules ) >= 0 &&
+				average != null && average.server[server.id] != null )
 				content.push( "<a href='server/"+server.id+"/' title='Details'>Details</a>" );
 
 			// pick first available link

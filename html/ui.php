@@ -232,11 +232,21 @@ class UI
 			{
 				self::response( "\n<script type='text/javascript'>\nvar" );
 				self::response( "
-	rootDir    = '".self::$Root."',
-	dataDir    = rootDir+'/data/',
-	gfxDir     = rootDir+'/gfx/',
-	configFile = dataDir+'config.json'
-;" );
+	rootDir     = '".self::$Root."',
+	dataDir     = rootDir+'/data/',
+	gfxDir      = rootDir+'/gfx/',
+	cacheDir    = rootDir+'/cache/',
+	configFile  = dataDir+'config.json'" );
+
+				$modules = FOstatusModule::getModulesNames();
+				if( count($modules) )
+				{
+					self::response( ",
+	siteModules = [ '%s' ]",
+						implode( "', '", $modules ));
+				}
+
+				self::response( "\n;" );
 
 				if( self::$jsFOstatus )
 					self::response( "\nvar fo = new FOstatus();" );
