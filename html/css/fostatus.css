@@ -12,6 +12,8 @@ html, body
 	text-align: center;
 	vertical-align: middle;
 	border-bottom: 1px solid #333;
+	padding-top: 3px;
+	padding-bottom: 3px;
 	margin-bottom: 5px;
 }
 
@@ -22,13 +24,14 @@ article
 	padding-right: 10px;
 	width: 90%;
 	background-color: #191919;
-	min-height: 88%;
+	min-height: 91%;
 	display: block;
 }
 
 footer, #info
 {
 	border-top: 1px solid #2b2b2b;
+	min-height: 15px;
 }
 
 #info
