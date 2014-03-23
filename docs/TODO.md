@@ -12,4 +12,4 @@
   * use parameters for replacements - json/config,server_history/?id=serverId
 * 404, invalid config, invalid id (Server)
 * Add live status timeline? http://highcharts.com/stock/demo/dynamic-update
-* provide generic functions for timeline charts
+* Provide generic functions for timeline charts
