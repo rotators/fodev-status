@@ -12,13 +12,13 @@ FOstatus.prototype.ExtractSeconds = function( seconds ) // helper
 {
 	var extract = function( need )
 	{
-		var res = 0;
+		var result = 0;
 		if( seconds >= need )
 		{
-			res = Math.floor( seconds / need );
-			seconds -= res * need;
+			result = Math.floor( seconds / need );
+			seconds -= result * need;
 		}
-		return( res );
+		return( result );
 	};
 
 	var years   = extract( 60 * 60 * 24 * 7 * 4 * 12 );
@@ -34,30 +34,33 @@ FOstatus.prototype.ExtractSeconds = function( seconds ) // helper
 FOstatus.prototype.LoadJSON = function( url, type, callback ) // helper
 {
 	var err = '[LoadJSON] Can\'t load '+(type != null ? type+' @ ' : '')+url+' : ';
+	var result = null;
 
 	if( url == null )
 	{
 		console.log( '[LoadJSON] URL not defined' );
-		return( null );
+		return( result );
 	}
 
 	if( type == null && callback == null )
 	{
 		console.log( err+'data type and/or callback must be defined' );
-		return( null );
+		return( result );
 	}
 
 	if( this.JSONLoader == null )
 	{
 		console.log( err+"JSONLoader not defined" );
+		return( result );
 	}
 
 	var data = this.JSONLoader( url );
 
 	if( data == null )
+	{
 		console.log( err+'Empty data' );
-
-	var result = null;
+		return( result );
+	}
 
 	if( type != null )
 	{
@@ -331,11 +334,41 @@ if( typeof(window.jQuery) !== 'undefined' )
 		},
 		error: function( jqXHR, textStatus, errorThrown )
 		{
-			console.log( '[JSONLoader:jQuery] ERROR '+textStatus+' : '+errorThrown );
+			console.log( '[JSONLoader:jQuery] ERROR : '+textStatus+' : '+errorThrown );
 		}});
 
 		return( result );
 	};
+}
+else if( typeof(window.Prototype) !== 'undefined' )
+{
+	FOstatus.prototype.JSONLoader = function( url )
+	{
+		var result = null;
+
+		new Ajax.Request( url, { method: 'get', asynchronous: false,
+		onCreate: function( response )
+		{
+			var transport = response.transport; 
+			transport.setRequestHeader = transport.setRequestHeader.wrap( function( original, k, v )
+			{
+				if( /^(accept|accept-language|content-language)$/i.test( k ))
+					return( original( k, v ));
+				return;
+			});
+		},
+		onComplete: function( data )
+		{
+			if( data.responseJSON != null )
+				result = data.responseJSON;
+		},
+		onFailure: function( data )
+		{
+			console.log( '[JSONLoader:prototype] ERROR : '+data.statusText );
+		}});
+
+		return( result );
+	}
 }
 /*
 else if( typeof(window.MooTools) !== 'undefined' )
