@@ -5,3 +5,6 @@ AddType text/plain php
 AddType text/plain pl
 
 RewriteEngine Off
+
+Header set Access-Control-Allow-Origin  "*"
+Header set Access-Control-Allow-Methods "GET"
