@@ -98,7 +98,7 @@ FOstatus.prototype.CheckConfig = function( data, skip_base )
 
 	skip_base = this.defaultArgument( skip_base, false );
 
-	var result = null, config = null;
+	var config = null;
 
 	if( skip_base )
 	{
@@ -107,7 +107,6 @@ FOstatus.prototype.CheckConfig = function( data, skip_base )
 	}
 	else
 	{
-
 		if( data.fonline == null )
 		{
 			console.log( "CheckConfig: missing fonline" );
@@ -129,32 +128,49 @@ FOstatus.prototype.CheckConfig = function( data, skip_base )
 		return( false );
 	}
 
-	$.each( config.server, function( idx, server )
+	for( id in config.server )
 	{
+		var server = config.server[id];
+
 		if( server.name == null )
 		{
 			console.log( "CheckConfig: missing fonline::config::server::"+idx+"::name" );
-			result = false;
-			return( false ); // break;
+			return( false );
 		}
 
 		if( server.host != null && server.port == null )
 		{
 			console.log( "CheckConfig: fonline::config::server::"+id+" : host set, port is null" );
-			result = false;
-			return( false ); // break;
+			return( false );
 		}
 
 		if( server.host == null && server.port != null )
 		{
 			console.log( "CheckConfig: fonline::config::server::"+id+" : host is null, port is set" );
-			result = false;
-			return( false ); // break;
+			return( false );
 		}
-	});
 
-	if( result != null )
-		return( result )
+		if( server.irc != null && server.irc.charAt(0) != '#' )
+		{
+			console.log( "CheckConfig: fonline::config::server::"+id+" : irc channel does not start with '#'" );
+			return( false );
+		}
+
+		if( server.color != null )
+		{
+			if( server.color.charAt(0) != '#' )
+			{
+				console.log( "CheckConfig: fonline::config::server::"+id+" : color does not start with '#'" );
+				return( false );
+			}
+
+			if( server.color.length != 7 )
+			{
+				console.log( "CheckConfig: fonline::config::server::"+id+" : invalid color length" );
+				return( false );
+			}
+		}
+	}
 
 	console.log( "CheckConfig: OK" );
 	return( true );
@@ -165,46 +181,41 @@ FOstatus.prototype.GetServer = function( id )
 	if( id == null )
 		return( null );
 
-	var result = null;
-
-	if( this.Config != null && this.Config.server != null )
+	if( this.Config != null && this.Config.server != null && this.Config.server[id] != null )
 	{
-		$.each( this.Config.server, function( server_id, server )
-		{
-			if( server_id == id )
-			{
-				result = server;
-				result.id = server_id;
+		var server = this.Config.server[id];
+		server.id = id;
 
-				return( false ); // break;
-			}
-		});
+		return( server );
 	}
 
-	return( result );
+	return( null );
 };
 
-FOstatus.prototype.GetServerByName = function( name )
+FOstatus.prototype.GetServerBy = function( property, value )
 {
-	if( name == null )
+	if( property == null || value == null )
 		return( null );
 
-	var result = null;
 	if( this.Config != null && this.Config.server != null )
 	{
-		$.each( this.Config.server, function( id, server )
+		for( id in this.Config.server )
 		{
-			if( server.name == name )
-			{
-				result = server;
-				result.id = id;
+			var server = this.Config.server[id];
 
-				return( false ); // break;
+			if( server[property] != null )
+			{
+				if( server[property] == value )
+				{
+					server.id = id;
+					
+					return( server );
+				}
 			}
-		});
+		}
 	}
 
-	return( result );
+	return( null );
 };
 
 FOstatus.prototype.GetOption = function( category, option )
@@ -221,12 +232,12 @@ FOstatus.prototype.GetOption = function( category, option )
 	return( null );
 };
 
-FOstatus.prototype.GetServerOption = function( server_id, option )
+FOstatus.prototype.GetServerOption = function( id, option )
 {
-	if( server_id == null || option == null )
+	if( id == null || option == null )
 		return( null );
 
-	var server = this.GetServer( server_id );
+	var server = this.GetServer( id );
 
 	if( server != null && server[option] != null )
 		return( server[option] );
@@ -244,12 +255,12 @@ FOstatus.prototype.GetServersArray = function( sorting, ascending )
 
 	if( this.Config != null && this.Config.server != null )
 	{
-		$.each( this.Config.server, function( id, server )
+		for( id in this.Config.server )
 		{
-			var copy = server;
+			var copy = this.Config.server[id];
 			copy.id = id;
-			servers.push(copy);
-		});
+			servers.push( copy );
+		}
 	}
 
 	if( sorting != null )
@@ -276,37 +287,24 @@ FOstatus.prototype.GetPath = function( name, args )
 
 	var result = null;
 
-	if( this.Config != null && this.Config.files != null )
+	if( this.Config != null && this.Config.files != null && this.Config.files[name] != null )
 	{
-		if( this.Config.files[name] != null )
+		result = this.Config.files[name];
+		if( this.Config.dirs != null )
 		{
-			result = this.Config.files[name];
-			if( this.Config.dirs != null )
+			for( id in this.Config.dirs )
 			{
-				$.each( this.Config.dirs, function( id, value )
-				{
-					result = result.replace( '{DIR:'+id+'}', value );
-				});
+				result = result.replace( '{DIR:'+id+'}', this.Config.dirs[id] );
 			}
-			if( args != null )
+		}
+		if( args != null )
+		{
+			for( id in args )
 			{
-				$.each( args, function( id, value )
-				{
-					result = result.replace( '{'+id+'}', value );
-				});
+				result = result.replace( '{'+id+'}', args[id] );
 			}
 		}
 	}
 
 	return( result );
 };
-
-// ""debug""
-
-if( $ != null )
-{
-	$(document).ajaxSend( function( event, jqxhr, settings )
-	{
-		console.log( 'Loading: '+settings.url );
-	});
-}

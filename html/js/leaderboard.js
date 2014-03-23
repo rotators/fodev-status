@@ -50,7 +50,7 @@ function start()
 		{
 			var color = '#ffffff';
 			var name = this.value;
-			var server = fo.GetServerByName( name );
+			var server = fo.GetServerBy( 'name', name );
 			if( server != null )
 			{
 				if( server.color != null )
