@@ -26,7 +26,6 @@ class Average extends FOstatusModule
 		{
 			parent::$Slim->expires( '+10 minutes' );
 
-			$this->js();
 			$this->content();
 			UI::footerTimeline( array(), '/average/' );
 		});
@@ -41,20 +40,15 @@ class Average extends FOstatusModule
 
 			UI::jsArguments( $servers );
 
-			$this->js();
 			$this->content();
 			UI::footerTimeline( $servers, '/average/' );
 		});
 	}
 
-	private function js()
-	{
-		UI::addHighstock();
-		UI::addFOstatus( $this );
-	}
-
 	private function content()
 	{
+		UI::start( $this );
+		UI::addHighstock();
 		UI::contentStatic( 'chart' );
 	}
 };

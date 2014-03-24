@@ -1,0 +1,26 @@
+.center
+{
+	text-align: center;
+}
+
+.center table
+{
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+}
+
+.center th
+{
+	text-align: center !important;
+}
+
+img {float: right; border: 0px;}
+
+table {border-collapse: collapse;}
+
+td
+{
+	border: 1px solid #333;
+	vertical-align: baseline;
+}

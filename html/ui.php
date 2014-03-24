@@ -14,9 +14,6 @@ class UI
 	// Description
 	public static $CoreDescription = 'Rendering functions';
 
-	// if true, main rendering hook won't be executed
-	public static $Disable = false;
-
 	private static $Slim = NULL;
 	private static $Root = NULL;
 
@@ -33,8 +30,16 @@ class UI
 	public static $vHighcharts = '3.0.9'; // 3.0.10 legend issues
 	public static $vHighstock = '1.3.9';  // 1.3.10 legend issues
 
+	// keeps track if main rendering hooks has been added
+	private static $started = false;
+
+	private static $currentModule = NULL;
+
+	// enable charts script
+	private static $useCharts = false;
+
 	// enable/disable charts exporting
-	public static $chartsExport = false;
+	public static $useChartsExport = false;
 
 	// keeps track of already added scripts
 	private static $jsJquery = false;
@@ -56,15 +61,37 @@ class UI
 	private static $content = NULL;
 	private static $footer = NULL;
 
+	// basic initialization
+	// should be called only by main script
 	public static function initialize( $root, \Slim\Slim $slim )
 	{
 		self::$Root = $root;
 		self::$Slim = $slim;
 
-		self::initHooks();
 		self::initError();
-		self::initFOdev();
 		self::initNotFound();
+	}
+
+	public static function start( FOstatusModule $module = NULL, $charts = true )
+	{
+		if( self::$started )
+			return;
+
+		self::$started = true;
+		self::$currentModule = $module;
+		self::$useCharts = $charts;
+
+		self::$content = NULL;
+
+		self::initHooks();
+		self::initFOdev();
+	}
+
+	private static function restart()
+	{
+		self::$started = false;
+		self::$currentModule = NULL;
+		self::$content = NULL;
 	}
 
 	//
@@ -80,7 +107,7 @@ class UI
 
 	public static function ExceptionHandler( Exception $e, $slimRunning = true )
 	{
-		self::$content = NULL;
+		self::restart();
 
 		self::title( 'Error' );
 
@@ -182,6 +209,10 @@ class UI
 	{
 		self::$Slim->notFound( function()
 		{
+			self::start();
+
+			self::$content = NULL;
+
 			self::$Slim->response->setStatus( 404 );
 
 			self::title( "Page not found" );
@@ -216,8 +247,7 @@ class UI
 		// main rendering hook
 		self::$Slim->hook( 'html', function()
 		{
-			if( self::$Disable )
-				return;
+			self::addFOstatus();
 
 			self::response( "<!DOCTYPE html>\n<html lang='en'>" );
 
@@ -339,6 +369,8 @@ $(document).ready( function()
 
 		self::$Slim->hook( 'html:head:css', function()
 		{
+			self::response( "\n\t<!-- stylesheet -->" );
+
 			if( file_exists( 'css/base.css' ))
 				self::response( "\n\t<link rel='stylesheet' href='".self::$Root."/css/base.css' type='text/css' />" );
 			else
@@ -346,6 +378,8 @@ $(document).ready( function()
 
 			if( file_exists( 'css/fostatus.css' ))
 				self::response( "\n\t<link rel='stylesheet' href='".self::$Root."/css/fostatus.css' type='text/css' />" );
+			else
+				print_r( $_SERVER['SCRIPT_NAME'] );
 		}, 1 );
 
 		self::$Slim->hook( 'html:body', function()
@@ -446,8 +480,8 @@ $(document).ready( function()
 	// add javascript file to generated page (local)
 	public static function addLocalScript( $filename, $priority = 10 )
 	{
-		if( file_exists( "js/$filename" ))
-			self::addScript( self::$Root.'/js/'.$filename, $priority );
+		if( file_exists( $filename ))
+			self::addScript( self::$Root.'/'.$filename, $priority );
 	}
 
 	// add jquery to generated page
@@ -496,7 +530,7 @@ $(document).ready( function()
 
 		self::addScript( $url, -9998 );
 
-		if( self::$chartsExport )
+		if( self::$useChartsExport )
 		{
 			$url = $base_url . 'modules/exporting';
 
@@ -533,7 +567,7 @@ $(document).ready( function()
 
 		self::addScript( $url, -9997 );
 
-		if( self::$chartsExport )
+		if( self::$useChartsExport )
 		{
 			$url = $base_url . 'modules/exporting';
 
@@ -548,56 +582,75 @@ $(document).ready( function()
 
 	// adds fostatus*.js to generated page
 	// if module itself is passed, try to add his own script and stylesheet
-	public static function addFOstatus( FOstatusModule $module = NULL, $charts = true )
+	private static function addFOstatus()
 	{
-		if( self::$jsFOstatus )
-			return;
-
-		self::$jsFOstatus = true;
-		$url = 'fostatus.js';
-
-		if( self::$useMinimizedJS && file_exists( 'js/fostatus.min.js' ))
-			$url = 'fostatus.min.js';
-
-		self::addLocalScript( $url, -9994 );
-
-		if( $charts )
+		if( !self::$jsFOstatus )
 		{
-			self::$jsFOstatusCharts = true;
-			$url = 'fostatus.charts.js';
+			self::$jsFOstatus = true;
 
-			if( self::$useMinimizedJS && file_exists( 'js/fostatus.charts.min.js' ))
-				$url = 'fostatus.charts.min.js';
+			$file = 'js/fostatus';
+			$fileMin = $file.'.min.js';
+			$file .= '.js';
 
-			self::addLocalScript( $url, -9993 );
+			if( self::$useMinimizedJS && file_exists( $fileMin ))
+				self::addLocalScript( $fileMin, -9994 );
+			else
+				self::addLocalScript( $file, -9994 );
 		}
 
-		if( isset($module) && is_subclass_of( $module, 'FOstatusModule' ))
+		if( !self::$jsFOstatusCharts && self::$useCharts === true )
 		{
-			$module = strtolower( get_class( $module ));
-			if( preg_match( '!^[a-z0-9_]+$!', $module ))
+			self::$jsFOstatusCharts = true;
+
+			$file = 'js/fostatus.charts';
+			$fileMin = $file.'.min.js';
+			$file .= '.js';
+
+			if( self::$useMinimizedJS && file_exists( $fileMin ))
+				self::addLocalScript( $fileMin, -9993 );
+			else
+				self::addLocalScript( $file, -9993 );
+		}
+
+		if( !self::$jsFOstatusModule &&
+			isset(self::$currentModule) &&
+			is_subclass_of( self::$currentModule, 'FOstatusModule' ) &&
+			isset(self::$currentModule->Directory))
+		{
+			
+			if( preg_match( '!^[a-z0-9_]+$!', self::$currentModule->ID ))
 			{
-				$url = NULL;
+				$add = NULL;
+				$file = sprintf( "%s/%s/%s",
+					FOstatusModule::$ModulesRoot,
+					self::$currentModule->ID, self::$currentModule->ID );
+				$fileMin = $file.'.min.js';
+				$file .= '.js';
 
-				if( self::$useMinimizedJS && file_exists( "js/$module.min.js" ))
-					$url = "$module.min.js";
-				else if( file_exists( "js/$module.js" ))
-					$url = "$module.js";
-
-				if( isset($url) )
+				if( self::$useMinimizedJS && file_exists( $fileMin ))
+					$add = $fileMin;
+				elseif( file_exists( $file ))
+					$add = $file;
+				if( isset($add) )
 				{
-					self::addJquery();
 					self::$jsFOstatusModule = true;
-					self::addLocalScript( $url, -9992 );
+
+					self::addJquery();
+					self::addLocalScript( $add, -9992 );
 				}
 
-				$url = "css/$module.css";
-				if( file_exists( $url ))
+				// TODO:
+				//	negative priority
+				//	$useMinimizedCSS?
+				$file = sprintf( "%s/%s/%s.css",
+					FOstatusModule::$ModulesRoot,
+					self::$currentModule->ID, self::$currentModule->ID );
+				if( file_exists( $file ))
 				{
-					self::$Slim->hook( 'html:head:css', function() use( $url )
+					self::$Slim->hook( 'html:head:css', function() use( $file )
 					{
 						self::response( "\n\t<link rel='stylesheet' href='%s/%s' type='text/css' />",
-							self::$Root, $url );
+							self::$Root, $file );
 					}, 2 );
 				}
 			}
@@ -636,17 +689,6 @@ $(document).ready( function()
 		self::$content .= $args;
 	}
 
-	public static function contentStatic( $name )
-	{
-		if( !isset($name) )
-			return;
-
-		if( !file_exists( "static/$name.html" ))
-			return;
-
-		self::content( "\n%s", file_get_contents( "static/$name.html" ));
-	}
-
 	public static function footer( $format )
 	{
 		if( !isset($format) )
@@ -668,15 +710,50 @@ $(document).ready( function()
 		self::$footer .= $args;
 	}
 
+	public static function contentStatic( $name )
+	{
+		if( !isset($name) || !preg_match( '!^[A-Za-z0-9_]+$!', $name ))
+			return;
+
+		if( isset(self::$currentModule) )
+		{
+			$file = sprintf( "%s/%s/%s.html",
+				FOstatusModule::$ModulesRoot,
+				self::$currentModule->ID, $name );
+
+			if( file_exists( $file ))
+			{
+				self::content( "\n%s", file_get_contents( $file ));
+				return;
+			}
+		}
+
+		$file = sprintf( "static/%s.html", $name );
+		if( file_exists( $file ))
+			self::content( "\n%s", file_get_contents( $file ));
+	}
+
 	public static function footerStatic( $name )
 	{
-		if( !isset($name) )
+		if( !isset($name) || !preg_match( '!^[A-Za-z0-9_]+$!', $name ))
 			return;
 
-		if( !file_exists( "static/$name.html" ))
-			return;
+		if( isset(self::$currentModule) )
+		{
+			$file = sprintf( "%s/%s/%s.html",
+				FOstatusModule::$ModulesRoot,
+				self::$currentModule->ID, $name );
 
-		self::footer( "\n%s", file_get_contents( "static/$name.html" ));
+			if( file_exists( $file ))
+			{
+				self::footer( "\n%s", file_get_contents( $file ));
+				return;
+			}
+		}
+
+		$file = sprintf( "static/%s.html", $name );
+		if( file_exists( $file ))
+			self::footer( "\n%s", file_get_contents( $file ));
 	}
 
 	public static function footerTimeline( array $servers, $path )

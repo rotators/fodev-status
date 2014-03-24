@@ -7,6 +7,9 @@
 /html/data/*
 /html/css/base.css
 
+# symlinks to extra modules which shouldn't be enabled by default
+/html/modules/phpinfo
+
 # fodev.net-specific
 fodev.php
 

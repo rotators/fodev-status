@@ -9,23 +9,39 @@ if( !defined( 'FODEV:STATUS' ))
 abstract class FOStatusModule
 {
 	// modules objects
+	// set by initialize()
 	public static $Instances = array();
 
 	// Root URI
+	// set by initialize()
 	public static $Root = NULL;
 
 	// Slim object
+	// set by initialize()
 	public static $Slim = NULL;
 
 	// FOstatus object
+	// set by initialize()
 	public static $FO = NULL;
 
-	private static $ModulesRoot = NULL;
+	// set by initialize()
+	public static $ModulesRoot = NULL;
+
+	//+++ informations for UI +++//
+
+	// module identifier, helping to find javascript, stylesheet, etc.
+	// set by initialize()
+	public $ID = NULL;
+
+	// module home directory, absolute path
+	// set by initialize() only if included from own directory
+	public $Directory = NULL;
 
 	//+++ informations for About module +++//
 
 	// Description
 	public static $CoreDescription = 'Base modules functionality';
+
 
 	// list of routes handled by module
 	public $Routes = array();
@@ -57,24 +73,17 @@ abstract class FOStatusModule
 		self::$Slim = $app;
 		self::$FO = $status;
 
+		$included = array();
 		if( preg_match( '!^[a-z]+$!', $modules ) && is_dir( $modules ))
 		{
 			self::$ModulesRoot = $modules;
 
-			foreach( glob( "$modules/*", GLOB_ONLYDIR | GLOB_ERR ) as $dir )
+			if( count(self::includeModules()) )
+				self::initializeModules();
+			else
 			{
-				$base = basename( $dir );
-
-				if( !preg_match( '!^[a-z]+$!', $base ))
-					continue;
-
-				$file = sprintf( "%s/%s/%s.php",
-					self::$ModulesRoot, $base, $base );
-
-				if( !file_exists( $file ) || !is_readable( $file ))
-					continue;
-
-				include_once( $file );
+				user_error( "No modules found" );
+				exit;
 			}
 		}
 		else
@@ -82,7 +91,54 @@ abstract class FOStatusModule
 			user_error( "Invalid modules directory" );
 			exit;
 		}
+	}
 
+	private static function includeModules()
+	{
+		$included = array();
+
+		// try to include $modules/NAME/NAME.php
+		foreach( glob( sprintf( "%s/*", self::$ModulesRoot ), GLOB_ONLYDIR | GLOB_ERR ) as $dir )
+		{
+			$base = basename( $dir );
+
+			if( !preg_match( '!^[a-z]+$!', $base ))
+				continue;
+
+			$file = sprintf( "%s/%s/%s.php",
+				self::$ModulesRoot, $base, $base );
+
+			if( !file_exists( $file ) || !is_readable( $file ))
+				continue;
+
+			// store module ID
+			array_push( $included, $base );
+
+			include_once( $file );
+		}
+
+		// try to include $modules/NAME.php
+		// does nothing if $modules/NAME/NAME.php has been included
+		foreach( glob( sprintf( "%s/*.php", self::$ModulesRoot ), GLOB_ERR ) as $file )
+		{
+			if( is_dir( $file ) || !is_readable( $file ))
+				continue;
+
+			$base = basename( $file, '.php' );
+
+			if( in_array( $base, $included ))
+				continue;
+
+			array_push( $included, $base );
+
+			include_once( $file );
+		}
+
+		return( $included );
+	}
+
+	private static function initializeModules()
+	{
 		foreach( get_declared_classes() as $class )
 		{
 			if( is_subclass_of( $class, 'FOstatusModule' ))
@@ -90,6 +146,16 @@ abstract class FOStatusModule
 				$module = new $class();
 				if( $module && !$module->Dispose )
 				{
+					$classModule = new ReflectionClass( $module );
+					if( !isset($classModule) )
+						continue;
+
+					$file = $classModule->getFileName();
+					$module->ID = basename( $file, '.php' );
+
+					$file = preg_replace( sprintf( "!^%s/!", self::$ModulesRoot ), '', $file );
+					$module->Directory = dirname( $file );
+
 					array_push( self::$Instances, $module );
 				}
 			}
@@ -100,6 +166,7 @@ abstract class FOStatusModule
 			$old_routes = self::getSlimRoutes();
 			$module->init();
 			$module->Routes = array_diff( self::getSlimRoutes(), $old_routes );
+
 		}
 	}
 

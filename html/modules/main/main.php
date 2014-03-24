@@ -17,10 +17,12 @@ class Main extends FOstatusModule
 		{
 			parent::$Slim->expires( '+1 minute' );
 
-			UI::addFOstatus( $this, false );
+			UI::start( $this, false );
 
-			UI::contentStatic( 'main' );
-			UI::footerStatic( 'main_footer' );
+//			UI::addFOstatus( $this, false );
+
+			UI::contentStatic( 'body' );
+			UI::footerStatic( 'footer' );
 		});
 		
 	}

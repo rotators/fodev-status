@@ -26,19 +26,14 @@ class Players extends FOstatusModule
 
 		parent::$Slim->get( '/players/', function()
 		{
-			$this->js();
-
 			parent::$Slim->expires( '+1 minute' );
 
+			UI::start( $this );
+			UI::addHighcharts();
+			UI::title( 'Players' );
 			UI::contentStatic( 'chart' );
-			UI::footerStatic( 'players_footer' );
+			UI::footerStatic( 'footer' );
 		});
-	}
-
-	private function js()
-	{
-		UI::addHighcharts();
-		UI::addFOstatus( $this );
 	}
 };
 

@@ -27,7 +27,6 @@ class History extends FOstatusModule
 		{
 			parent::$Slim->expires( '+10 minutes' );
 
-			$this->js();
 			$this->content();
 			UI::footerTimeline( array(), '/history/' );
 		});
@@ -41,22 +40,16 @@ class History extends FOstatusModule
 			if( !$this->filterServers( $servers_user, $servers, '/history/', false ))
 				return;
 
-			UI::jsArguments( $servers );
-
-			$this->js();
 			$this->content();
+			UI::jsArguments( $servers );
 			UI::footerTimeline( $servers, '/history/' );
 		});
 	}
 
-	private function js()
-	{
-		UI::addHighstock();
-		UI::addFOstatus( $this );
-	}
-
 	private function content()
 	{
+		UI::start( $this );
+		UI::addHighstock();
 		UI::contentStatic( 'chart' );
 	}
 };

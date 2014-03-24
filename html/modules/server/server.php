@@ -17,8 +17,6 @@ class Server extends FOstatusModule
 			if( isset(parent::$FO->Config['server'][$server_user]['name']) )
 				UI::title( parent::$FO->Config['server'][$server_user]['name'] );
 
-			$this->js();
-
 			if( isset(parent::$FO->Config['server'][$server_user]) )
 				$server = parent::$FO->Config['server'][$server_user];
 
@@ -36,9 +34,10 @@ class Server extends FOstatusModule
 
 			$jsArguments = array( $server_user );
 
+			UI::start( $this );
+			UI::addHighstock();
 			UI::jsArguments( $jsArguments );
-
-			UI::contentStatic( 'server' );
+			UI::contentStatic( 'body' );
 			UI::contentStatic( 'chart' );
 
 			$compare = array();
@@ -54,12 +53,6 @@ class Server extends FOstatusModule
 			}
 
 		});
-	}
-
-	private function js()
-	{
-		UI::addHighstock();
-		UI::addFOstatus( $this );
 	}
 
 	public function serverLogo( $id )

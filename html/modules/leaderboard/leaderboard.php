@@ -16,17 +16,11 @@ class Leaderboard extends FOstatusModule
 		{
 			parent::$Slim->expires( '+10 minutes' );
 
-			$this->js();
-
+			UI::start( $this );
+			UI::addHighcharts();
 			UI::contentStatic( 'chart' );
-			UI::footerStatic( 'leaderboard_footer' );
+			UI::footerStatic( 'footer' );
 		});
-	}
-
-	private function js()
-	{
-		UI::addHighcharts();
-		UI::addFOstatus( $this );
 	}
 };
 

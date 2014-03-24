@@ -14,6 +14,7 @@ class About extends FOstatusModule
 
 		parent::$Slim->get( '/about/', function()
 		{
+			UI::start( NULL, false );
 			UI::title( 'About' );
 
 			$this->aboutMain();
@@ -23,21 +24,21 @@ class About extends FOstatusModule
 		$this->RoutesInfo['about/config'] = "Informations about configuration format";
 		parent::$Slim->get( '/about/config/', function()
 		{
-
+			UI::start( NULL, false );
 			$this->aboutConfig();
 		});
 
 		$this->RoutesInfo['about/modules'] = "Auto-generated informations about used modules";
 		parent::$Slim->get( '/about/modules/', function()
 		{
-
+			UI::start( NULL, false );
 			$this->aboutModules();
 		});
 	}
 
 	private function aboutMain()
 	{
-		UI::content( "<a href='modules/'>Modules info</a><br/>\n" );
+		UI::content( "<a href='modules/'>Modules info</a><br>\n" );
 	}
 
 	private function aboutSoftware()
@@ -83,16 +84,16 @@ class About extends FOstatusModule
 
 		foreach( array( 'Core' => 'FOstatusModule', 'UI' => 'UI' ) as $coreName => $coreClass )
 		{
-			UI::content( "\n<hr>\n<strong id='%s'>%s</strong><br/>",
+			UI::content( "\n<hr>\n<strong id='%s'>%s</strong><br>",
 				$coreName, $coreName );
 
 			if( isset($coreClass::$CoreDescription) )
-				UI::content( "\nDescription: %s<br/>", $coreClass::$CoreDescription );
+				UI::content( "\nDescription: %s<br>", $coreClass::$CoreDescription );
 
 			$class = new ReflectionClass( $coreClass );
 			if( $class )
 			{
-				UI::content( "\nLast update: %s<br/>",
+				UI::content( "\nLast update: %s<br>",
 					date ("j F Y, H:i", filemtime( $class->getFileName() )));
 			}
 		}
@@ -129,25 +130,28 @@ class About extends FOstatusModule
 			{
 				UI::content( " : %s", implode( ' -&gt; ', $parents ));
 			}
-			UI::content( "\n<br/>" );
+			UI::content( "\n<br>" );
 
 			if( isset($instance->Author) )
-				UI::content( "\nAuthor: %s<br/>", $instance->Author );
+				UI::content( "\nAuthor: %s<br>", $instance->Author );
 
 			if( isset($instance->Version) )
-				UI::content( "\nVersion: %s<br/>", $instance->Version );
+				UI::content( "\nVersion: %s<br>", $instance->Version );
 
-			UI::content( "\nLast update: %s<br/>",
+			if( isset($instance->ID) )
+				UI::content( "\nInternal ID: %s<br>", $instance->ID );
+
+			UI::content( "\nLast update: %s<br>",
 				date ("j F Y, H:i", filemtime( $class->getFileName() ))
 			);
 
 			if( isset($instance->Description) )
-				UI::content( "\nDescription: %s<br/>",
+				UI::content( "\nDescription: %s<br>",
 					$instance->Description );
 
 			if( count($instance->Routes) )
 			{
-				UI::content( "\nProvides:<br/>" );
+				UI::content( "\nProvides:<br>" );
 				UI::content( "\n<table>" );
 				foreach( $instance->Routes as $route )
 				{
@@ -194,7 +198,7 @@ class About extends FOstatusModule
 
 			if( isset($instance->Info) )
 			{
-				UI::content( "\nAdditional informations:<br/>\n%s<br/>",
+				UI::content( "\nAdditional informations:<br>\n%s<br>",
 					$instance->Info );
 			}
 		}
