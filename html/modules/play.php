@@ -16,7 +16,6 @@ class PlayFOnline extends FOstatusModule
 		{
 			parent::$Slim->response->headers->set( 'Content-Type',  'application/json' );
 
-			UI::$Disable = true;
 			$json = array();
 			foreach( array( 'config', 'status', 'logo' ) as $id )
 			{

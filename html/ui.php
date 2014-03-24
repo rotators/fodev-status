@@ -70,6 +70,18 @@ class UI
 
 		self::initError();
 		self::initNotFound();
+
+		// add trailing slash to all requests
+		self::$Slim->hook( 'slim.before.router', function()
+		{
+			if( substr( self::$Slim->request->getResourceUri(), -1 ) != '/' )
+			{
+				$location  = self::$Slim->request->getRootUri();
+				$location .= self::$Slim->request->getResourceUri();
+				$location .= '/';
+				self::$Slim->redirect( $location, 301 );
+			}
+		}, -9999 );
 	}
 
 	public static function start( FOstatusModule $module = NULL, $charts = true )
@@ -226,17 +238,6 @@ class UI
 	}
 	private static function initHooks()
 	{
-		// add trailing slash to all requests
-		self::$Slim->hook( 'slim.before.router', function()
-		{
-			if( substr( self::$Slim->request->getResourceUri(), -1 ) != '/' )
-			{
-				$location  = self::$Slim->request->getRootUri();
-				$location .= self::$Slim->request->getResourceUri();
-				$location .= '/';
-				self::$Slim->redirect( $location, 301 );
-			}
-		}, -9999 );
 
 		// render a page after executing route function
 		self::$Slim->hook( 'slim.after.router', function()
