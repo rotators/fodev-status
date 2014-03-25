@@ -99,13 +99,6 @@ class UI
 		self::initFOdev();
 	}
 
-	private static function restart()
-	{
-		self::$started = false;
-		self::$currentModule = NULL;
-		self::$content = NULL;
-	}
-
 	//
 	// here be dragons
 	//
@@ -119,7 +112,15 @@ class UI
 
 	public static function ExceptionHandler( Exception $e, $slimRunning = true )
 	{
-		self::restart();
+		if( !self::$started )
+			self::start( NULL, false );
+		else
+		{
+			self::$useCharts = false;
+			self::$content =
+			self::$currentModule =
+			NULL;
+		}
 
 		self::title( 'Error' );
 
@@ -658,7 +659,7 @@ $(document).ready( function()
 		}
 	}
 
-	// shortcut to \Slim\Response
+	// shortcut to \Slim\Response, can be used without calling UI::start()
 	public static function response( $format ) 
 	{
 		$args = func_get_args();
