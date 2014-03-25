@@ -16,4 +16,10 @@
 !/html/data/.htaccess
 !/html/data/config.json
 
+# preserve directory structure
 !empty.dir
+
+###
+
+# various temporary files 
+*~

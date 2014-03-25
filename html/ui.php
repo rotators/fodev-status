@@ -230,16 +230,16 @@ class UI
 
 			self::title( "Page not found" );
 
-			self::content( "\n404" );
+			self::contentStatic( 'error_404' );
 
 			self::$Slim->applyHook( 'slim.after.router' );
 			print self::$Slim->response->getBody();
 
 		});
 	}
+
 	private static function initHooks()
 	{
-
 		// render a page after executing route function
 		self::$Slim->hook( 'slim.after.router', function()
 		{
@@ -379,7 +379,9 @@ $(document).ready( function()
 			else
 				self::response( "\n\t<link rel='stylesheet' href='http://fodev.net/forum/Themes/blackened/css/index.css?fin20' type='text/css' />" );
 
-			if( file_exists( 'css/fostatus.css' ))
+			// blindly assume that file is in place, otherwise line wont be
+			// added when handling fatal errors (getcwd() returns '/' then)
+			// if( file_exists( 'css/fostatus.css' ))
 				self::response( "\n\t<link rel='stylesheet' href='".self::$Root."/css/fostatus.css' type='text/css' />" );
 		}, 1 );
 
@@ -648,8 +650,6 @@ $(document).ready( function()
 							self::$Root, $file );
 					}, 2 );
 				}
-				else
-					print_r($file);
 			}
 		}
 	}
@@ -716,13 +716,12 @@ $(document).ready( function()
 				$base = sprintf( "%s/%s/",
 					FOstatusModule::$ModulesRoot,
 					self::$currentModule->ID );
-				$file = sprintf( "%s%s.html", $base, $name );
 
+				$file = sprintf( "%sstatic/%s.html", $base, $name );
 				if( file_exists( $file ))
 					return( $file );
 
-				$file = sprintf( "%sstatic/%s.html", $base, $name );
-
+				$file = sprintf( "%s%s.html", $base, $name );
 				if( file_exists( $file ))
 					return( $file );
 			}

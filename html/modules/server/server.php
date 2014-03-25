@@ -14,17 +14,18 @@ class Server extends FOstatusModule
 	{
 		parent::$Slim->get( '/server/:server/', function( $server_user )
 		{
-			if( isset(parent::$FO->Config['server'][$server_user]['name']) )
-				UI::title( parent::$FO->Config['server'][$server_user]['name'] );
-
 			if( isset(parent::$FO->Config['server'][$server_user]) )
+			{
 				$server = parent::$FO->Config['server'][$server_user];
+				UI::title( $server['name'] );
+			}
 
 			if( !isset($server) )
 			{
-				// TODO
-				UI::start( NULL, false );
-				UI::content( 'server not found' );
+				// TODO: get rid of including javascript
+				UI::start( $this, false );
+				UI::title( 'Error' );
+				UI::contentStatic( 'error_wrongId' );
 
 				return;
 			}

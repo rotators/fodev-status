@@ -58,7 +58,16 @@ if( $fo->LoadConfig( 'data/config.json' ))
 {
 	FOstatusModule::initialize( $root, 'modules', $app, $fo );
 }
-//TODO: else
+else
+{
+	UI::start( NULL, false );
+	UI::title( 'Error' );
+	UI::contentStatic( 'error_config' );
+
+	$app->applyHook( 'slim.after.router' );
+	print $app->response->getBody();
+	exit;
+}
 
 $app->run();
 
