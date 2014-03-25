@@ -1,6 +1,6 @@
-/*.db
-/*.log
-/*.pid
+/bin/*.db
+/bin/*.log
+/bin/*.pid
 
 # local testing
 /html/cache/*
@@ -11,7 +11,7 @@
 /html/modules/phpinfo
 
 # fodev.net-specific
-fodev.php
+/fodev.php
 
 !/html/data/.htaccess
 !/html/data/config.json
