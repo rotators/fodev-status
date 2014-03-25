@@ -380,8 +380,6 @@ $(document).ready( function()
 
 			if( file_exists( 'css/fostatus.css' ))
 				self::response( "\n\t<link rel='stylesheet' href='".self::$Root."/css/fostatus.css' type='text/css' />" );
-			else
-				print_r( $_SERVER['SCRIPT_NAME'] );
 		}, 1 );
 
 		self::$Slim->hook( 'html:body', function()
