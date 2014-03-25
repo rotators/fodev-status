@@ -3,9 +3,6 @@
 * Some details about last week/month/year only (Server)
 * Find a way to move record markers if they don't fit into chart or overlap (Summary)
 * About
-* Reorganize modules
-  * each module in own directory (modules/moduleName/)
-  * static files should be taken only from module's dir or its subdirectories
 * Do not request data from servers which was never seen (History, Average)
 * Better way to provide combined data
   * allow clients to specify what they want - json/config,status/
