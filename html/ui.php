@@ -710,49 +710,41 @@ $(document).ready( function()
 		self::$footer .= $args;
 	}
 
-	public static function contentStatic( $name )
+	private static function findStaticFile( $name )
 	{
-		if( !isset($name) || !preg_match( '!^[A-Za-z0-9_]+$!', $name ))
-			return;
-
-		if( isset(self::$currentModule) )
+		if( isset($name) && preg_match( '!^[A-Za-z0-9_]+$!', $name ))
 		{
-			$file = sprintf( "%s/%s/%s.html",
-				FOstatusModule::$ModulesRoot,
-				self::$currentModule->ID, $name );
-
-			if( file_exists( $file ))
+			if( isset(self::$currentModule) )
 			{
-				self::content( "\n%s", file_get_contents( $file ));
-				return;
+				$file = sprintf( "%s/%s/%s.html",
+					FOstatusModule::$ModulesRoot,
+					self::$currentModule->ID, $name );
+
+				if( file_exists( $file ))
+					return( $file );
 			}
+
+			$file = sprintf( "static/%s.html", $name );
+			if( file_exists( $file ))
+				return( $file );
 		}
 
-		$file = sprintf( "static/%s.html", $name );
-		if( file_exists( $file ))
+		return( NULL );
+	}
+
+	public static function contentStatic( $name )
+	{
+		$file = self::findStaticFile( $name );
+
+		if( isset($file) )
 			self::content( "\n%s", file_get_contents( $file ));
 	}
 
 	public static function footerStatic( $name )
 	{
-		if( !isset($name) || !preg_match( '!^[A-Za-z0-9_]+$!', $name ))
-			return;
+		$file = self::findStaticFile( $name );
 
-		if( isset(self::$currentModule) )
-		{
-			$file = sprintf( "%s/%s/%s.html",
-				FOstatusModule::$ModulesRoot,
-				self::$currentModule->ID, $name );
-
-			if( file_exists( $file ))
-			{
-				self::footer( "\n%s", file_get_contents( $file ));
-				return;
-			}
-		}
-
-		$file = sprintf( "static/%s.html", $name );
-		if( file_exists( $file ))
+		if( isset($file) )
 			self::footer( "\n%s", file_get_contents( $file ));
 	}
 
