@@ -23,6 +23,7 @@ class Server extends FOstatusModule
 			if( !isset($server) )
 			{
 				// TODO
+				UI::start( NULL, false );
 				UI::content( 'server not found' );
 
 				return;

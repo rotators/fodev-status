@@ -1,12 +1,12 @@
 <?php
 
-if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_exists( 'UI' ))
+if( !defined( 'FODEV:STATUS' ) || !class_exists( 'TestModule' ) || !class_exists( 'UI' ))
 {
 	header( 'Location: /', true, 303 );
 	exit;
 }
 
-class Summary extends FOstatusModule
+class Summary extends TestModule
 {
 	public function init()
 	{

@@ -231,6 +231,19 @@ abstract class FOStatusModule
 		return( $modules );
 	}
 
+	public function getFile( $extension = NULL )
+	{
+		if( !isset($this->Directory) )
+			return( NULL );
+
+		return( sprintf( "%s/%s/%s%s%s",
+			FOstatusModule::$ModulesRoot,
+			$this->ID,
+			$this->ID,
+			isset($extension) ? '.' : '',
+			isset($extension) ? $extension : '' ));
+	}
+
 	public function bytesToSize( $size, $precision = 2 )
 	{
 		$base = log($size) / log(1024);
@@ -250,7 +263,7 @@ abstract class FOStatusModule
 		$result = array();
 
 		// strict arguments
-		if( !preg_match( '!^[a-z0-9_]+$!', $input ) && !preg_match( '!^[a-z0-9_,]+$!', $input ))
+		if( !preg_match( '!^[a-z0-9_,]+$!', $input ))
 		{
 			parent::$Slim->redirect( parent::$Root.$path, 303 );
 			return( false );
@@ -319,6 +332,14 @@ abstract class FOStatusModule
 	// module initialization
 	// called after spawning module
 	abstract public function init();
+};
+
+// for About module
+class TestModule extends FOstatusModule
+{
+	public function init()
+	{
+	}
 };
 
 ?>

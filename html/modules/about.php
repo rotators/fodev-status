@@ -128,7 +128,7 @@ class About extends FOstatusModule
 			array_pop( $parents ); // cut 'FOstatusModule' from list
 			if( count($parents) )
 			{
-				UI::content( " : %s", implode( ' -&gt; ', $parents ));
+				UI::content( " &raquo; %s", implode( ' &raquo; ', $parents ));
 			}
 			UI::content( "\n<br>" );
 

@@ -249,7 +249,8 @@ class UI
 		// main rendering hook
 		self::$Slim->hook( 'html', function()
 		{
-			self::addFOstatus();
+			if( isset(self::$currentModule) )
+				self::addFOstatus();
 
 			self::response( "<!DOCTYPE html>\n<html lang='en'>" );
 
@@ -580,8 +581,7 @@ $(document).ready( function()
 		}
 	}
 
-	// adds fostatus*.js to generated page
-	// if module itself is passed, try to add his own script and stylesheet
+	// adds static files which may be used by module
 	private static function addFOstatus()
 	{
 		if( !self::$jsFOstatus )
@@ -613,17 +613,14 @@ $(document).ready( function()
 		}
 
 		if( !self::$jsFOstatusModule &&
-			isset(self::$currentModule) &&
 			is_subclass_of( self::$currentModule, 'FOstatusModule' ) &&
 			isset(self::$currentModule->Directory))
 		{
-			
 			if( preg_match( '!^[a-z0-9_]+$!', self::$currentModule->ID ))
 			{
 				$add = NULL;
-				$file = sprintf( "%s/%s/%s",
-					FOstatusModule::$ModulesRoot,
-					self::$currentModule->ID, self::$currentModule->ID );
+				$file = self::$currentModule->getFile();
+
 				$fileMin = $file.'.min.js';
 				$file .= '.js';
 
@@ -642,9 +639,7 @@ $(document).ready( function()
 				// TODO:
 				//	negative priority
 				//	$useMinimizedCSS?
-				$file = sprintf( "%s/%s/%s.css",
-					FOstatusModule::$ModulesRoot,
-					self::$currentModule->ID, self::$currentModule->ID );
+				$file = self::$currentModule->getFile( 'css' );
 				if( file_exists( $file ))
 				{
 					self::$Slim->hook( 'html:head:css', function() use( $file )
@@ -653,6 +648,8 @@ $(document).ready( function()
 							self::$Root, $file );
 					}, 2 );
 				}
+				else
+					print_r($file);
 			}
 		}
 	}
@@ -716,9 +713,15 @@ $(document).ready( function()
 		{
 			if( isset(self::$currentModule) )
 			{
-				$file = sprintf( "%s/%s/%s.html",
+				$base = sprintf( "%s/%s/",
 					FOstatusModule::$ModulesRoot,
-					self::$currentModule->ID, $name );
+					self::$currentModule->ID );
+				$file = sprintf( "%s%s.html", $base, $name );
+
+				if( file_exists( $file ))
+					return( $file );
+
+				$file = sprintf( "%sstatic/%s.html", $base, $name );
 
 				if( file_exists( $file ))
 					return( $file );
