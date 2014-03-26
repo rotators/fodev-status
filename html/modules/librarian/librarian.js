@@ -1,9 +1,14 @@
 function start()
 {
-	if( !fo.LoadConfig( configFile ))
-		return;
+	ShowInfo( 'Loading...' );
 
-	$('#table').empty();
+	if( !fo.LoadConfig( configFile ))
+	{
+		ShowInfo( 'Invalid config' );
+		return;
+	}
+
+	$('#chart').empty();
 
 	fo.LoadJSON( dataDir+fo.GetPath( 'librarian' ), 'librarian', function( jsonData )
 	{
@@ -44,7 +49,9 @@ function start()
 			'</tr>'
 		);
 
-		$('#table').append( table );
+		$('#chart').append( table );
+
+		HideInfo();
 	});
 }
 
