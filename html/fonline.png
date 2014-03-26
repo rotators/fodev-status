@@ -1,6 +1,5 @@
 <?php
 
-include( 'lib/FOstatus.php' );
 include( 'lib/fowww/FOnlineFont.php' );
 
 header( "Expires: Mon, 26 Jul 1997 05:00:00 GMT" ); 
@@ -11,9 +10,10 @@ header( "Pragma: no-cache" );
 header( "Connection: close" );
 
 $img = NULL;
+$status = NULL;
+if( file_exists( 'data/status.json' ) && is_readable( 'data/status.json' ))
+	$status = json_decode( file_get_contents( 'data/status.json' ), true );
 
-$fo = new FOstatus();
-$status = json_decode( file_get_contents( 'data/status.json' ), true );
 if( $status != NULL && isset($status['fonline']['status']['servers']) && $status['fonline']['status']['servers'] > 0 )
 {
 	$img = imagecreatefrompng( 'gfx/online.png' );
