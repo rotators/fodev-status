@@ -327,7 +327,7 @@ if( typeof(window.jQuery) !== 'undefined' )
 	{
 		var result = null;
 
-		$.ajax({ dataType: 'json', url: url, async: false,
+		$.ajax({ dataType: 'json', url: url, async: true,
 		success: function( data )
 		{
 			result = data;
@@ -346,7 +346,7 @@ else if( typeof(window.Prototype) !== 'undefined' )
 	{
 		var result = null;
 
-		new Ajax.Request( url, { method: 'get', asynchronous: false,
+		new Ajax.Request( url, { method: 'get', asynchronous: true,
 		onCreate: function( response )
 		{
 			var transport = response.transport; 
