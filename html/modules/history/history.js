@@ -22,8 +22,15 @@ function start( /* servers */ )
 	if( !fo.LoadConfig( configFile ))
 		return;
 
+	var average = fo.LoadJSON( dataDir+fo.GetPath( 'average_short' ), 'average_short' );
+	if( average.server != null )
+		average = average.server;
+
 	$.each( fo.GetServersArray( 'name' ), function( idx, server )
 	{
+		if( average[server.id] == null )
+			return( true ); // continue;
+
 		var add = false;
 
 		if( args.length == 0 )
