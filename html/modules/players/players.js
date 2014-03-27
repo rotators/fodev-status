@@ -15,65 +15,75 @@ function start()
 	chart.chart.originalName = chart.chart.name;
 
 	// set data before creating chart for fancy initial animation
-	chart.series[0].data = getData();
-	chart = new Highcharts.Chart( chart );
+	getData( function( data )
+	{
+		chart.series[0].data = data;
+		chart = new Highcharts.Chart( chart );
 
-	setInterval( update, 60000 );
-	HideInfo();
-	$('#footer').show();
+		setInterval( update, 10000 );
+		HideInfo();
+		$('#footer').show();
+	});
 }
 
 function update()
 {
 	if( $('input[name="auto_update"]').prop('checked') )
 	{
-		var data = getData();
-		chart.series[0].setData( data, true );
+		getData( function( data )
+		{
+			chart.series[0].setData( data, true );
+		});
 	}
 }
 
-function getData( year, month, day )
+function getData( callback, year, month, day )
 {
-	if( !fo.LoadConfig( configFile ))
+	if( callback == null )
 		return;
 
-	var url = dataDir;
-	
-	if( year != null && month != null && day != null )
-		url += fo.GetPath( 'day_summary', { YEAR: year, MONTH: month, DAY: day });
-	else
-		url += fo.GetPath( 'status' );
-
-	var seriesData = [];
-
-	var jsonData = fo.LoadJSON( url, 'status' );
-	if( jsonData != null && jsonData.server != null )
+	fo.LoadConfig( configFile, function()
 	{
-		$.each( fo.GetServersArray('name'), function( idx, server )
+		var url = dataDir;
+
+		if( year != null && month != null && day != null )
+			url += fo.GetPath( 'day_summary', { YEAR: year, MONTH: month, DAY: day });
+		else
+			url += fo.GetPath( 'status' );
+
+		var seriesData = [];
+
+		fo.LoadJSON( url, 'status', function( jsonData )
 		{
-			if( jsonData.server[server.id] != null )
+			$.each( fo.GetServersArray('name'), function( idx, server )
 			{
-				var players = parseInt( jsonData.server[server.id].players );
-				if( players > 0 )
+				if( jsonData.server[server.id] != null )
 				{
-					var data = {
-						id: server.id,
-						name: fo.GetServerOption( server.id,'name' ),
-						y: players
-					};
-
-					var options = ['color'];
-					$.each(options, function(i,option)
+					var players = parseInt( jsonData.server[server.id].players );
+					if( players > 0 )
 					{
-						var value = fo.GetServerOption( server.id, option );
-						if( value != null )
-							data[option] = value;
-					});
-					seriesData.push( data );
-				}
-			};
-		});
-	};
+						var data = {
+							id: server.id,
+							name: fo.GetServerOption( server.id,'name' ),
+							y: players,
+							index: idx,
+							legendIndex: idx
+						};
 
-	return( seriesData );
+						var options = ['color'];
+						$.each(options, function(i,option)
+						{
+							var value = fo.GetServerOption( server.id, option );
+							if( value != null )
+								data[option] = value;
+						});
+
+						seriesData.push( data );
+					}
+				};
+			});
+
+			callback( seriesData );
+		});
+	});
 }
