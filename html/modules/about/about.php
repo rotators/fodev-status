@@ -14,10 +14,10 @@ class About extends FOstatusModule
 
 		parent::$Slim->get( '/about/', function()
 		{
-			UI::start( NULL, false );
+			UI::start( $this, false );
 			UI::title( 'About' );
+			UI::contentStatic( 'main' );
 
-			$this->aboutMain();
 			$this->aboutSoftware();
 		});
 
@@ -36,11 +36,6 @@ class About extends FOstatusModule
 		});
 	}
 
-	private function aboutMain()
-	{
-		UI::content( "<a href='modules/'>Modules info</a><br>\n" );
-	}
-
 	private function aboutSoftware()
 	{
 		$software = array(
@@ -49,7 +44,7 @@ class About extends FOstatusModule
 			'PHP'			=> 'https://php.net/',
 			'Slim'			=> 'http://slimframework.com/',
 			'FOnlineFont'		=> 'https://github.com/wipe2238/fowww/blob/master/FOnlineFont.php',
-			'*2'			=> "\n\t<hr>",
+			'*2'			=> "\n\t<hr>\nClient-side<br>",
 			'jQuery'		=> 'https://jquery.com/',
 			'Highcharts'		=> 'http://www.highcharts.com/products/highcharts/',
 			'Highstock'		=> 'http://www.highcharts.com/products/highstock/',

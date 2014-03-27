@@ -12,6 +12,33 @@ class JSON extends FOstatusModule
 
 	public function init()
 	{
+		parent::$Slim->get( '/json/', function()
+		{
+			$json = array();
+			foreach( get_class_methods( $this ) as $method )
+			{
+				if( preg_match( "!^".$this->prefix."([a-z_]+)$!", $method, $match ))
+				{
+					array_push( $json, array(
+						'id' => $match[1]
+					));
+				}
+			};
+			foreach( parent::$FO->Config['files'] as $file => $value )
+			{
+				$path = array(
+					'id' => $file
+				);
+
+				if( preg_match_all( '!\{(.*)\}!U', parent::$FO->GetPath( $file ), $match ))
+				{
+					$path['require'] = $match[1];
+				}
+				array_push( $json, $path );
+			}
+			$this->send( array( 'fonline' => array( 'json' => $json )));
+		});
+
 		parent::$Slim->get( '/json/:arguments/', function( $args )
 		{
 			if( !preg_match( '!^[a-z_,]+$!', $args ))
