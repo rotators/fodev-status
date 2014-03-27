@@ -34,71 +34,63 @@ FOstatus.prototype.ExtractSeconds = function( seconds ) // helper
 FOstatus.prototype.LoadJSON = function( url, type, callback ) // helper
 {
 	var err = '[LoadJSON] Can\'t load '+(type != null ? type+' @ ' : '')+url+' : ';
-	var result = null;
 
 	if( url == null )
 	{
 		console.log( '[LoadJSON] URL not defined' );
-		return( result );
+		return;
 	}
-
-	if( type == null && callback == null )
+	else if( type == null )
 	{
-		console.log( err+'data type and/or callback must be defined' );
-		return( result );
+		console.log( err+'data type not defined' );
+		return;
 	}
-
-	if( this.JSONLoader == null )
+	else if( callback == null )
+	{
+		console.log( err+'callback not defined' );
+		return;
+	}
+	else if( this.JSONLoader == null )
 	{
 		console.log( err+"JSONLoader not defined" );
-		return( result );
+		return;
 	}
 
-	var data = this.JSONLoader( url );
-
-	if( data == null )
-	{
-		console.log( err+'Empty data' );
-		return( result );
-	}
-
-	if( type != null )
+	this.JSONLoader( url, function( data )
 	{
 		if( data.fonline == null )
 			console.log( err+'Missing data->fonline' );
 		else if( data.fonline[type] == null )
 			console.log( err+'Missing data->fonline->'+type )
 		else
-		{
-			if( callback != null )
-				result = callback( data.fonline[type] );
-			else
-				result = data.fonline[type];
-		}
-	}
-	else if( callback != null )
-		result = callback( data );
-
-	return( result );
+			callback( data.fonline[type] );
+	});
 };
 
-FOstatus.prototype.LoadConfig = function( url )
+FOstatus.prototype.LoadConfig = function( url, callback )
 {
-	if( url == null )
-		return( false );
+	var err = '[LoadConfig] ';
 
-	var result = false, self = this;
+	if( url == null )
+	{
+		console.log( err+'URL not defined' );
+		return;
+	}
+	else if( callback == null )
+	{
+		console.log( err+'callback not defined' );
+		return;
+	}
+
+	var self = this;
 	this.Config = null;
 
 	this.LoadJSON( url, 'config', function( data )
 	{
 		self.Config = data;
-		result = true;
+		callback();
 	});
-
-	return( result );
 };
-
 
 FOstatus.prototype.CheckConfig = function( data, skip_base )
 {
@@ -323,21 +315,20 @@ FOstatus.prototype.GetPath = function( name, args )
 
 if( typeof(window.jQuery) !== 'undefined' )
 {
-	FOstatus.prototype.JSONLoader = function( url )
+	FOstatus.prototype.JSONLoader = function( url, callback )
 	{
 		var result = null;
 
 		$.ajax({ dataType: 'json', url: url, async: true,
 		success: function( data )
 		{
-			result = data;
+			if( callback != null )
+				callback( data );
 		},
 		error: function( jqXHR, textStatus, errorThrown )
 		{
 			console.log( '[JSONLoader:jQuery] ERROR : '+textStatus+' : '+errorThrown );
 		}});
-
-		return( result );
 	};
 }
 else if( typeof(window.Prototype) !== 'undefined' )
@@ -359,15 +350,13 @@ else if( typeof(window.Prototype) !== 'undefined' )
 		},
 		onComplete: function( data )
 		{
-			if( data.responseJSON != null )
-				result = data.responseJSON;
+			if( callback != null && data.responseJSON != null )
+				callback( data.responseJSON );
 		},
 		onFailure: function( data )
 		{
 			console.log( '[JSONLoader:prototype] ERROR : '+data.statusText );
 		}});
-
-		return( result );
 	}
 }
 /*
