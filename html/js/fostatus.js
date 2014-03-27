@@ -76,19 +76,15 @@ FOstatus.prototype.LoadConfig = function( url, callback )
 		console.log( err+'URL not defined' );
 		return;
 	}
-	else if( callback == null )
-	{
-		console.log( err+'callback not defined' );
-		return;
-	}
-
 	var self = this;
 	this.Config = null;
 
 	this.LoadJSON( url, 'config', function( data )
 	{
 		self.Config = data;
-		callback();
+
+		if( callback != null )
+			callback();
 	});
 };
 
@@ -249,7 +245,6 @@ FOstatus.prototype.GetServerOption = function( id, option )
 	return( null );
 };
 
-
 FOstatus.prototype.GetServersArray = function( sorting, ascending )
 {
 	sorting = this.defaultArgument( sorting, null );
@@ -327,13 +322,13 @@ if( typeof(window.jQuery) !== 'undefined' )
 		},
 		error: function( jqXHR, textStatus, errorThrown )
 		{
-			console.log( '[JSONLoader:jQuery] ERROR : '+textStatus+' : '+errorThrown );
+			console.log( '[JSONLoader:jQuery] ERROR : '+url+' : '+textStatus+' : '+errorThrown );
 		}});
 	};
 }
 else if( typeof(window.Prototype) !== 'undefined' )
 {
-	FOstatus.prototype.JSONLoader = function( url )
+	FOstatus.prototype.JSONLoader = function( url, callback )
 	{
 		var result = null;
 
@@ -355,7 +350,7 @@ else if( typeof(window.Prototype) !== 'undefined' )
 		},
 		onFailure: function( data )
 		{
-			console.log( '[JSONLoader:prototype] ERROR : '+data.statusText );
+			console.log( '[JSONLoader:prototype] ERROR : '+url+' : '+data.statusText );
 		}});
 	}
 }

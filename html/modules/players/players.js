@@ -32,7 +32,16 @@ function update()
 	{
 		getData( function( data )
 		{
-			chart.series[0].setData( data, true );
+			$.each( data, function( idx, pointData )
+			{
+				var point = chart.get( pointData.id );
+				if( point != null )
+				{
+					point.update( pointData, true );
+				}
+				else
+					chart.series[0].addPoint( pointData, true );
+			});
 		});
 	}
 }
@@ -64,9 +73,8 @@ function getData( callback, year, month, day )
 					{
 						var data = {
 							id: server.id,
-							name: fo.GetServerOption( server.id,'name' ),
+							name: fo.GetServerOption( server.id, 'name' ),
 							y: players,
-							index: idx,
 							legendIndex: idx
 						};
 
