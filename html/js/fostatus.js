@@ -38,25 +38,25 @@ FOstatus.prototype.LoadJSON = function( url, type, callback ) // helper
 	if( url == null )
 	{
 		console.log( '[LoadJSON] URL not defined' );
-		return;
+		return( null );
 	}
 	else if( type == null )
 	{
 		console.log( err+'data type not defined' );
-		return;
+		return( null );
 	}
 	else if( callback == null )
 	{
 		console.log( err+'callback not defined' );
-		return;
+		return( null );
 	}
 	else if( this.JSONLoader == null )
 	{
 		console.log( err+"JSONLoader not defined" );
-		return;
+		return( null );
 	}
 
-	this.JSONLoader( url, function( data )
+	var request = this.JSONLoader( url, function( data )
 	{
 		if( data.fonline == null )
 			console.log( err+'Missing data->fonline' );
@@ -65,6 +65,8 @@ FOstatus.prototype.LoadJSON = function( url, type, callback ) // helper
 		else
 			callback( data.fonline[type] );
 	});
+
+	return( request );
 };
 
 FOstatus.prototype.LoadConfig = function( url, callback )
@@ -74,18 +76,20 @@ FOstatus.prototype.LoadConfig = function( url, callback )
 	if( url == null )
 	{
 		console.log( err+'URL not defined' );
-		return;
+		return( null );
 	}
 	var self = this;
 	this.Config = null;
 
-	this.LoadJSON( url, 'config', function( data )
+	var request = this.LoadJSON( url, 'config', function( data )
 	{
 		self.Config = data;
 
 		if( callback != null )
 			callback();
 	});
+
+	return( request );
 };
 
 FOstatus.prototype.CheckConfig = function( data, skip_base )
@@ -312,9 +316,7 @@ if( typeof(window.jQuery) !== 'undefined' )
 {
 	FOstatus.prototype.JSONLoader = function( url, callback )
 	{
-		var result = null;
-
-		$.ajax({ dataType: 'json', url: url, async: true,
+		var request = $.ajax({ dataType: 'json', url: url, async: true,
 		success: function( data )
 		{
 			if( callback != null )
@@ -324,6 +326,44 @@ if( typeof(window.jQuery) !== 'undefined' )
 		{
 			console.log( '[JSONLoader:jQuery] ERROR : '+url+' : '+textStatus+' : '+errorThrown );
 		}});
+
+		return( request );
+	};
+
+	FOstatus.prototype.LoadJSONQueue = function( resetConfig, dataPath, requests, callback )
+	{
+		var self = this;
+		var startJSONQueue = function()
+		{
+			var queue = [], result = {};
+			$.each( requests, function( idx, id ) // for()... don't!
+			{
+				var path = self.GetPath( id );
+				if( path == null )
+				{
+					result[id] = null;
+					return( true ); // continue;
+				}
+				queue.push( self.LoadJSON( dataPath+path, id, function( data )
+				{
+					result[id] = data;
+				}));
+			});
+			$.when.apply( $, queue ).done( function()
+			{
+				callback( result );
+			});
+		};
+
+		if( this.Config == null || resetConfig )
+		{
+			if( this.ConfigURL == null )
+				return;
+			else
+				this.LoadConfig( this.ConfigURL, startJSONQueue );
+		}
+		else
+			startJSONQueue();
 	};
 }
 else if( typeof(window.Prototype) !== 'undefined' )
@@ -360,18 +400,15 @@ else if( typeof(window.MooTools) !== 'undefined' )
 	// This is not json loader, this is just a tribute;
 	// MooTools does not (?) allow loading json from other domain
 
-	FOstatus.prototype.JSONLoader = function( url )
+	FOstatus.prototype.JSONLoader = function( url, callback )
 	{
-		var result = null;
-
-		var request = new Request.JSON({ url: url, method: 'get', async: false,
+		var request = new Request.JSON({ url: url, method: 'get', async: true,
 		onSuccess: function( data )
 		{
-			result = data;
+			if( data != null )
+				callback( data );
 		}
 		}).send();
-
-		return( result );
 	};
 }
 */

@@ -2,6 +2,8 @@ var chart = null;
 
 function start()
 {
+	fo.ConfigURL = configFile;
+
 	$('#footer').hide();
 	ShowInfo( 'Loading' );
 	chart = foCharts.CreatePercentPie(
@@ -60,7 +62,7 @@ function getData( callback, year, month, day )
 	if( callback == null )
 		return;
 
-	fo.LoadConfig( configFile, function()
+	fo.LoadJSONQueue( true, dataDir, ['status'], function( result )
 	{
 		var url = dataDir;
 
@@ -69,46 +71,43 @@ function getData( callback, year, month, day )
 		else
 			url += fo.GetPath( 'status' );
 
-		var seriesData = [];
+		var seriesData = [], jsonData = result.status;
 
-		fo.LoadJSON( url, 'status', function( jsonData )
+		var toHide = [];
+
+		$.each( fo.GetServersArray('name'), function( idx, server )
 		{
-			var toHide = [];
-
-			$.each( fo.GetServersArray('name'), function( idx, server )
+			if( jsonData.server[server.id] != null )
 			{
-				if( jsonData.server[server.id] != null )
+				var players = parseInt( jsonData.server[server.id].players );
+				if( players > 0 )
 				{
-					var players = parseInt( jsonData.server[server.id].players );
-					if( players > 0 )
+					var data = {
+						id: server.id,
+						name: fo.GetServerOption( server.id, 'name' ),
+						x: idx,
+						category: idx,
+						y: players,
+						legendIndex: idx
+					};
+
+					var options = ['color'];
+					$.each(options, function(i,option)
 					{
-						var data = {
-							id: server.id,
-							name: fo.GetServerOption( server.id, 'name' ),
-							x: idx,
-							category: idx,
-							y: players,
-							legendIndex: idx
-						};
+						var value = fo.GetServerOption( server.id, option );
+						if( value != null )
+							data[option] = value;
+					});
 
-						var options = ['color'];
-						$.each(options, function(i,option)
-						{
-							var value = fo.GetServerOption( server.id, option );
-							if( value != null )
-								data[option] = value;
-						});
-
-						seriesData.push( data );
-					}
-					else
-						toHide.push( server.id );
+					seriesData.push( data );
 				}
 				else
 					toHide.push( server.id );
-			});
-
-			callback( seriesData, toHide );
+			}
+			else
+				toHide.push( server.id );
 		});
+
+		callback( seriesData, toHide );
 	});
 }
