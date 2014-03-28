@@ -30,8 +30,14 @@ function update()
 {
 	if( $('input[name="auto_update"]').prop('checked') )
 	{
-		getData( function( data )
+		getData( function( data, toHide )
 		{
+			$.each( toHide, function( idx, id )
+			{
+				var point = chart.get( id );
+				if( point != null )
+					point.remove()
+			});
 			$.each( data, function( idx, pointData )
 			{
 				var point = chart.get( pointData.id );
@@ -64,6 +70,8 @@ function getData( callback, year, month, day )
 
 		fo.LoadJSON( url, 'status', function( jsonData )
 		{
+			var toHide = [];
+
 			$.each( fo.GetServersArray('name'), function( idx, server )
 			{
 				if( jsonData.server[server.id] != null )
@@ -74,6 +82,8 @@ function getData( callback, year, month, day )
 						var data = {
 							id: server.id,
 							name: fo.GetServerOption( server.id, 'name' ),
+							x: idx,
+							category: idx,
 							y: players,
 							legendIndex: idx
 						};
@@ -88,10 +98,14 @@ function getData( callback, year, month, day )
 
 						seriesData.push( data );
 					}
-				};
+					else
+						toHide.push( server.id );
+				}
+				else
+					toHide.push( server.id );
 			});
 
-			callback( seriesData );
+			callback( seriesData, toHide );
 		});
 	});
 }
