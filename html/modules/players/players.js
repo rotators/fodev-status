@@ -30,13 +30,14 @@ function update()
 {
 	if( $('input[name="auto_update"]').prop('checked') )
 	{
-		getData( function( data, toHide )
+		getData( function( data )// toHide )
 		{
+			/*
 			$.each( toHide, function( idx, id )
 			{
 				var point = chart.get( id );
 				if( point != null )
-					point.remove()
+					point.remove();
 			});
 			$.each( data, function( idx, pointData )
 			{
@@ -48,6 +49,8 @@ function update()
 				else
 					chart.series[0].addPoint( pointData, true );
 			});
+			*/
+			chart.series[0].setData( data, true );
 		});
 	}
 }
