@@ -1,0 +1,125 @@
+#!/bin/perl
+#
+# one-time only!
+#
+use strict;
+use warnings;
+
+BEGIN { push( @INC, '../../bin' ); };
+
+use Archive::Zip qw( :ERROR_CODES );
+use File::Basename qw( dirname );
+use FOstatus;
+use Storable;
+
+my $fo = FOstatus->new();
+my $config_file = '../../html/data/config.json';
+my $data_dir = dirname( $config_file ) . '/';
+
+sub fid2rid($)
+{
+	my( $ffid ) = @_;
+
+	foreach my $fid ( keys( $fo->{Config}->{server} ))
+	{
+		next if( !exists($fo->{Config}->{server}{$fid}{librarian} ));
+
+		my $rid = $fo->{Config}->{server}{$fid}{librarian};
+		return( $rid ) if( $fid eq $ffid );
+	}
+
+	return( undef );
+}
+
+sub rtext($$$)
+{
+	my( $prefix, $rid, $suffix ) = @_;
+
+	return( sprintf( "%s%s%s%s", $prefix, $rid ne '' ? '_' : '', $rid, $suffix ));
+}
+
+sub load_sql($$;$)
+{
+	my( $rid, $dir, $quiet ) = @_;
+
+	my %db;
+	my $id = rtext( 'playerStats', $rid, '' );
+	my $filename = rtext( $dir.'/playerStats', $rid, '.txt.zip' );
+	my $zip = Archive::Zip->new();
+
+	printf( "Loading database: %s\n", $filename ) if( !$quiet );
+	if( $zip->read($filename) != AZ_OK )
+	{
+		printf( "\tRead error\n" ) if( !$quiet );
+		return( %db );
+	}
+
+	if( $zip->numberOfMembers() != 1 )
+	{
+		printf( "\tWrong number of members (%d)\n", $zip->numberOfMembers() ) if( !$quiet );
+		return( %db );
+	}
+
+	my $content = ($zip->members())[0]->contents();
+
+	# Simply horrible way to load sql, isn't it?
+
+	for( split( /^/, $content ))
+	{
+		chomp;
+		s!\n!!g;
+		s!\r!!g;
+		if( /^INSERT INTO `$id` VALUES (.*)/ )
+		{
+			my $values = $1;
+			my @vals = split( /\),\(/, $values );
+			foreach my $val ( @vals )
+			{
+				if( $val =~ /([0-9]+)\,\'([0-9]+)\-([0-9]+)\-([0-9]+) ([0-9]+)\:([0-9]+)\:([0-9]+)\'\,([0-9-]+)/ )
+				{
+					my( $timestamp, $year, $month, $day, $hour, $min, $sec, $online ) = ( $1, int($2), int($3), int($4), int($5), int($6), int($7), $8 );
+
+					if( int($online) >= 0 && (!exists($db{timestamp}) || $timestamp > $db{timestamp} ))
+					{
+						$db{timestamp} = $timestamp / 1000;
+						$db{count} = $online;
+					}
+				}
+			}
+		}
+	};
+
+	return( %db );
+}
+
+if( !$fo->LoadConfig( $config_file ))
+{
+	print( "ERROR: invalid configuration" );
+	exit;
+}
+
+my %ping = %{ retrieve( '../../bin/ping.db' )};
+my $save = 0;
+foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
+{
+	print( "seen $fid?\n" );
+	my $rid = fid2rid( $fid );
+	if( defined($rid) && (!exists($ping{seen}{$fid}) || $ping{seen}{$fid} <= 0 ))
+	{
+		my %db = load_sql( $rid, $data_dir.$fo->{Config}->{dirs}{db} );
+		if( exists($db{timestamp}) )
+		{
+			my $t = localtime( $db{timestamp} );
+			printf( "seen %s = [ %s : %d : %d ]\n", $fid, $t,
+				$db{timestamp}, $db{count} );
+			$ping{seen}{$fid} = $db{timestamp};
+			$save = 1;
+		}
+	}
+}
+
+if( $save )
+{
+	print( "save\n" );
+	store( \%ping, '../../ping.db' );
+}
