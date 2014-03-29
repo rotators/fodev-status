@@ -14,20 +14,15 @@ class Summary extends TestModule
 
 //		UI::menu( 'fonline', 'Summary', 5 );
 
-		parent::$Slim->get( '/test/fonline/', function()
+		parent::$Slim->get( '/test/summary/', function()
 		{
 			parent::$Slim->expires( '+10 minutes' );
 
-			$this->js();
+			UI::start( $this );
+			UI::addHighstock();
 
 			UI::contentStatic( 'chart' );
 		});
-	}
-
-	private function js()
-	{
-		UI::addHighstock();
-		UI::addFOstatus( $this );
 	}
 };
 
