@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang='en'>
 <head>
 	<title>fodev-status demonstration</title>
+	<meta charset='utf-8' />
 	<script src="//code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
-	<script src="//fodev.net/status/js/fostatus.js" type="text/javascript"></script>
-	<script src="//www.google.com/jsapi" type="text/javascript"></script>
+<!--	<script src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js" type="text/javascript"></script>
+-->
+	<script src="//google.com/jsapi" type="text/javascript"></script>
+
+	<script src="/fodev/status/js/fostatus.js" type="text/javascript"></script>
 </head>
 <body>
 
@@ -19,42 +23,44 @@ function drawChart()
 	var fodev = 'http://fodev.net/status/data/';
 
 	var fo = new FOstatus();
-	if( !fo.LoadConfig( fodev+'config.json' ))
-		return;
-
-	if( !fo.CheckConfig( fo.Config, true ))
+	fo.LoadConfig( fodev+'config.json', function()
 	{
-		console.Log( "Invalid config" );
-		return;
-	}
-
-	var chart_data = [['Server', 'Players' ]];
-	var chart_slices = [];
-
-	fo.LoadJSON( fodev+fo.GetPath( 'status' ), 'status', function( data )
-	{
-		$.each( fo.GetServersArray( 'name' ), function( i, server )
+		if( !fo.CheckConfig( fo.Config, true ))
 		{
-			if( data.server[server.id] != null && data.server[server.id].players > 0 )
+			console.Log( "Invalid config" );
+			return;
+		}
+
+		var chart_data = [['Server', 'Players' ]];
+		var chart_slices = [];
+
+		fo.LoadJSON( fodev+fo.GetPath( 'status' ), 'status', function( data )
+		{
+			var servers = fo.GetServersArray( 'name' );
+			for( id in servers )
 			{
-				chart_data.push([ server.name, data.server[server.id].players ]);
-				if( server.color != null )
-					chart_slices.push({ color: server.color });
-				else
-					chart_slices.push({ color: '#ffffff' });
+				var server = servers[id];
+
+				if( data.server[server.id] != null && data.server[server.id].players > 0 )
+				{
+					chart_data.push([ server.name, data.server[server.id].players ]);
+					if( server.color != null )
+						chart_slices.push({ color: server.color });
+					else
+						chart_slices.push({ color: '#ffffff' });
+				}
 			}
+
+			var chart = new google.visualization.PieChart(document.getElementById('players'));
+			chart.draw( google.visualization.arrayToDataTable( chart_data ),
+			{
+				title: 'FOnline players distribution',
+				is3D: true,
+				slices: chart_slices,
+			});
+			
 		});
 	});
-
-	var chart = new google.visualization.PieChart(document.getElementById('players'));
-	chart.draw(
-		google.visualization.arrayToDataTable( chart_data ),
-		{
-			title: 'FOnline players distribution',
-			is3D: true,
-			slices: chart_slices,
-		}
-	);
 }
 </script>
 </body>
