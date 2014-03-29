@@ -245,6 +245,7 @@ if( !$options{standalone} )
 if( -r 'ping.db' )
 {
 	%ping = %{ retrieve( 'ping.db' ) };
+	delete( $ping{seen} );
 }
 
 $options{rebuild} = 1 if( ! -f $data_dir.$fo->GetPath( 'history' ));

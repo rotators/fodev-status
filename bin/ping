@@ -128,10 +128,16 @@ foreach my $fid ( sort{$fo->{Config}->{server}{$a}{name} cmp $fo->{Config}->{ser
 	my %status = ping_server( $server, $fid );
 	my $ping_end = time();
 
+	if( exists($db{seen}{$fid}) )
+		{ $status{seen} = int( $db{seen}{$fid} ); }
+	else
+		{ $status{seen} = int( -1 ); }
+
 	printf( "%s : ", $server->{name} );
 	if( $status{uptime} > 0 )
 	{
 		printf( "%d player%s", $status{players}, $status{players} != 1 ? 's' : '' );
+		$status{seen} = $status{checked};
 	}
 	else
 		{ print( "offline" ); }
@@ -173,6 +179,13 @@ foreach my $fid ( sort{$a cmp $b} keys($result{fonline}{status}{server}) )
 			$fid, $db{$year}{$month}{$day}{$fid} || 0, $server->{players}
 		);
 		$db{$year}{$month}{$day}{$fid} = int( $server->{players} );
+	}
+	elsif( !exists($db{seen}{$fid}) || $db{seen}{$fid} != $server->{seen} )
+	{
+		print( "[Save]\n" ) if( !exists($db{rebuild}) );
+		$db{rebuild} = 1;
+
+		$db{seen}{$fid} = $server->{seen};
 	}
 }
 
