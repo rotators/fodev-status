@@ -75,8 +75,13 @@ FOstatus.prototype.LoadConfig = function( url, callback )
 
 	if( url == null )
 	{
-		console.log( err+'URL not defined' );
-		return( null );
+		if( this.ConfigURL == null )
+		{
+			console.log( err+'URL not defined' );
+			return( null );
+		}
+		else
+			url = this.ConfigURL;
 	}
 	var self = this;
 	this.Config = null;
@@ -338,13 +343,28 @@ if( typeof(window.jQuery) !== 'undefined' )
 			var queue = [], result = {};
 			$.each( requests, function( idx, id ) // for()... don't!
 			{
-				var path = self.GetPath( id );
+				var params = {};
+
+				var req = id.split( ':', 2 );
+				if( req.length > 1 )
+				{
+					var arg = req[1].split( ',' );
+					$.each( arg, function( iidx, val )
+					{
+						var pa = val.split( '=' );
+						if( pa.length == 2 )
+							params[pa[0]] = pa[1];
+					});
+				}
+
+				var path = self.GetPath( req[0], params );
 				if( path == null )
 				{
 					result[id] = null;
 					return( true ); // continue;
 				}
-				queue.push( self.LoadJSON( dataPath+path, id, function( data )
+
+				queue.push( self.LoadJSON( dataPath+path, req[0], function( data )
 				{
 					result[id] = data;
 				}));
@@ -360,7 +380,7 @@ if( typeof(window.jQuery) !== 'undefined' )
 			if( this.ConfigURL == null )
 				return;
 			else
-				this.LoadConfig( this.ConfigURL, startJSONQueue );
+				this.LoadConfig( null, startJSONQueue );
 		}
 		else
 			startJSONQueue();
