@@ -1,6 +1,6 @@
-[submodule "html/lib/slim"]
+[submodule "slim"]
 	path = html/lib/slim
 	url = https://github.com/codeguy/Slim.git
-[submodule "html/lib/fowww"]
+[submodule "fowww"]
 	path = html/lib/fowww
 	url = https://github.com/wipe2238/fowww.git
