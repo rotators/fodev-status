@@ -143,6 +143,10 @@ abstract class FOStatusModule
 		{
 			if( is_subclass_of( $class, 'FOstatusModule' ))
 			{
+				// utility class, should not be instanced
+				if( $class == 'TestModule' )
+					continue;
+
 				$module = new $class();
 				if( $module && !$module->Dispose )
 				{
