@@ -5,71 +5,76 @@ function start()
 	$('#footer').hide();
 	ShowInfo( 'Loading...' );
 
-	if( !fo.LoadConfig( configFile ))
+	fo.LoadConfig( configFile, function()
 	{
-		ShowInfo( 'Invalid config file' );
-		return;
-	}
+		chart = foCharts.CreateStackedColumn(
+			'fonline',
+			'chart',
+			'FOnline',
+			'"Everything is dead or dying"'
+		);
 
-	lifetime = fo.LoadJSON( dataDir+fo.GetPath( 'lifetime' ), 'lifetime' );
-	players = fo.LoadJSON( dataDir+fo.GetPath( 'max_players' ), 'max_players' );
-	average = fo.LoadJSON( dataDir+fo.GetPath( 'average_short' ), 'average_short' );
-
-	chart = foCharts.CreateStackedColumn(
-		'fonline',
-		'chart',
-		'FOnline',
-		'"Everything is dead or dying"'
-	);
-
-	chart.series =
-	[
-		{
-			name: 'Availability',
-			color: fo.GetOption( 'colors', 'availability' ),
-			tooltip:
+		chart.series =
+		[
 			{
-				valueSuffix: "%"
+				name: 'Availability',
+				color: fo.GetOption( 'colors', 'availability' ),
+				tooltip:
+				{
+					valueSuffix: "%"
+				},
+				data: []
 			},
-			data: []
-		},
-		{
-			name: 'Maximum players',
-			color: fo.GetOption( 'colors', 'players' ),
-			data: []
-		},
-		{
-			name: 'Average players',
-			color: fo.GetOption( 'colors', 'average' ),
-			data: []
-		}
-	];
-	chart.xAxis.labels =
-	{
-		formatter: function()
-		{
-			var color = '#ffffff';
-			var name = this.value;
-			var server = fo.GetServerBy( 'name', name );
-			if( server != null )
 			{
-				if( server.color != null )
-					color = server.color;
+				name: 'Maximum players',
+				color: fo.GetOption( 'colors', 'players' ),
+				data: []
+			},
+			{
+				name: 'Average players',
+				color: fo.GetOption( 'colors', 'average' ),
+				data: []
 			}
-			return( '<span style="fill: '+color+';">'+name+'</span>' );
+		];
+		chart.xAxis.labels =
+		{
+			formatter: function()
+			{
+				var color = '#ffffff';
+				var name = this.value;
+				var server = fo.GetServerBy( 'name', name );
+				if( server != null )
+				{
+					if( server.color != null )
+						color = server.color;
+				}
+				return( '<span style="fill: '+color+';">'+name+'</span>' );
+			}
 		}
-	}
 
-	chart = new Highcharts.Chart( chart );
-	update();
+		chart = new Highcharts.Chart( chart );
 
-	$('#show_closed').click( function()
-	{
-		update();
+		fo.LoadJSONQueue( false, dataDir, ['lifetime','max_players','average_short'], function( result )
+		{
+			if( result.lifetime != null )
+				lifetime = result.lifetime;
+			if( result.max_players != null )
+				players = result.max_players;
+			if( result.average_short != null )
+				average = result.average_short;
+
+			update();
+
+			$('#show_closed').click( function()
+			{
+				update();
+			});
+
+			$('#footer').show();
+			HideInfo();
+		});
 	});
 
-	$('#footer').show();
-	HideInfo();
 }
 
 function update()

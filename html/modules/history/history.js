@@ -1,6 +1,7 @@
 function start( /* servers */ )
 {
 	var args = arguments;
+	fo.ConfigURL = configFile;
 
 	$('#footer').hide();
 	$('#remove_hidden').click( function()
@@ -17,41 +18,6 @@ function start( /* servers */ )
 		}
 	});
 
-	var rawNames = ['*']; // navigator series
-
-	if( !fo.LoadConfig( configFile ))
-		return;
-
-	var average = fo.LoadJSON( dataDir+fo.GetPath( 'average_short' ), 'average_short' );
-	if( average.server != null )
-		average = average.server;
-
-	$.each( fo.GetServersArray( 'name' ), function( idx, server )
-	{
-		if( average[server.id] == null )
-			return( true ); // continue;
-
-		var add = false;
-
-		if( args.length == 0 )
-			add = true;
-		else if( args.length > 0 && $.inArray( server.id, args ) >= 0 )
-			add = true;
-
-		if( server.singleplayer != null && server.singleplayer == true )
-			add = false;
-
-		if( add )
-			rawNames.push( server.id );
-	});
-
-	if( rawNames.length == 1 )
-	{
-		var url = rootDir+'/history/';
-		console.log( 'Redirecting: '+url );
-		window.location = url;
-	}
-
 	var chart = foCharts.CreateTimeline(
 		'fonline',
 		'chart',
@@ -62,69 +28,15 @@ function start( /* servers */ )
 
 	chart = Highcharts.StockChart( chart );
 
-	$.each( rawNames, function( idx, id )
+	fo.LoadConfig( configFile, function()
 	{
-		var info = fo.GetServerOption( id, 'name' );
-		if( info == null )
-			info = 'summary';
-
-		ShowInfo( 'Loading '+info+'... ('+(idx+1)+'/'+rawNames.length+')' );
-
-		if( info != 'summary' )
+		foCharts.BuildTimeline( args, chart, 'history', 'server_history', function()
 		{
-			var singleplayer = fo.GetServerOption( id, 'singleplayer' );
-			if( singleplayer != null && singleplayer == true )
-				return( true ); // continue;
-		}
-		
-		var url = dataDir, ident = 'history', options = {};
-		if( id != '*' )
-		{
-			ident = 'server_'+ident;
-			options = { ID: id };
-		}
-		url += fo.GetPath( ident, options );
-
-		fo.LoadJSON( url, ident, function( jsonData )
-		{
-			var seriesOptions = {
-				id: id,
-				index: idx,
-				legendIndex: idx,
-			};
-
-			var series;
-			if( id == '*' )
-			{
-				series = chart.get('nav');
-				if( series )
-					series.setData( foCharts.ConvertTimestampArray( jsonData ), true );
-			}
-			else
-			{
-				seriesOptions.data = foCharts.ConvertTimestampArray( jsonData.server[id] );
-				// get exta options from config
-				$.each( ['name','color'], function( i, option )
-				{
-					var value = fo.GetServerOption( id, option );
-					if( value != null )
-						seriesOptions[option] = value;
-				});
-
-				series = chart.addSeries( seriesOptions, true, true );
-			}
-
-			if( series )
-			{
-				series.update( true );
-				series.xAxis.setExtremes();
-			}
+			ShowInfo( 'Loaded' );
+			chart.redraw();
+			chart.reflow();
+			HideInfo();
+			$('#footer').show();
 		});
 	});
-
-	ShowInfo( 'Loaded' );
-	chart.redraw();
-	chart.reflow();
-	HideInfo();
-	$('#footer').show();
 }

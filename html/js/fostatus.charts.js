@@ -221,6 +221,88 @@ FOstatusCharts.prototype.CreateTimeline = function( name, container, title, subt
 	return( chart );
 }
 
+FOstatusCharts.prototype.BuildTimeline = function( args, chart, path, data, callback )
+{
+	var self = this;
+
+	ShowInfo( 'Preloading...' );
+	fo.LoadJSONQueue( false, dataDir, ['average_short',path], function( result )
+	{
+		var average;
+		if( result.average_short != null && result.average_short.server != null )
+		{
+			average = result.average_short.server;
+		}
+
+		if( result.history != null )
+		{
+			ShowInfo( 'Loading summary...' );
+			chart.get( 'nav' ).setData( self.ConvertTimestampArray( result.history ));
+			chart.get( 'nav' ).xAxis.setExtremes();
+		}
+		result = null;
+
+		var request = [];
+		ShowInfo( 'Checking arguments...' );
+		$.each( fo.GetServersArray( 'name' ), function( idx, server )
+		{
+			if( average != null && average[server.id] == null )
+				return( true ); // continue;
+
+			var add = false;
+
+			if( args.length == 0 )
+				add = true;
+			else if( args.length > 0 && $.inArray( server.id, args ) >= 0 )
+				add = true;
+
+			if( server.singleplayer != null && server.singleplayer == true )
+				add = false;
+
+			if( add )
+				request.push( server.id );
+		});
+
+		if( request.length == 0 )
+		{
+			var url = rootDir+'/'+path+'/';
+			if( window.location != url )
+			{
+				console.log( 'Redirecting: '+url );
+				window.location = url;
+			}
+		}
+
+		var queue = [];
+		ShowInfo( 'Loading servers data...' );
+		$.each( request, function( idx, serverId )
+		{
+			queue.push( fo.LoadJSON( dataDir+fo.GetPath( 'server_'+path, { ID: serverId }), 'server_'+path, function( result )
+			{
+				var seriesOptions = {
+					id: id,
+					index: idx,
+					legendIndex: idx,
+					data: self.ConvertTimestampArray( result.server[serverId] )
+				};
+
+				$.each( ['name','color'], function( i, option )
+				{
+					var value = fo.GetServerOption( serverId, option )
+					if( value != null )
+						seriesOptions[option] = value;
+				});
+
+				chart.addSeries( seriesOptions, true ).xAxis.setExtremes();
+			}));
+		});
+		$.when.apply( $, queue ).done( function()
+		{
+			callback();
+		});
+	});
+};
+
 FOstatusCharts.prototype.CreatePercentPie = function( name, container, title, subtitle, seriesName )
 {
 	var chart = this.BaseChart( name, container, title, subtitle );

@@ -1,55 +1,22 @@
 function start( /* servers */ )
 {
 	var args = arguments;
+	fo.ConfigURL = configFile;
 
 	$('#footer').hide();
 	$('#remove_hidden').click( function()
 	{
-		var hidden = foCharts.GetVisibleSeries( chart );
+		var hidden = foCharts.GetHiddenSeries( chart );
 		if( hidden.length > 0 )
 		{
 			var visible = foCharts.GetVisibleSeries( chart );
 			var url = rootDir+'/average/'+visible.join(',')+(visible.length>0?'/':'');
 
+			// TODO: remove series from chart and use history.pushState() instead?
 			console.log( 'Redirecting: '+url );
 			window.location = url;
 		}
 	});
-
-	var rawNames = ['*']; // navigator series
-
-	if( !fo.LoadConfig( configFile ))
-		return;
-
-	var average = fo.LoadJSON( dataDir+fo.GetPath( 'average_short' ), 'average_short' );
-	if( average.server != null )
-		average = average.server;
-
-	$.each( fo.GetServersArray( 'name' ), function( idx, server )
-	{
-		if( average[server.id] == null )
-			return( true ); // continue;
-
-		var add = false;
-
-		if( args.length == 0 )
-			add = true;
-		else if( args.length > 0 && $.inArray( server.id, args ) >= 0 )
-			add = true;
-
-		if( server.singleplayer != null && server.singleplayer == true )
-			add = false;
-
-		if( add )
-			rawNames.push( server.id );
-	});
-
-	if( rawNames.length == 1 )
-	{
-		var url = rootDir+'/average/';
-		console.log( 'Redirecting: '+url );
-		window.location = url;
-	}
 
 	var chart = foCharts.CreateTimeline(
 		'fonline',
@@ -61,68 +28,15 @@ function start( /* servers */ )
 
 	chart = Highcharts.StockChart( chart );
 
-	$.each( rawNames, function( idx, id )
+	fo.LoadConfig( configFile, function()
 	{
-		var info = fo.GetServerOption( id, 'name' );
-		if( info == null )
-			info = 'summary';
-
-		ShowInfo( 'Loading '+info+'... ('+(idx+1)+'/'+rawNames.length+')' );
-
-		if( info != 'summary' )
+		foCharts.BuildTimeline( args, chart, 'average', 'server_average', function()
 		{
-			var singleplayer = fo.GetServerOption( id, 'singleplayer' );
-			if( singleplayer != null && singleplayer == true )
-				return( true ); // continue;
-		}
-		
-		var url = dataDir, ident = 'average', options = {};
-		if( id != '*' )
-		{
-			ident = 'server_'+ident;
-			options = { ID: id };
-		}
-		url += fo.GetPath( ident, options );
-
-		fo.LoadJSON( url, ident, function( jsonData )
-		{
-			var seriesOptions = {
-				id: id,
-				index: idx,
-				legendIndex: idx,
-			};
-
-			var series;
-			if( id == '*' )
-			{
-				series = chart.get('nav');
-				if( series )
-					series.setData( foCharts.ConvertTimestampArray( jsonData ), true );
-			}
-			else
-			{
-				seriesOptions.data = foCharts.ConvertTimestampArray( jsonData.server[id] );
-				// get exta options from config
-				$.each( ['name','color'], function( i, option )
-				{
-					var value = fo.GetServerOption( id, option );
-					if( value != null )
-						seriesOptions[option] = value;
-				});
-
-				series = chart.addSeries( seriesOptions, true );
-			}
-
-			if( series )
-			{
-				series.update();
-				series.xAxis.setExtremes();
-			}
+			ShowInfo( 'Loaded' );
+			chart.redraw();
+			chart.reflow();
+			HideInfo();
+			$('#footer').show();
 		});
 	});
-
-	ShowInfo( 'Loaded' );
-	chart.reflow();
-	HideInfo();
-	$('#footer').show();
 }

@@ -3,6 +3,8 @@ function start()
 	$('#games').hide();
 	$('#footer').hide();
 
+	fo.ConfigURL = configFile;
+
 	update( true );
 
 	$('#show_offline').click( function()
@@ -39,27 +41,18 @@ function update( first_time )
 	var show_closed = $('#show_closed').prop( 'checked' );
 	var show_singleplayer = $('#show_singleplayer').prop( 'checked' );
 
-	if( !fo.LoadConfig( configFile ))
+	fo.LoadJSONQueue( true, dataDir, ['status','average_short','lifetime'], function( result )
 	{
-		ShowInfo( 'Invalid config file' );
-		return;
-	}
+		var status = result.status;
+		var average = result.average_short;
+		var lifetime = result.lifetime;
+		result = null;
 
-	fo.LoadJSON( dataDir+fo.GetPath( 'status' ), 'status', function( status )
-	{
 		if( status.servers == null || status.players == null || status.server == null )
 		{
 			ShowInfo( 'Invalid status data' );
 			return;
 		}
-
-		// optional data
-		var average = fo.LoadJSON( dataDir+fo.GetPath( 'average_short' ), 'average_short' );
-		if( average.server == null )
-			average = null;
-		var lifetime = fo.LoadJSON( dataDir+fo.GetPath( 'lifetime' ), 'lifetime' );
-		if( lifetime.server == null )
-			lifetime = null;
 
 		// cache results until all servers are parsed
 		var divs = [];
