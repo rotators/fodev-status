@@ -17,7 +17,7 @@ class Main extends FOstatusModule
 		{
 			parent::$Slim->expires( '+1 minute' );
 
-			UI::start( $this, false );
+			UI::start( $this, true );
 
 //			UI::addFOstatus( $this, false );
 

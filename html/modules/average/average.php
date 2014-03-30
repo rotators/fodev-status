@@ -47,7 +47,7 @@ class Average extends FOstatusModule
 
 	private function content()
 	{
-		UI::start( $this );
+		UI::start( $this, true, true );
 		UI::addHighstock();
 		UI::contentStatic( 'chart' );
 	}

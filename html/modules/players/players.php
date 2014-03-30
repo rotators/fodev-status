@@ -28,7 +28,7 @@ class Players extends FOstatusModule
 		{
 			parent::$Slim->expires( '+1 minute' );
 
-			UI::start( $this );
+			UI::start( $this, true, true );
 			UI::addHighcharts();
 			UI::title( 'Players' );
 			UI::contentStatic( 'chart' );

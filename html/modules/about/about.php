@@ -32,7 +32,7 @@ class About extends FOstatusModule
 
 	private function aboutSoftware()
 	{
-		UI::start( $this, false );
+		UI::start( $this );
 		UI::title( 'About' );
 		UI::contentStatic( 'main' );
 
@@ -73,8 +73,9 @@ class About extends FOstatusModule
 
 	private function aboutModules()
 	{
-		UI::start( $this, false );
+		UI::start( $this );
 		UI::title( 'About : modules' );
+		UI::contentStatic( 'modules' );
 
 		foreach( array( 'Core' => 'FOstatusModule', 'UI' => 'UI' ) as $coreName => $coreClass )
 		{
@@ -200,7 +201,7 @@ class About extends FOstatusModule
 
 	private function aboutConfig()
 	{
-		UI::start( NULL, false );
+		UI::start( $this );
 
 		$context = array(
 			'server' => array(

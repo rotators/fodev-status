@@ -18,7 +18,7 @@ class Summary extends TestModule
 		{
 			parent::$Slim->expires( '+10 minutes' );
 
-			UI::start( $this );
+			UI::start( $this, true, true );
 			UI::addHighstock();
 
 			UI::contentStatic( 'chart' );

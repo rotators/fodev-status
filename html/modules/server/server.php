@@ -36,7 +36,7 @@ class Server extends FOstatusModule
 
 			$jsArguments = array( $server_user );
 
-			UI::start( $this );
+			UI::start( $this, true, true );
 			UI::addHighstock();
 			UI::jsArguments( $jsArguments );
 			UI::contentStatic( 'body' );

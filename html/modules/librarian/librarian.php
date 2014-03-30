@@ -23,7 +23,7 @@ class Librarian extends FOstatusModule
 		{
 			UI::title( "Librarian" );
 
-			UI::start( $this, false );
+			UI::start( $this );
 			UI::contentStatic( 'chart' );
 			UI::footerStatic(  'footer' );
 		});

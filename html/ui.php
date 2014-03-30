@@ -35,6 +35,9 @@ class UI
 
 	private static $currentModule = NULL;
 
+	// enable main script
+	private static $useStatus = false;
+
 	// enable charts script
 	private static $useCharts = false;
 
@@ -84,13 +87,17 @@ class UI
 		}, -9999 );
 	}
 
-	public static function start( FOstatusModule $module = NULL, $charts = true )
+	public static function start( FOstatusModule $module = NULL, $status = false, $charts = false )
 	{
 		if( self::$started )
 			return;
 
+		if( $charts )
+			$status = true;
+
 		self::$started = true;
 		self::$currentModule = $module;
+		self::$useStatus = $status;
 		self::$useCharts = $charts;
 
 		self::$content = NULL;
@@ -353,9 +360,10 @@ $(document).ready( function()
 <head>
 	<title>%s</title>
 	<meta charset='utf-8' />
+	<meta name='author' content='Rotators' />
 	<meta name='robots' content='index, follow' />
-	<meta name='description' content='fodev.net - the FOnline development community' />
-	<meta name='keywords' content='Fallout Online, FOnline, SDK' />
+	<meta name='description' content='FOnline servers status,- FOdev.net' />
+	<meta name='keywords' content='FOnline, Fallout Online, FOdev, SDK' />
 	<meta name='robots' content='index, follow' />
 
 	<link rel='icon' type='image/png' href='/favicon.png' />
@@ -586,7 +594,7 @@ $(document).ready( function()
 	// adds static files which may be used by module
 	private static function addFOstatus()
 	{
-		if( !self::$jsFOstatus )
+		if( !self::$jsFOstatus && self::$useStatus === true )
 		{
 			self::$jsFOstatus = true;
 

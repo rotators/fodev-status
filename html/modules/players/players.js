@@ -22,7 +22,7 @@ function start()
 		chart.series[0].data = data;
 		chart = new Highcharts.Chart( chart );
 
-		setInterval( update, 10000 );
+		setInterval( update, 60000 );
 		HideInfo();
 		$('#footer').show();
 	});
