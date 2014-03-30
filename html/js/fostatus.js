@@ -317,6 +317,10 @@ FOstatus.prototype.GetPath = function( name, args )
 	return( result );
 };
 
+//
+// Frameworks extras
+//
+
 if( typeof(window.jQuery) !== 'undefined' )
 {
 	FOstatus.prototype.JSONLoader = function( url, callback )

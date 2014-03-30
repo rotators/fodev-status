@@ -5,15 +5,13 @@
 use strict;
 use warnings;
 
-BEGIN { push( @INC, '../../bin' ); };
-
 use Archive::Zip qw( :ERROR_CODES );
 use File::Basename qw( dirname );
 use FOstatus;
 use Storable;
 
 my $fo = FOstatus->new();
-my $config_file = '../../html/data/config.json';
+my $config_file = '/path/to/config.json';
 my $data_dir = dirname( $config_file ) . '/';
 
 sub fid2rid($)
@@ -98,7 +96,7 @@ if( !$fo->LoadConfig( $config_file ))
 	exit;
 }
 
-my %ping = %{ retrieve( '../../bin/ping.db' )};
+my %ping = %{ retrieve( 'ping.db' )};
 my $save = 0;
 foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
 {
@@ -112,7 +110,7 @@ foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
 			my $t = localtime( $db{timestamp} );
 			printf( "seen %s = [ %s : %d : %d ]\n", $fid, $t,
 				$db{timestamp}, $db{count} );
-			$ping{seen}{$fid} = $db{timestamp};
+			$ping{seen}{$fid} = int( $db{timestamp} );
 			$save = 1;
 		}
 	}
@@ -121,5 +119,5 @@ foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
 if( $save )
 {
 	print( "save\n" );
-	store( \%ping, '../../ping.db' );
+	store( \%ping, 'ping.new.db' );
 }

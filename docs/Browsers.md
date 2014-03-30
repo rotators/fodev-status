@@ -1,3 +1,7 @@
+## 
+## Short summary of supported browsers
+## 
+
 Browser			| Status
 ------------------------|----------------------
 Arora v0.11.0		| crash on charts

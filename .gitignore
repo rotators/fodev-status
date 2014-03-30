@@ -4,17 +4,16 @@
 
 # local testing
 /html/cache/*
-/html/data/*
 /html/css/base.css
+/html/data/*
+!/html/data/.htaccess
+!/html/data/config.json
 
 # symlinks to extra modules which shouldn't be enabled by default
 /html/modules/phpinfo
 
 # fodev.net-specific
 /fodev.php
-
-!/html/data/.htaccess
-!/html/data/config.json
 
 # preserve directory structure
 !empty.dir
