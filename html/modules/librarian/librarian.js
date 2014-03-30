@@ -2,56 +2,53 @@ function start()
 {
 	ShowInfo( 'Loading...' );
 
-	if( !fo.LoadConfig( configFile ))
-	{
-		ShowInfo( 'Invalid config' );
-		return;
-	}
-
 	$('#chart').empty();
 
-	fo.LoadJSON( dataDir+fo.GetPath( 'librarian' ), 'librarian', function( jsonData )
+	fo.LoadConfig( configFile, function()
 	{
-		var pings = 0;
-		var table = $('<table>',
+		fo.LoadJSON( dataDir+fo.GetPath( 'librarian' ), 'librarian', function( jsonData )
 		{
-			style: 'margin-left: auto; margin-right: auto;'
-		} );
-		table.append( '<thead><tr><th>Server</th><th>Pings</th><th>Sent</th><th>Received</th></tr></thead>' );
+			var pings = 0;
+			var table = $('<table>',
+			{
+				style: 'margin-left: auto; margin-right: auto;'
+			});
+			table.append( '<thead><tr><th>Server</th><th>Pings</th><th>Sent</th><th>Received</th></tr></thead>' );
 
-		var tbody = table.append('<tbody>' );
+			var tbody = table.append('<tbody>' );
 
-		$.each( fo.GetServersArray( 'name' ), function( idx, server )
-		{
-			if( jsonData.server[server.id] == null )
-				return( true ); // continue;
+			$.each( fo.GetServersArray( 'name' ), function( idx, server )
+			{
+				if( jsonData.server[server.id] == null )
+					return( true ); // continue;
 
-			pings += jsonData.server[server.id];
+				pings += jsonData.server[server.id];
 
-			var tr = $('<tr>' );
+				var tr = $('<tr>' );
 
-			// we have to assume that Server module is loaded
-			tr.append( '<td><a href=\''+rootDir+'/server/'+server.id+'/\'>'+server.name+'</a></td>' );
-			tr.append( '<td>'+jsonData.server[server.id]+'</td>' );
-			tr.append( '<td>'+bytesToSize( jsonData.server[server.id] * 4 )+'</td>' );
-			tr.append( '<td>'+bytesToSize( jsonData.server[server.id] * 16 )+'</td>' );
+				// we have to assume that Server module is loaded
+				tr.append( '<td><a href=\''+rootDir+'/server/'+server.id+'/\'>'+server.name+'</a></td>' );
+				tr.append( '<td>'+jsonData.server[server.id]+'</td>' );
+				tr.append( '<td>'+bytesToSize( jsonData.server[server.id] * 4 )+'</td>' );
+				tr.append( '<td>'+bytesToSize( jsonData.server[server.id] * 16 )+'</td>' );
 
-			tbody.append( tr );
+				tbody.append( tr );
+			});
+
+			tbody.append
+			(
+				'<tr>'+
+					'<td></td>'+
+					'<td>'+pings+'</td>'+
+					'<td>'+bytesToSize( pings * 4 )+'</td>'+
+					'<td>'+bytesToSize( pings * 16 )+'</td>'+
+				'</tr>'
+			);
+
+			$('#chart').append( table );
+
+			HideInfo();
 		});
-
-		tbody.append
-		(
-			'<tr>'+
-				'<td></td>'+
-				'<td>'+pings+'</td>'+
-				'<td>'+bytesToSize( pings * 4 )+'</td>'+
-				'<td>'+bytesToSize( pings * 16 )+'</td>'+
-			'</tr>'
-		);
-
-		$('#chart').append( table );
-
-		HideInfo();
 	});
 }
 

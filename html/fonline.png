@@ -21,9 +21,9 @@ if( $status != NULL && isset($status['fonline']['status']['servers']) && $status
 	$font_big     = new FOnlineFont( 'fonts/Big.fofnt' );
 	$font_default = new FOnlineFont( 'fonts/Default.fofnt' );
 
-	$img_fonline = $font_big->TextToImage( 'FOnline', 0, 255, 0 );
-	$img_servers = $font_default->TextToImage( 'Servers: '.$status['fonline']['status']['servers'], 0, 255, 0 );
-	$img_players = $font_default->TextToImage( 'Players: '.$status['fonline']['status']['players'], 0, 255, 0 );
+	$img_fonline = $font_big->TextToImage( 'FOnline', 2, 238, 0 );
+	$img_servers = $font_default->TextToImage( 'Servers: '.$status['fonline']['status']['servers'], 2, 238, 0 );
+	$img_players = $font_default->TextToImage( 'Players: '.$status['fonline']['status']['players'], 2, 238, 0 );
 
 	imagecopy( $img, $img_fonline, 30, 14, 0, 0, imagesx($img_fonline), imagesy($img_fonline) );
 	imagecopy( $img, $img_servers, 141, 16, 0, 0, imagesx($img_servers), imagesy($img_servers) );

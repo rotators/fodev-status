@@ -67,16 +67,19 @@ function start( id )
 			server_history:
 			{
 				name: 'Players',
+				index: 0,
 				color: fo.GetOption( 'colors', 'players' ),
 			},
 			server_average:
 			{
 				name: 'Average',
+				index: 1,
 				color: fo.GetOption( 'colors', 'average' ),
 			},
 			max_players:
 			{
 				name: 'Server record',
+				index: 2,
 				color: fo.GetOption( 'colors', 'record' ),
 				extract: true,
 				series: 'server_history',
@@ -123,6 +126,8 @@ function start( id )
 						}],
 						type: 'flags',
 						shape: 'flag',
+						index: config.index,
+						legendIndex: config.index
 					};
 
 					if( config.series != null )
@@ -157,7 +162,9 @@ function start( id )
 				{
 					seriesOptions = {
 						data: foCharts.ConvertTimestampArray( jsonData.server[id] ),
-						id: idx
+						id: idx,
+						index: config.index,
+						legendIndex: config.index
 					};
 
 					addSeries( seriesOptions, config );

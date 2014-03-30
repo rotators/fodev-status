@@ -14,30 +14,28 @@ class About extends FOstatusModule
 
 		parent::$Slim->get( '/about/', function()
 		{
-			UI::start( $this, false );
-			UI::title( 'About' );
-			UI::contentStatic( 'main' );
-
 			$this->aboutSoftware();
 		});
 
 		$this->RoutesInfo['about/config'] = "Informations about configuration format";
 		parent::$Slim->get( '/about/config/', function()
 		{
-			UI::start( NULL, false );
 			$this->aboutConfig();
 		});
 
 		$this->RoutesInfo['about/modules'] = "Auto-generated informations about used modules";
 		parent::$Slim->get( '/about/modules/', function()
 		{
-			UI::start( NULL, false );
 			$this->aboutModules();
 		});
 	}
 
 	private function aboutSoftware()
 	{
+		UI::start( $this, false );
+		UI::title( 'About' );
+		UI::contentStatic( 'main' );
+
 		$software = array(
 			'*1'			=> "\n\t<hr>",
 			'Perl'			=> 'http://www.perl.org/',
@@ -75,6 +73,7 @@ class About extends FOstatusModule
 
 	private function aboutModules()
 	{
+		UI::start( $this, false );
 		UI::title( 'About : modules' );
 
 		foreach( array( 'Core' => 'FOstatusModule', 'UI' => 'UI' ) as $coreName => $coreClass )
@@ -201,6 +200,8 @@ class About extends FOstatusModule
 
 	private function aboutConfig()
 	{
+		UI::start( NULL, false );
+
 		$context = array(
 			'server' => array(
 				'!'			=> 'Game definition',
