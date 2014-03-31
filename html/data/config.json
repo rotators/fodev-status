@@ -181,7 +181,8 @@
 				{
 					"name": "What Remains",
 					"link": "http://www.rpgcodex.net/forums/?forums/43/",
-					"singleplayer": true
+					"singleplayer": true,
+					"irc": "#WhatRemains"
 				},
 				"wasteland":
 				{

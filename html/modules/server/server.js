@@ -15,7 +15,8 @@ function start( id )
 
 	fo.LoadConfig( configFile, function()
 	{
-		if( fo.GetServerOption( id, 'id' ) == null )
+		var server = fo.GetServer( id );
+		if( server == null || fo.GetServerOption( id, 'id' ) == null )
 		{
 			ShowInfo( 'Invalid server id' );
 			return;
@@ -33,25 +34,53 @@ function start( id )
 		error: function()
 		{
 			// this one must be generated server-side before accessing page
+			// TODO: use /path/json/logo/
 			tmp = rootDir+'/cache/'+id+'.logo-placeholder.png';
 		}});
 
 		$( '<img>',
 		{
 			src: tmp,
-			alt: fo.GetServerOption( id, 'name' )
+			alt: server.name
 		}).appendTo( '#logo' );
 
 		// add a server link (if a available)
 		$.each( ['website','link'], function( idx, weblink )
 		{
-			var value = fo.GetServerOption( id, weblink );
+			var value = server[weblink];
 			if( value != null )
 			{
 				$( '<a>', { href: value, text: value }).appendTo( '#link' );
 				return( false ); // break;
 			}
 		});
+
+		tmp = null;
+		if( server.singleplayer != null && server.singleplayer == true )
+		{
+			tmp = 'Singleplayer game';
+			$('#game').css( 'color', '#0090c0' );
+		}
+		if( server.closed != null && server.closed == true )
+		{
+			tmp = 'Server closed';
+			$('#game').css( 'color', '#b1000d' );
+		}
+		else if( server.host != null && server.port != null )
+		{
+			tmp = server.host+' : '+server.port;
+		}
+		if( tmp != null )
+			$('#game').text( tmp );
+
+		if( server.irc != null && server.irc.charAt(0) == '#' )
+		{
+			$( '<a>',
+			{
+				href: 'https://chat.forestnet.org/?channels='+server.irc,
+				text: server.irc+' @ ForestNet'
+			}).appendTo( '#irc' );
+		}
 
 		var chart = foCharts.CreateTimeline( 'fonline', 'chart' );
 		chart.chart.height = 300;
