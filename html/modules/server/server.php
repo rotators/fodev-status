@@ -23,7 +23,7 @@ class Server extends FOstatusModule
 			if( !isset($server) )
 			{
 				// TODO: get rid of including javascript
-				UI::start( $this, false );
+				UI::start( $this );
 				UI::title( 'Error' );
 				UI::contentStatic( 'error_wrongId' );
 

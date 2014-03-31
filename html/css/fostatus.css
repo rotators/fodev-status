@@ -96,13 +96,29 @@ a:focus, a:active
 	src:  local( ' ' ),
 		url('../fonts/jh_fallout-webfont.woff') format('woff'),
 		url('../fonts/jh_fallout-webfont.ttf') format('truetype');
-	font-weight: small;
-	font-style: lighter;
 }
 
-.font_fallout
+.font_fallout, .font_fallout_green
 {
 	font-family: 'JH_FalloutRegular';
 	font-size: 8px;
+}
+
+.font_fallout_green
+{
 	color: rgb( 2, 238, 0 );
+}
+
+#error
+{
+	width: 50%;
+	margin: auto;
+	border-radius: 15px;
+	border-style: groove;
+	border-color: #333;
+	padding: 10px;
+	text-align: center;
+	display: block;
+	font-family: 'JH_FalloutRegular';
+	font-size: 8px;
 }
