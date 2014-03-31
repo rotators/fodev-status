@@ -269,7 +269,7 @@ abstract class FOStatusModule
 		// strict arguments
 		if( !preg_match( '!^[a-z0-9_,]+$!', $input ))
 		{
-			self::$Slim->redirect( parent::$Root.$path, 303 );
+			self::$Slim->redirect( self::$Root.$path, 303 );
 			return( false );
 		}
 

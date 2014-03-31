@@ -280,7 +280,7 @@ FOstatusCharts.prototype.BuildTimeline = function( args, chart, path, data, call
 			queue.push( fo.LoadJSON( dataDir+fo.GetPath( 'server_'+path, { ID: serverId }), 'server_'+path, function( result )
 			{
 				var seriesOptions = {
-					id: id,
+					id: serverId,
 					index: idx,
 					legendIndex: idx,
 					data: self.ConvertTimestampArray( result.server[serverId] )
