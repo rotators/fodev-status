@@ -5,12 +5,24 @@
 		{
 			"server":
 			{
+				"arcanum":
+				{
+					"name": "Arcanum Reborn",
+					"website": "http://www.arcreborn.ru/",
+					"irc": "#ArcReborn"
+				},
 				"asylum":
 				{
 					"name": "New Asylum",
 					"host": "fonewasylum.servegame.com",
 					"port": 2238,
 					"link": "http://fodev.net/forum/index.php/topic,29522.0.html"
+				},
+				"australia":
+				{
+					"name": "Australia",
+					"link": "http://www.moddb.com/games/fallout-online-australia",
+					"singleplayer": true
 				},
 				"fallen":
 				{
