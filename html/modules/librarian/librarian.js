@@ -8,7 +8,11 @@ function start()
 	{
 		fo.LoadJSON( dataDir+fo.GetPath( 'librarian' ), 'librarian', function( jsonData )
 		{
-			var total_out = 0, total_in = 0;
+			var modServer = false, total_out = 0, total_in = 0;
+
+			if( $.inArray( 'Server', siteModules ) >= 0 )
+				modServer = true;
+
 			var table = $('<table>',
 			{
 				style: 'margin-left: auto; margin-right: auto;'
@@ -27,8 +31,11 @@ function start()
 
 				var tr = $('<tr>' );
 
-				// we have to assume that Server module is loaded
-				tr.append( '<td><a href=\''+rootDir+'/server/'+server.id+'/\'>'+server.name+'</a></td>' );
+				if( modServer )
+					tr.append( '<td><a href=\''+rootDir+'/server/'+server.id+'/\'>'+server.name+'</a></td>' );
+				else
+					tr.append( '<td>'+server.name+'</td>' );
+
 				tr.append( '<td>'+jsonData.server[server.id].out+'</td>' );
 				tr.append( '<td>'+bytesToSize( jsonData.server[server.id].out * 4 )+'</td>' );
 				tr.append( '<td>'+jsonData.server[server.id].in+'</td>' );
