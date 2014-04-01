@@ -190,6 +190,13 @@
 					"link": "http://fodev.net/forum/index.php/topic,29525.0.html",
 					"singleplayer": true
 				},
+				"vault112":
+				{
+					"name": "Vault 112",
+					"link": "http://fodev.net/forum/index.php/topic,29307.0.html",
+					"source": "https://github.com/wladimiiir/vault112/",
+					"singleplayer": true
+				},
 				"whatremains":
 				{
 					"name": "What Remains",
