@@ -149,6 +149,9 @@ class JSON extends FOstatusModule
 	private function send( array $json )
 	{
 		parent::$Slim->response->headers->set( 'Content-Type', 'application/json' );
+		parent::$Slim->response->headers->set( 'Access-Control-Allow-Origin',  '*' );
+		parent::$Slim->response->headers->set( 'Access-Control-Allow-Methods', 'GET' );
+
 		UI::response( json_encode( $json, JSON_UNESCAPED_SLASHES ));
 	}
 
