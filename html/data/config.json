@@ -91,7 +91,8 @@
 					"name": "Last Hope",
 					"host": "217.199.212.124",
 					"port": 4000,
-					"website": "http://deimosland.com"
+					"website": "http://deimosland.com",
+					"closed": true
 				},
 				"laststand":
 				{
