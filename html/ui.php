@@ -27,8 +27,8 @@ class UI
 
 	// external dependencies versions; if not set, latest available version is used
 	public static $vJquery = '1.11.0';
-	public static $vHighcharts = '3.0.9'; // 3.0.10 legend issues
-	public static $vHighstock = '1.3.9';  // 1.3.10 legend issues
+	public static $vHighcharts = '3.0.10';
+	public static $vHighstock = '1.3.10';
 
 	// keeps track if main rendering hooks has been added
 	private static $started = false;

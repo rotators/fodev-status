@@ -41,11 +41,10 @@ function update( first_time )
 	var show_closed = $('#show_closed').prop( 'checked' );
 	var show_singleplayer = $('#show_singleplayer').prop( 'checked' );
 
-	fo.LoadJSONQueue( true, dataDir, ['status','average_short','lifetime'], function( result )
+	fo.LoadJSONQueue( true, dataDir, ['status','average_short'], function( result )
 	{
 		var status = result.status;
 		var average = result.average_short;
-		var lifetime = result.lifetime;
 		result = null;
 
 		if( status.servers == null || status.players == null || status.server == null )
@@ -107,7 +106,7 @@ function update( first_time )
 				if( result.length > 0 )
 					content += result.join( ' and ' );
 			}
-			else
+			else // !online
 			{
 				if( singleplayer )
 				{
@@ -136,12 +135,12 @@ function update( first_time )
 					if( average != null && average.server[server.id] != null )
 						content += ' (average players: '+average.server[server.id]+')';
 
-					if( !closed  )
+					if( !closed )
 					{
-						if( lifetime != null && lifetime.server[server.id] != null && lifetime.server[server.id].seen != null )
+						if( status.server[server.id] != null && status.server[server.id].seen != null && status.server[server.id].seen > 0 )
 						{
 							content += '<br>Last seen: ';
-							var seen = new Date( lifetime.server[server.id].seen * 1000 );
+							var seen = new Date( status.server[server.id].seen * 1000 );
 							var now = new Date();
 							var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 							if( now.getFullYear() == seen.getFullYear() && now.getMonth() == seen.getMonth() && now.getDate() == seen.getDate() )
