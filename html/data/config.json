@@ -22,7 +22,8 @@
 				{
 					"name": "Australia",
 					"link": "http://www.moddb.com/games/fallout-online-australia",
-					"singleplayer": true
+					"singleplayer": true,
+					"irc": "#FOAustralia"
 				},
 				"fallen":
 				{
