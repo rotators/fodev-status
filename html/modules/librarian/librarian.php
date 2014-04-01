@@ -21,9 +21,8 @@ class Librarian extends FOstatusModule
 	{
 		parent::$Slim->get( '/librarian/', function()
 		{
-			UI::title( "Librarian" );
-
 			UI::start( $this, true );
+			UI::title( "Librarian" );
 			UI::contentStatic( 'chart' );
 			UI::footerStatic(  'footer' );
 		});

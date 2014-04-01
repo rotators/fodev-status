@@ -8,12 +8,12 @@ function start()
 	{
 		fo.LoadJSON( dataDir+fo.GetPath( 'librarian' ), 'librarian', function( jsonData )
 		{
-			var pings = 0;
+			var total_out = 0, total_in = 0;
 			var table = $('<table>',
 			{
 				style: 'margin-left: auto; margin-right: auto;'
 			});
-			table.append( '<thead><tr><th>Server</th><th>Pings</th><th>Sent</th><th>Received</th></tr></thead>' );
+			table.append( '<thead><tr><th>Server</th><th colspan="2">Sent</th><th colspan="2">Received</th></tr></thead>' );
 
 			var tbody = table.append('<tbody>' );
 
@@ -22,15 +22,17 @@ function start()
 				if( jsonData.server[server.id] == null )
 					return( true ); // continue;
 
-				pings += jsonData.server[server.id];
+				total_out += jsonData.server[server.id].out;
+				total_in += jsonData.server[server.id].in;
 
 				var tr = $('<tr>' );
 
 				// we have to assume that Server module is loaded
 				tr.append( '<td><a href=\''+rootDir+'/server/'+server.id+'/\'>'+server.name+'</a></td>' );
-				tr.append( '<td>'+jsonData.server[server.id]+'</td>' );
-				tr.append( '<td>'+bytesToSize( jsonData.server[server.id] * 4 )+'</td>' );
-				tr.append( '<td>'+bytesToSize( jsonData.server[server.id] * 16 )+'</td>' );
+				tr.append( '<td>'+jsonData.server[server.id].out+'</td>' );
+				tr.append( '<td>'+bytesToSize( jsonData.server[server.id].out * 4 )+'</td>' );
+				tr.append( '<td>'+jsonData.server[server.id].in+'</td>' );
+				tr.append( '<td>'+bytesToSize( jsonData.server[server.id].in * 16 )+'</td>' );
 
 				tbody.append( tr );
 			});
@@ -38,10 +40,11 @@ function start()
 			tbody.append
 			(
 				'<tr>'+
-					'<td></td>'+
-					'<td>'+pings+'</td>'+
-					'<td>'+bytesToSize( pings * 4 )+'</td>'+
-					'<td>'+bytesToSize( pings * 16 )+'</td>'+
+					'<td>TOTAL</td>'+
+					'<td>'+total_out+'</td>'+
+					'<td>'+bytesToSize( total_out * 4 )+'</td>'+
+					'<td>'+total_in+'</td>'+
+					'<td>'+bytesToSize( total_in * 16 )+'</td>'+
 				'</tr>'
 			);
 

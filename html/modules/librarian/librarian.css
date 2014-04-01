@@ -1,0 +1,15 @@
+th
+{
+	border: 1px solid #555;
+}
+
+table tbody tr td
+{
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+table tbody tr:last-child td:first-child
+{
+	font-weight: bold;
+}
