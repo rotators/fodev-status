@@ -160,4 +160,23 @@ sub Timestamp($$$)
 	return( Date_to_Time( $year, $month, $day, 0, 0, 0 ));
 }
 
+# copy of http://search.cpan.org/~pinyan/Tie-IxHash-Easy/
+# need to be here, becouse of reasons
+
+package Tie::IxHash::Easy;
+
+use base 'Tie::IxHash';
+
+use strict;
+use warnings;
+
+our $VERSION = '0.01';
+
+sub STORE
+{
+	my( $self, $key, $value ) = @_;
+	tie( %$value, 'Tie::IxHash::Easy' ) if ref( $value ) eq "HASH";
+	$self->SUPER::STORE( $key, $value );
+}
+
 1;

@@ -97,11 +97,10 @@ sub check_db($$$)
 	return( $updated );
 }
 
-sub load_sql($$;$)
+sub load_sql($$$;$)
 {
-	my( $rid, $dir, $quiet ) = @_;
+	my( $db, $rid, $dir, $quiet ) = @_;
 
-	my %db;
 	my $id = rtext( 'playerStats', $rid, '' );
 	my $filename = rtext( $dir.'/playerStats', $rid, '.txt.zip' );
 	my $zip = Archive::Zip->new();
@@ -110,13 +109,13 @@ sub load_sql($$;$)
 	if( $zip->read($filename) != AZ_OK )
 	{
 		printf( "\tRead error\n" ) if( !$quiet );
-		return( %db );
+		return;
 	}
 
 	if( $zip->numberOfMembers() != 1 )
 	{
 		printf( "\tWrong number of members (%d)\n", $zip->numberOfMembers() ) if( !$quiet );
-		return( %db );
+		return;
 	}
 
 	my $content = ($zip->members())[0]->contents();
@@ -137,19 +136,17 @@ sub load_sql($$;$)
 				if( $val =~ /([0-9]+)\,\'([0-9]+)\-([0-9]+)\-([0-9]+) ([0-9]+)\:([0-9]+)\:([0-9]+)\'\,([0-9-]+)/ )
 				{
 					my( $timestamp, $year, $month, $day, $hour, $min, $sec, $online ) = ( $1, int($2), int($3), int($4), int($5), int($6), int($7), $8 );
-					$db{pings}{out}++;
-					$db{pings}{in}++ if( $online >= 0 );
+					$db->{pings}{out}++;
+					$db->{pings}{in}++ if( $online >= 0 );
 
-					if( !exists($db{$year}{$month}{$day}) || $db{$year}{$month}{$day} < $online )
+					if( !exists($db->{$year}{$month}{$day}) || $db->{$year}{$month}{$day} < $online )
 					{
-						$db{$year}{$month}{$day} = $online;
+						$db->{$year}{$month}{$day} = $online;
 					}
 				}
 			}
 		}
 	};
-
-	return( %db );
 }
 
 sub save($$;%)
@@ -268,6 +265,17 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 		%servers, %max_players, %lifetime, %librarian, %daily
 	);
 
+#	tie( %history, 'Tie::IxHash::Easy' );
+#	tie( %server_history, 'Tie::IxHash::Easy' );
+#	tie( %average, 'Tie::IxHash::Easy' );
+	tie( %average_short, 'Tie::IxHash::Easy' );
+#	tie( %server_average, 'Tie::IxHash::Easy' );
+#	tie( %servers, 'Tie::IxHash::Easy' );
+	tie( %max_players, 'Tie::IxHash::Easy' );
+	tie( %lifetime, 'Tie::IxHash::Easy' );
+	tie( %librarian, 'Tie::IxHash::Easy' );
+	tie( %daily, 'Tie::IxHash::Easy' );
+
 	foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
 	{
 		my $rid = fid2rid( $fid );
@@ -275,7 +283,7 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 		# check librarian database
 		if( defined($rid) )
 		{
-			%server_history = load_sql( $rid, $data_dir.$fo->{Config}->{dirs}{db}, 1 );
+			load_sql( \%server_history, $rid, $data_dir.$fo->{Config}->{dirs}{db}, 0 );
 			$librarian{server}{$fid}{out} = $server_history{pings}{out} || 0;
 			$librarian{server}{$fid}{in} = $server_history{pings}{in} || 0;
 			delete( $server_history{pings} );
@@ -455,4 +463,5 @@ my $time_end = time();
 print( "Finished" );
 printf(" in %ds", $time_end - $time_start ) if( $time_end - $time_start > 0 );
 print( "\n" );
+
 1;
