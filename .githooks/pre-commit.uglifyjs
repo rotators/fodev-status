@@ -1,0 +1,49 @@
+#!/bin/bash
+###
+#
+# pre-commit.uglifyjs
+#
+# Runs uglifyjs over all javascript files
+#
+# Copy/include in .git/hooks/pre-commit to use, see http://git-scm.com/docs/githooks
+#
+###
+
+self="uglifyjs"
+prog=`which uglifyjs`
+#echo "pre-commit: started $self"
+
+if [ "x$prog" == "x" ]; then
+	echo "pre-commit: skipped $self : uglifyjs not found"
+	exit 0
+fi
+
+for file in html/js/*.js html/modules/*/*.js; do
+	# skip uglified files
+	if [ ${file:${#file}-7} == ".min.js" ]; then
+		continue;
+	fi
+
+	porcelain=`git status --porcelain $file`
+	porcelain=${porcelain::2}
+	if [ "$porcelain" != "A " ] && [ "$porcelain" != "M " ]; then
+		continue;
+	fi
+
+	# process only if original file is newer than uglified one
+	file_min="${file%.*}.min.${file##*.}"
+	if [ $file -nt $file_min ]; then
+		echo "pre-commit($self): $file -> $file_min"
+		uglifyjs $file -c -m -o $file_min
+
+		status=$?
+		if [ $status != 0 ]; then
+			echo "pre-commit: failed $self, aborting commit"
+			exit $status
+		fi
+		git add $file_min
+	fi
+done
+
+#echo "pre-commit: finished $self"
+exit 0

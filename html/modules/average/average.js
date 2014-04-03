@@ -1,4 +1,4 @@
-function start( /* servers */ )
+function start(/* servers */)
 {
 	var args = arguments;
 	fo.ConfigURL = configFile;
@@ -22,8 +22,8 @@ function start( /* servers */ )
 		'fonline',
 		'chart',
 		'FOnline',
-		'"Everything is dead or dying"',
-		'Maximum players'
+		'Average players over time',
+		'Average players'
 	);
 
 	chart = Highcharts.StockChart( chart );

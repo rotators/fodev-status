@@ -22,7 +22,7 @@ function start( /* servers */ )
 		'fonline',
 		'chart',
 		'FOnline',
-		'"Everything is dead or dying"',
+		'Maximum players over time',
 		'Maximum players'
 	);
 

@@ -283,7 +283,7 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 		# check librarian database
 		if( defined($rid) )
 		{
-			load_sql( \%server_history, $rid, $data_dir.$fo->{Config}->{dirs}{db}, 0 );
+			load_sql( \%server_history, $rid, $data_dir.$fo->{Config}->{dirs}{db}, 1 );
 			$librarian{server}{$fid}{out} = $server_history{pings}{out} || 0;
 			$librarian{server}{$fid}{in} = $server_history{pings}{in} || 0;
 			delete( $server_history{pings} );

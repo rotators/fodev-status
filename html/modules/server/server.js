@@ -85,7 +85,6 @@ function start( id )
 		var chart = foCharts.CreateTimeline( 'fonline', 'chart' );
 		chart.chart.height = 300;
 		chart.scrollbar = 
-//		chart.legend =
 		chart.navigator =
 		chart.rangeSelector =
 		{ enabled: false };
@@ -124,13 +123,7 @@ function start( id )
 				if( config.color != null )
 					seriesOptions.color = config.color;
 
-				series = chart.addSeries( seriesOptions, false );
-
-				if( series != null )
-				{
-					series.update();
-					series.xAxis.setExtremes();
-				}
+				 chart.addSeries( seriesOptions, true ).xAxis.setExtremes();
 			}
 		};
 
@@ -201,7 +194,6 @@ function start( id )
 			}
 		});
 
-		chart.redraw();
 		HideInfo();
 		$('#footer').show();
 	});

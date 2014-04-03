@@ -64,7 +64,7 @@ function start()
 
 function bytesToSize( bytes, precision )
 {
-	precision = fo.defaultArgument( precision, 2 );
+	precision = fo.defaultArgument( precision, 1 );
 
 	var suffixes = [ 'B', 'KB', 'MB', 'GB', 'TB' ];
 

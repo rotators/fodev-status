@@ -11,7 +11,7 @@ function start()
 			'fonline',
 			'chart',
 			'FOnline',
-			'"Everything is dead or dying"'
+			'Leaderboard'
 		);
 
 		chart.series =

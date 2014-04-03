@@ -17,27 +17,25 @@ my $fo = FOstatus->new;
 my $me = $0;
 my $config_file = shift || 'html/data/config.json';
 
-sub ping_server($$)
+sub ping_server($$$)
 {
-	my( $server, $fid ) = @_;
+	my( $status, $server, $fid ) = @_;
 	my( $conn_timeout, $read_timeout ) = ( 15, 15 );
 
 	$conn_timeout = $server->{timeout}{connect} if( exists($server->{timeout}{connect}) );
 	$read_timeout = $server->{timeout}{read} if( exists($server->{timeout}{read}) );
 
-	my %status = (
-		'players'	=> int( -1 ),
-		'uptime'	=> int( -1 ),
-		'checked'	=> int( -1 )
-	);
+	$status->{players} = int( -1 );
+	$status->{uptime} = int( -1 );
+	$status->{checked} = int( -1 );
 
 	my $host = $server->{host};
 	my $port = $server->{port};
 
-	return( %status ) if( uc($host) eq 'UNKNOWN' || uc($host) eq 'HIDDEN' );
-	return( %status ) if( $port <= 1024 || $port >= 65535 );
+	return if( uc($host) eq 'UNKNOWN' || uc($host) eq 'HIDDEN' );
+	return if( $port <= 1024 || $port >= 65535 );
 
-	$status{checked} = time();
+	$status->{checked} = time();
 	my $timer_start = time();
 	my $socket = IO::Socket::INET->new(
 		PeerAddr => $host,
@@ -47,7 +45,7 @@ sub ping_server($$)
 		Blocking => 0
 	);
 	my $timer_end = time();
-	$status{_connect} = $timer_end - $timer_start;
+	$status->{_connect} = $timer_end - $timer_start;
 
 	if( $socket )
 	{
@@ -64,20 +62,16 @@ sub ping_server($$)
 			}
 			$timer_end = time();
 			close( $socket );
-			$status{_read} = $timer_end - $timer_start;
+			$status->{_read} = $timer_end - $timer_start;
 
 			if( scalar( @can_read ) && length( $read ) == 16 )
 			{
 				my( $players, $uptime, $reserved1, $reserved2) = unpack( 'L4' , $read );
-				$status{players} = int($players);
-				$status{uptime} = int($uptime);
-
-				return( %status );
+				$status->{players} = int($players);
+				$status->{uptime} = int($uptime);
 			}
 		}
 	}
-
-	return( %status );
 }
 
 sub save($$)
@@ -102,18 +96,13 @@ if( -f 'ping.db' )
 	%db = %{ retrieve( 'ping.db' )};
 }
 
-my %result = (
-	'fonline' =>
-	{
-		'status' =>
-		{
-			'servers' => int( 0 ),
-			'players' => int( 0 )
-		}
-	}
-);
+my %result;
+tie( %result, 'Tie::IxHash::Easy' );
+$result{fonline}{status}{servers} = int( 0 );
+$result{fonline}{status}{players} = int( 0 );
+
 print( "[Ping]\n" );
-foreach my $fid ( sort{$fo->{Config}->{server}{$a}{name} cmp $fo->{Config}->{server}{$b}{name}} keys( $fo->{Config}->{server} ))
+foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
 {
 	my $server = $fo->{Config}->{server}{$fid};
 
@@ -124,20 +113,25 @@ foreach my $fid ( sort{$fo->{Config}->{server}{$a}{name} cmp $fo->{Config}->{ser
 	next if( uc($server->{host}) eq 'UNKNOWN' );
 	next if( $server->{port} == 0 );
 
+	$result{fonline}{status}{server}{$fid} = {};
 	my $ping_start = time();
-	my %status = ping_server( $server, $fid );
+	ping_server( $result{fonline}{status}{server}{$fid}, $server, $fid );
 	my $ping_end = time();
 
-	if( exists($db{seen}{$fid}) )
-		{ $status{seen} = int( $db{seen}{$fid} ); }
+	if( exists($db{seen}{$fid}) && defined($db{seen}{$fid}) )
+		{ $result{fonline}{status}{server}{$fid}{seen} = int( $db{seen}{$fid} ); }
 	else
-		{ $status{seen} = int( -1 ); }
+		{ $result{fonline}{status}{server}{$fid}{seen} = int( -1 ); }
 
 	printf( "%s : ", $server->{name} );
-	if( $status{uptime} > 0 )
+	if( $result{fonline}{status}{server}{$fid}{uptime} > 0 )
 	{
-		printf( "%d player%s", $status{players}, $status{players} != 1 ? 's' : '' );
-		$status{seen} = $status{checked};
+		printf( "%d player%s",
+			$result{fonline}{status}{server}{$fid}{players},
+			$result{fonline}{status}{server}{$fid}{players} != 1 ? 's' : '' );
+
+		$result{fonline}{status}{server}{$fid}{seen} =
+			$result{fonline}{status}{server}{$fid}{checked};
 	}
 	else
 		{ print( "offline" ); }
@@ -145,17 +139,20 @@ foreach my $fid ( sort{$fo->{Config}->{server}{$a}{name} cmp $fo->{Config}->{ser
 	if( $ping_end - $ping_start > 1 )
 	{
 		printf( " (total: %ds", $ping_end - $ping_start );
-		printf( ", connect: %ds", $status{_connect} ) if( $status{_connect}||0 > 0 );
-		printf( ", read: %ds", $status{_read} ) if( $status{_read}||0 > 0 );
+		printf( ", connect: %ds", $result{fonline}{status}{server}{$fid}{_connect} )
+			if( $result{fonline}{status}{server}{$fid}{_connect}||0 > 0 );
+		printf( ", read: %ds", $result{fonline}{status}{server}{$fid}{_read} )
+			if( $result{fonline}{status}{server}{$fid}{_read}||0 > 0 );
 		print( ")" );
 	}
 	print( "\n" );
-	delete( $status{_connect} );
-	delete( $status{_read} );
+	delete( $result{fonline}{status}{server}{$fid}{_connect} );
+	delete( $result{fonline}{status}{server}{$fid}{_read} );
 
-	$result{fonline}{status}{server}{$fid} = \%status;
-	$result{fonline}{status}{servers}++ if( $status{uptime} >= 0 );
-	$result{fonline}{status}{players} += $status{players} if( $status{players} > 0 );
+	$result{fonline}{status}{servers}++
+		if( $result{fonline}{status}{server}{$fid}{uptime} >= 0 );
+	$result{fonline}{status}{players} += $result{fonline}{status}{server}{$fid}{players}
+		if( $result{fonline}{status}{server}{$fid}{players} > 0 );
 }
 
 save( \%result, $data_dir.$fo->GetPath( 'status' ));
@@ -176,7 +173,9 @@ foreach my $fid ( sort{$a cmp $b} keys($result{fonline}{status}{server}) )
 		$db{rebuild} = 1;
 
 		printf( "%s: %d -> %d\n",
-			$fid, $db{$year}{$month}{$day}{$fid} || 0, $server->{players}
+			$fo->{Config}->{server}{$fid}{name},
+			$db{$year}{$month}{$day}{$fid} || 0,
+			$server->{players}
 		);
 		$db{$year}{$month}{$day}{$fid} = int( $server->{players} );
 	}
