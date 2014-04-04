@@ -48,6 +48,41 @@ sub LoadConfig($$)
 	return( 1 );
 }
 
+sub CanPing($$)
+{
+	my( $self, $fid ) = @_;
+
+	return( 0 ) if( !defined($fid) );
+
+	return( 0 ) if( !exists($self->{Config}) );
+	return( 0 ) if( !defined($self->{Config}) );
+
+	return( 0 ) if( !exists($self->{Config}->{server}) );
+	return( 0 ) if( !defined($self->{Config}->{server}) );
+
+	return( 0 ) if( !exists($self->{Config}->{server}{$fid}) );
+	return( 0 ) if( !defined($self->{Config}->{server}{$fid}) );
+
+	if( exists($self->{Config}->{server}{$fid}{closed}) )
+	{
+		return( 0 ) if( $self->{Config}->{server}{$fid}{closed} );
+	}
+	if( exists($self->{Config}->{server}{$fid}{singleplayer}) )
+	{
+		return( 0 ) if( $self->{Config}->{server}{$fid}{singleplayer} );
+	}
+
+	return( 0 ) if( !exists($self->{Config}->{server}{$fid}{host}) );
+	return( 0 ) if( !exists($self->{Config}->{server}{$fid}{port}) );
+
+	return( 0 ) if( uc($self->{Config}->{server}{$fid}{host}) eq 'UNKNOWN' );
+
+	return( 0 ) if( $self->{Config}->{server}{$fid}{port} <= 1024 );
+	return( 0 ) if( $self->{Config}->{server}{$fid}{port} >= 65535 );
+
+	return( 1 )
+}
+
 sub GetPath($$;%)
 {
 	my( $self, $name, %args ) = @_;

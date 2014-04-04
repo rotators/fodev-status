@@ -106,12 +106,7 @@ foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
 {
 	my $server = $fo->{Config}->{server}{$fid};
 
-	next if( $server->{closed} );
-	next if( $server->{singleplayer} );
-
-	next if( !exists($server->{host}) || !exists($server->{port}) );
-	next if( uc($server->{host}) eq 'UNKNOWN' );
-	next if( $server->{port} == 0 );
+	next if( !$fo->CanPing($fid) );
 
 	$result{fonline}{status}{server}{$fid} = {};
 	my $ping_start = time();
