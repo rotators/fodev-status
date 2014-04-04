@@ -1,3 +1,10 @@
+/*
+ * FOstatus by Rotators
+ * https://github.com/rotators/fodev-status/
+ *
+ * @preserve
+ */
+
 function start( id )
 {
 	$('#footer').hide();
@@ -56,12 +63,12 @@ function start( id )
 		});
 
 		tmp = null;
-		if( server.singleplayer != null && server.singleplayer == true )
+		if( server.singleplayer != null && server.singleplayer )
 		{
 			tmp = 'Singleplayer game';
 			$('#game').css( 'color', '#0090c0' );
 		}
-		if( server.closed != null && server.closed == true )
+		if( server.closed != null && server.closed )
 		{
 			tmp = 'Server closed';
 			$('#game').css( 'color', '#b1000d' );
@@ -133,7 +140,7 @@ function start( id )
 
 			var seriesOptions = null;
 
-			if( config.extract != null && config.extract == true )
+			if( config.extract != null && config.extract )
 			{
 				fo.LoadJSON( dataDir+fo.GetPath( idx ), idx, function( jsonData )
 				{

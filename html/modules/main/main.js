@@ -1,3 +1,10 @@
+/*
+ * FOstatus by Rotators
+ * https://github.com/rotators/fodev-status/
+ *
+ * @preserve
+ */
+
 function start()
 {
 	$('#games').hide();
@@ -59,9 +66,9 @@ function update( first_time )
 		$.each( fo.GetServersArray( 'name' ), function( idx, server )
 		{
 			var online = false, closed = false, singleplayer = false;
-			if( server.singleplayer != null && server.singleplayer == true )
+			if( server.singleplayer != null && server.singleplayer )
 				singleplayer = true;
-			else if( server.closed != null && server.closed == true )
+			else if( server.closed != null && server.closed )
 				closed = true;
 			else if( status.server[server.id] != null && status.server[server.id].uptime >= 0 )
 				online = true;

@@ -24,6 +24,8 @@ if [ "x$prog" == "x" ]; then
 fi
 
 for file in html/js/*.js html/modules/*/*.js; do
+	file_min="${file%.*}.min.${file##*.}"
+
 	# skip uglified files
 	if [ ${file:${#file}-7} == ".min.js" ]; then
 		continue;
@@ -31,15 +33,18 @@ for file in html/js/*.js html/modules/*/*.js; do
 
 	porcelain=`git status --porcelain $file`
 	porcelain=${porcelain::2}
-	if [ "$porcelain" != "A " ] && [ "$porcelain" != "M " ]; then
+
+	if [ "$porcelain" == "" ]; then
+		continue;
+	elif [ "$porcelain" != "A " ] && [ "$porcelain" != "M " ]; then
+		git reset HEAD $file_min
 		continue;
 	fi
 
 	# process only if original file is newer than uglified one
-	file_min="${file%.*}.min.${file##*.}"
 	if [ $file -nt $file_min ]; then
 		echo "pre-commit($self): $file -> $file_min"
-		uglifyjs $file -c -m -o $file_min
+		uglifyjs $file --comments -c -m -o $file_min
 
 		status=$?
 		if [ $status != 0 ]; then

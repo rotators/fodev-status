@@ -1,3 +1,10 @@
+/*
+ * FOstatus by Rotators
+ * https://github.com/rotators/fodev-status/
+ *
+ * @preserve
+ */
+
 function start()
 {
 	var chart = foCharts.CreateTimeline( 'fonline', 'chart' );

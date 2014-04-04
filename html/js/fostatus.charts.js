@@ -1,3 +1,9 @@
+/*
+ * FOstatus by Rotators
+ * https://github.com/rotators/fodev-status/
+ *
+ * @preserve
+ */
 function FOstatusCharts()
 {
 }
@@ -256,7 +262,7 @@ FOstatusCharts.prototype.BuildTimeline = function( args, chart, path, data, call
 			else if( args.length > 0 && $.inArray( server.id, args ) >= 0 )
 				add = true;
 
-			if( server.singleplayer != null && server.singleplayer == true )
+			if( server.singleplayer != null && server.singleplayer )
 				add = false;
 
 			if( add )
@@ -372,7 +378,7 @@ FOstatusCharts.prototype.GetVisibleSeries = function( chart )
 		if( series.options == null )
 			return( true ); // continue;
 
-		if( series.options.isInternal != null && series.options.isInternal == true )
+		if( series.options.isInternal != null && series.options.isInternal )
 			return( true ); // continue;
 
 		if( series.options.id != null )
@@ -396,7 +402,7 @@ FOstatusCharts.prototype.GetHiddenSeries = function( chart )
 		if( series.options == null )
 			return( true ); // continue;
 
-		if( series.options.isInternal != null && series.options.isInternal == true )
+		if( series.options.isInternal != null && series.options.isInternal )
 			return( true ); // continue;
 
 		if( series.options.id != null )

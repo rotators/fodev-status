@@ -1,3 +1,10 @@
+/*
+ * FOstatus by Rotators
+ * https://github.com/rotators/fodev-status/
+ *
+ * @preserve
+ */
+
 function FOstatus()
 {
 	this.Config = null;
@@ -394,8 +401,6 @@ else if( typeof(window.Prototype) !== 'undefined' )
 {
 	FOstatus.prototype.JSONLoader = function( url, callback )
 	{
-		var result = null;
-
 		new Ajax.Request( url, { method: 'get', asynchronous: true,
 		onCreate: function( response )
 		{

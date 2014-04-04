@@ -1,3 +1,10 @@
+/*
+ * FOstatus by Rotators
+ * https://github.com/rotators/fodev-status/
+ *
+ * @preserve
+ */
+
 function start(/* servers */)
 {
 	var args = arguments;
