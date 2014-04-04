@@ -7,6 +7,11 @@
 #
 # Copy/include in .git/hooks/pre-commit to use, see http://git-scm.com/docs/githooks
 #
+# NOTES:
+# - Scripts are uglified only if source file is fully added to commit; if file is modified
+#   after `git add`, it will be ignored
+# - Commit message may not display status of uglified files correctly
+#
 ###
 
 self="uglifyjs"

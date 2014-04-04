@@ -34,7 +34,7 @@ abstract class FOStatusModule
 	public $ID = NULL;
 
 	// module home directory, absolute path
-	// set by initialize() only if included from own directory
+	// set by initialize()
 	public $Directory = NULL;
 
 	//+++ informations for About module +++//
