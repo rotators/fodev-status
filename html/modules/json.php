@@ -8,7 +8,7 @@ if( !defined( 'FODEV:STATUS' ) || !class_exists( 'FOstatusModule' ) || !class_ex
 
 class JSON extends FOstatusModule
 {
-	private $prefix = 'json_';
+	private $func_prefix = 'json_';
 
 	public function init()
 	{
@@ -17,7 +17,7 @@ class JSON extends FOstatusModule
 			$json = array();
 			foreach( get_class_methods( $this ) as $method )
 			{
-				if( preg_match( "!^".$this->prefix."([a-z_]+)$!", $method, $match ))
+				if( preg_match( "!^".$this->func_prefix."([a-z_]+)$!", $method, $match ))
 				{
 					array_push( $json, array(
 						'id' => $match[1]
@@ -54,7 +54,7 @@ class JSON extends FOstatusModule
 				$result = parent::$FO->GetPath( $arg );
 				if( !isset($result) ) // not yet needed to check for {}
 				{
-					if( !method_exists( $this, $this->prefix.$arg ))
+					if( !method_exists( $this, $this->func_prefix.$arg ))
 					{
 						$error = 'Unknown request: '.$arg;
 						break;
@@ -105,15 +105,13 @@ class JSON extends FOstatusModule
 					if( file_exists( $file ))
 					{
 						$tmp = json_decode( file_get_contents( $file ), true );
-						if( isset($tmp['fonline'][$id]) )
+						if( !isset($tmp['fonline']) || !isset($tmp['fonline'][$id]) )
 						{
-							$json['fonline'][$id] = $tmp['fonline'][$id];
-						}
-						else
-						{
-							$this->sendError( "" );
+							$this->sendError( "[$id] Invalid structure" );
 							return;
 						}
+
+						$json['fonline'][$id] = $tmp['fonline'][$id];
 					}
 					else
 					{
@@ -123,7 +121,7 @@ class JSON extends FOstatusModule
 				}
 				else
 				{
-					$func = $this->prefix.$id;
+					$func = $this->func_prefix.$id;
 					$result = $this->$func();
 
 					if( $result === FALSE )

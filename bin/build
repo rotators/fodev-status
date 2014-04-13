@@ -442,19 +442,24 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 
 	save_ymd( \%average, 'average' );
 
-	print( "[Packing]\n" );
-	push( @save_files, $config_file );
-
-	my $zip = Archive::Zip->new();
-
-	foreach my $file ( @save_files )
+	my $zipFile = $fo->GetPath( 'zip' );
+	if( defined($zipFile) )
 	{
-		my $zipName = $file;
-		$zipName =~ s!^$data_dir!!;
-		$zip->addFile( $file, $zipName )->desiredCompressionLevel( 9 );
-	}
+		print( "[Packing]\n" );
+		push( @save_files, $config_file );
 
-	$zip->writeToFileNamed( $data_dir.'fonline-status.zip' );
+		my $zip = Archive::Zip->new();
+
+		foreach my $file ( @save_files )
+		{
+			my $zipName = $file;
+			$zipName =~ s!^$data_dir!!;
+			$zip->addFile( $file, $zipName )->desiredCompressionLevel( 9 );
+		}
+
+		printf( "Saving: %s\n", $zipFile );
+		$zip->writeToFileNamed( $data_dir.$zipFile );
+	}
 }
 
 my $time_end = time();

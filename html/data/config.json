@@ -224,7 +224,8 @@
 				"servers": "{DIR:misc}/servers.json",
 				"server_average": "{DIR:average}/server_{ID}.json",
 				"server_history": "{DIR:history}/server_{ID}.json",
-				"status": "status.json"
+				"status": "status.json",
+				"zip": "fonline-status.zip"
 			},
 			"dirs":
 			{
