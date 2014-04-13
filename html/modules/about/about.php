@@ -79,18 +79,19 @@ class About extends FOstatusModule
 
 		foreach( array( 'Core' => 'FOstatusModule', 'UI' => 'UI' ) as $coreName => $coreClass )
 		{
-			UI::content( "\n<hr>\n<strong id='%s'>%s</strong><br>",
+			UI::content( "\n<hr id='%s'>\n<table>\n\t<tr>\n\t\t<td colspan='2'><strong>%s</strong></td>\n\t</tr>",
 				$coreName, $coreName );
 
 			if( isset($coreClass::$CoreDescription) )
-				UI::content( "\nDescription: %s<br>", $coreClass::$CoreDescription );
+				UI::content( "\n\t<tr>\n\t\t<td>Description</td>\n\t\t<td>%s</td>\n\t</tr>", $coreClass::$CoreDescription );
 
 			$class = new ReflectionClass( $coreClass );
 			if( $class )
 			{
-				UI::content( "\nLast update: %s<br>",
+				UI::content( "\n\t<tr>\n\t\t<td>Last update</td>\n\t\t<td>%s</td>\n\t</tr>",
 					date ("j F Y, H:i", filemtime( $class->getFileName() )));
 			}
+			UI::content( "\n</table>" );
 		}
 
 		$instances = parent::$Instances;
@@ -105,11 +106,12 @@ class About extends FOstatusModule
 			if( !$className )
 				continue;
 
-			UI::content( "\n<hr/>" );
+			UI::content( "\n<hr id='%s'>", $className );
 
-			UI::content( "\nModule: <strong id='%s'>%s</strong>",
-				$className, $className
-			);
+			UI::content( "\n<table>" );
+
+			UI::content( "\n\t<tr>\n\t\t<td>Module</td>\n\t\t<td><strong>%s</strong>",
+				$className );
 
 			$class = new ReflectionClass( $instance );
 			$parents = array();
@@ -125,29 +127,29 @@ class About extends FOstatusModule
 			{
 				UI::content( " &raquo; %s", implode( ' &raquo; ', $parents ));
 			}
-			UI::content( "\n<br>" );
+			UI::content( "</td>\n\t</tr>" );
 
 			if( isset($instance->Author) )
-				UI::content( "\nAuthor: %s<br>", $instance->Author );
+				UI::content( "\n\t<tr><td>Author:</td><td>%s</td>>", $instance->Author );
 
 			if( isset($instance->Version) )
-				UI::content( "\nVersion: %s<br>", $instance->Version );
+				UI::content( "\n\t<tr><td>Version:</td><td>%s</td</tr>", $instance->Version );
 
 			if( isset($instance->ID) )
-				UI::content( "\nInternal ID: %s<br>", $instance->ID );
+				UI::content( "\n\t<tr>\n\t\t<td>Internal ID:</td>\n\t\t<td>%s</td>\n\t</tr>", $instance->ID );
 
-			UI::content( "\nLast update: %s<br>",
+			UI::content( "\n\t<tr>\n\t\t<td>Last update:</td>\n\t\t<td>%s</td>\n\t</tr>",
 				date ("j F Y, H:i", filemtime( $class->getFileName() ))
 			);
 
 			if( isset($instance->Description) )
-				UI::content( "\nDescription: %s<br>",
+				UI::content( "\n\t<tr>\n\t\t<td>Description:</td>\n\t\t<td>%s</td>\n\t</tr>",
 					$instance->Description );
 
 			if( count($instance->Routes) )
 			{
-				UI::content( "\nProvides:<br>" );
-				UI::content( "\n<table>" );
+				UI::content( "\n\t<tr>\n\t\t<td colspan='2'>Provides:</td>\n\t</tr>" );
+//				UI::content( "\n<table>" );
 				foreach( $instance->Routes as $route )
 				{
 					// remove leading/trailing slash(es)
@@ -160,6 +162,10 @@ class About extends FOstatusModule
 					$rawRoute = $route;
 					$rawArgs  = false;
 
+					$colspan = '';
+					if( !isset($instance->RoutesInfo[$rawRoute]) )
+						$colspan = " colspan='2' ";
+
 					if( preg_match_all( '!:(\w+)!m', $route, $match ))
 					{
 						$rawArgs = true;
@@ -168,11 +174,13 @@ class About extends FOstatusModule
 							$route = str_replace( ":$m", "<strong>[</strong>$m<strong>]</strong>", $route );
 						}
 						$route = str_replace( "_", " ", $route );
-						UI::content( "\n\t\t<td>$route/</td>" );
+						UI::content( "\n\t\t<td%s>$route/</td>",
+							$colspan );
 					}
 					else
 						UI::content(
-							"\n\t\t<td><a href='%s/%s'>%s/</a></td>",
+							"\n\t\t<td%s><a href='%s/%s'>%s/</a></td>",
+							$colspan,
 							parent::$Root,
 							$route != '' ? "$route/" : '',
 							$route
@@ -180,22 +188,21 @@ class About extends FOstatusModule
 					if( isset($instance->RoutesInfo[$rawRoute]) )
 						UI::content( "\n\t\t<td>%s</td>",
 							$instance->RoutesInfo[$rawRoute] );
-					/*
-					else
-						UI::content( "\t\t<td>%s</td>",
-							"route&lt;$rawRoute&gt;" );
-					*/
 
 					UI::content( "\n\t</tr>" );
 				}
-				UI::content( "\n</table>" );
+//				UI::content( "\n</table>" );
 			}
 
+			UI::content( "\n</table>" );
 			if( isset($instance->Info) )
 			{
-				UI::content( "\nAdditional informations:<br>\n%s<br>",
+				// split the table
+				UI::content( "</table>\n<table>" );
+				UI::content( "\nAdditional informations:<br>\n%s\n<br>",
 					$instance->Info );
 			}
+
 		}
 	}
 
