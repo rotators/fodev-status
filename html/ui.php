@@ -422,6 +422,14 @@ $(document).ready( function()
 				self::response( "\n\t</nav> <!-- #header -->" );
 			}
 
+			if( isset(self::$currentModule) &&
+				class_exists( 'TestModule' ) &&
+				is_subclass_of( self::$currentModule, 'TestModule' ))
+			{
+				self::response( "\n\t<div id='error'>Experimental</div>" );
+			}
+
+
 			if( isset(self::$content) )
 				self::response( self::$content );
 

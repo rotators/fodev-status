@@ -116,9 +116,10 @@ a:focus, a:active
 	border-radius: 15px;
 	border-style: groove;
 	border-color: #333;
-	padding: 10px;
+	padding-bottom: 8px;
 	text-align: center;
+	vertical-align: middle;
 	display: block;
 	font-family: 'JH_FalloutRegular';
-	font-size: 8px;
+	font-size: 9px;
 }
