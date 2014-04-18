@@ -19,7 +19,7 @@ class UI
 
 	private static $title = NULL;
 	private static $titlePrefix = NULL;
-	private static $titleSuffix = 'FOnline status (beta)';
+	private static $titleSuffix = 'FOnline status';
 
 	// use minimalized javascript
 	// enforced for external dependencies only
