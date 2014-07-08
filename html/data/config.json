@@ -62,6 +62,13 @@
 					"irc": "#FO2",
 					"color": "#705055"
 				},
+				"forever":
+				{
+					"name": "Forever",
+					"host": "hadelmia.com",
+					"port": 2238,
+					"website": "http://fonline.hadelmia.com/"
+				},
 				"goon":
 				{
 					"name": "Goon Haven",
@@ -148,7 +155,11 @@
 					"port": 6112,
 					"website": "http://forum.fallout2online.ru/",
 					"librarian": "requiem",
-					"color": "#5c009a"
+					"color": "#5c009a",
+					"timeout":
+					{
+					    "connect": 30
+					}
 				},
 				"roleplay":
 				{
