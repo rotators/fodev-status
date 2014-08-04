@@ -45,12 +45,11 @@
 				"fode":
 				{
 					"name": "Desert Europe",
-					"host": "game.fode.eu",
-					"port": 2250,
 					"website": "http://fode.eu/",
 					"librarian": "fode",
 					"irc": "#FODE",
-					"color": "#0e5e7e"
+					"color": "#0e5e7e",
+					"closed": true
 				},
 				"fonline2":
 				{
