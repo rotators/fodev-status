@@ -9,7 +9,8 @@
 				{
 					"name": "Arcanum Reborn",
 					"website": "http://www.arcreborn.ru/",
-					"irc": "#ArcReborn"
+					"irc": "#ArcReborn",
+					"closed": true
 				},
 				"asylum":
 				{
@@ -30,7 +31,8 @@
 					"name": "Battle of the Fallen",
 					"host": "93.79.236.160",
 					"port": 4000,
-					"link": "http://fonline.ru/forum/threads/3845/"
+					"link": "http://fonline.ru/forum/threads/3845/",
+					"closed": true
 				},
 				"fo2238":
 				{
@@ -82,7 +84,8 @@
 					"name": "Just Life",
 					"host": "fo.just-gaming.ru",
 					"port": 4000,
-					"website": "http://fo7.3nx.ru/"
+					"website": "http://fo7.3nx.ru/",
+					"closed": true
 				},
 				"lastfrontier":
 				{
@@ -106,7 +109,8 @@
 					"host": "fonlineforfun.zapto.org",
 					"port": 4000,
 					"website": "http://fols.your-talk.com/forum",
-					"link": "http://fodev.net/forum/index.php/topic,29390.0.html"
+					"link": "http://fodev.net/forum/index.php/topic,29390.0.html",
+					"closed": true
 				},
 				"nextday":
 				{
@@ -134,7 +138,8 @@
 					"host": "fonline.dyndns.info",
 					"port": 4000,
 					"website": "http://fonlinerw.sosbb.ru/",
-					"source": "http://code.google.com/p/fonline-racial-wars/"
+					"source": "http://code.google.com/p/fonline-racial-wars/",
+					"closed": true
 				},
 				"reloaded":
 				{
