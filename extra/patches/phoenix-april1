@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Storable;
+use Data::Dumper;
+
+if( -f 'ping.db' )
+{
+	my %db;
+	%db = %{ retrieve( 'ping.db' ) };
+	$db{2015}{4}{1}{phoenix} = 25;
+	store( \%db, 'ping.new.db' );
+}
+
+1;
