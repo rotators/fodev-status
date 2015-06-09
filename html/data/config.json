@@ -17,7 +17,8 @@
 					"name": "New Asylum",
 					"host": "fonewasylum.ddns.net",
 					"port": 2238,
-					"link": "http://fodev.net/forum/index.php/topic,29522.0.html"
+					"link": "http://fodev.net/forum/index.php/topic,29522.0.html",
+					"closed": true
 				},
 				"australia":
 				{
@@ -119,7 +120,8 @@
 					"port": 4000,
 					"website": "http://www.fonextday.ru/",
 					"irc": "#NextDay",
-					"color": "#ca9d00"
+					"color": "#ca9d00",
+					"closed": true
 				},
 				"phoenix" :
 				{
@@ -170,7 +172,8 @@
 					"name": "Roleplay",
 					"host": "195.222.127.183",
 					"port": 4000,
-					"website": "http://tnf.net.ru/"
+					"website": "http://tnf.net.ru/",
+					"closed": true
 				},
 				"survivors":
 				{
