@@ -183,13 +183,13 @@
 				"tla2":
 				{
 					"name": "TLA mk2",
-					"host": "tlamk2server.no-ip.org",
+					"host": "46.165.192.91",
 					"port": 4000,
 					"timeout":
 					{
 						"connect": 30
 					},
-					"website": "http://tlamk2.ru/",
+					"website": "http://fallout2online.com/",
 					"link": "http://fodev.net/forum/index.php/topic,28460.0.html",
 					"librarian": "tlamk2",
 					"irc": "#TLAmk2",
