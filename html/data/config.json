@@ -180,6 +180,14 @@
 					"link_fodev": "http://fodev.net/forum/index.php/topic,28470.0.html",
 					"singleplayer": true
 				},
+				"teleport":
+				{
+					"name": "Teleport",
+					"host": "95.170.182.230",
+					"port": 5568,
+					"link": "http://fonline.ru/forum/threads/5079/",
+					"color": "#0b3a4a"
+				},
 				"tla2":
 				{
 					"name": "TLA mk2",
