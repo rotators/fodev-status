@@ -177,10 +177,15 @@ sub YMDHashToArray($$)
 					}
 				}
 				$last_day = Date_to_Days( $year, $month, $day );
-				my $online = $db->{$year}{$month}{$day};
-				$online = int($online);
+				
+				# Don't use any string operations on $online and $timestamp after this declaration since they will get stringified by perl
+				# which means that JSON serialization will treat them as strings instead of integers resulting in wrong JavaScript type.
+				# that's why the printf statement is commented out, only use it for debug but don't forget to uncomment again.
+				my $online = int($db->{$year}{$month}{$day} + 0);
 				$online = undef if( $online < 0 );
-				my @result = ( int($self->Timestamp( $year, $month, $day )), $online );
+				my $timestamp = int($self->Timestamp( $year, $month, $day ) + 0);
+				my @result = ( $timestamp, $online );
+				#printf( "+ result $year $month $day | %s\n", join( ' ', @result ) );
 				push( @content, \@result );
 			}
 		}
