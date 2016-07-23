@@ -69,7 +69,8 @@
 					"name": "Forever",
 					"host": "hadelmia.com",
 					"port": 2238,
-					"website": "http://fonline.hadelmia.com/"
+					"website": "http://fonline.hadelmia.com/",
+					"closed": true
 				},
 				"goon":
 				{
