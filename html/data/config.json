@@ -27,6 +27,13 @@
 					"singleplayer": true,
 					"irc": "#FOAustralia"
 				},
+				"battleground":
+				{
+					"name": "Battleground",
+					"link": "http://forum.fonline-reloaded.net/index.php?topic=11904.0",
+					"host": "europe.fonline.org",
+					"port": 5000
+				},
 				"fallen":
 				{
 					"name": "Battle of the Fallen",
@@ -67,10 +74,9 @@
 				"forever":
 				{
 					"name": "Forever",
-					"host": "hadelmia.com",
+					"host": "server.hadelmia.com",
 					"port": 2238,
-					"website": "http://fonline.hadelmia.com/",
-					"closed": true
+					"website": "http://fonline.hadelmia.com/"
 				},
 				"goon":
 				{
@@ -79,7 +85,8 @@
 					"port": 5568,
 					"website": "http://goon-haven.ru/",
 					"librarian": "gh",
-					"color": "#a1a400"
+					"color": "#a1a400",
+					"closed": true
 				},
 				"justlife":
 				{
@@ -188,7 +195,8 @@
 					"host": "95.170.182.230",
 					"port": 5568,
 					"link": "http://fonline.ru/forum/threads/5079/",
-					"color": "#0b3a4a"
+					"color": "#0b3a4a",
+					"closed": true
 				},
 				"tla2":
 				{
