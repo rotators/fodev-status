@@ -24,7 +24,8 @@
 				{
 					"name": "Australia",
 					"link": "http://www.moddb.com/games/fallout-online-australia",
-					"singleplayer": true,
+					"host": "120.88.146.63",
+					"port": 7771,
 					"irc": "#FOAustralia"
 				},
 				"battleground":
@@ -149,7 +150,7 @@
 					"host": "play.fonline-reloaded.net",
 					"port": 2238,
 					"website": "http://fonline-reloaded.net/",
-					"source": "http://forum.fonline-reloaded.net/index.php?topic=7505.msg57925#msg57925",
+					"source": "http://forum.fonline-reloaded.net/index.php?topic=9569.0",
 					"link": "http://fodev.net/forum/index.php/topic,29419.0.html",
 					"librarian": "fore",
 					"irc": "#Reloaded",
@@ -212,6 +213,13 @@
 					"librarian": "tlamk2",
 					"irc": "#TLAmk2",
 					"color": "#a5000f"
+				},
+				"tmh":
+				{
+					"name": "TMH",
+					"host": "217.144.172.230",
+					"port": 5568,
+					"website": "http://tmh.ixbb.ru/"
 				},
 				"vanburen":
 				{
