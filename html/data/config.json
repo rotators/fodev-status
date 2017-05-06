@@ -13,7 +13,7 @@
 					"website": "http://fonline-aftertimes.net/",
 					"link": "http://fodev.net/forum/index.php/topic,29923.msg261891.html#new",
 					"irc": "#Aftertimes",
-					"color": "#2f8aa9"
+					"color": "#595595"
 				},
 				"arcanum":
 				{
@@ -87,7 +87,8 @@
 					"name": "Forever",
 					"host": "server.hadelmia.com",
 					"port": 2238,
-					"website": "http://fonline.hadelmia.com/"
+					"website": "http://fonline.hadelmia.com/",
+					"color": "#bf923b"
 				},
 				"goon":
 				{
@@ -229,7 +230,8 @@
 					"name": "TMH",
 					"host": "217.144.172.230",
 					"port": 5568,
-					"website": "http://tmh.ixbb.ru/"
+					"website": "http://tmh.ixbb.ru/",
+					"color": "#4d6843"
 				},
 				"vanburen":
 				{
