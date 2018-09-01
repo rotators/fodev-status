@@ -1,4 +1,3 @@
-/bin/*.db
 /bin/*.log
 /bin/*.pid
 
@@ -8,6 +7,8 @@
 /html/data/*
 !/html/data/.htaccess
 !/html/data/config.json
+/extra/patches/ping-db
+*.db*
 
 # symlinks to extra modules which shouldn't be enabled by default
 /html/modules/phpinfo
