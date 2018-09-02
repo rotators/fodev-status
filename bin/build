@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use lib '.';
+
 use Archive::Zip qw( :ERROR_CODES );
 use Date::Calc qw( Delta_Days Time_to_Date );
 use File::Basename qw( dirname );
@@ -28,7 +30,7 @@ sub rid2fid($)
 {
 	my( $rid ) = @_;
 
-	foreach my $fid ( keys( $fo->{Config}->{server} ))
+	foreach my $fid ( keys( %{ $fo->{Config}->{server} } ))
 	{
 		next if( !exists($fo->{Config}->{server}{$fid}{librarian} ));
 
@@ -44,7 +46,7 @@ sub fid2rid($)
 {
 	my( $ffid ) = @_;
 
-	foreach my $fid ( keys( $fo->{Config}->{server} ))
+	foreach my $fid ( keys( %{ $fo->{Config}->{server} } ))
 	{
 		next if( !exists($fo->{Config}->{server}{$fid}{librarian} ));
 
@@ -227,7 +229,7 @@ if( !$fo->LoadConfig( $config_file ))
 if( !$options{standalone} )
 {
 	print( "[Librarian]\n" );
-	foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
+	foreach my $fid ( sort{$a cmp $b} keys( %{ $fo->{Config}->{server} } ))
 	{
 		my $rid = fid2rid( $fid );
 		next if( !defined($rid) );
@@ -276,7 +278,7 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 	tie( %librarian, 'Tie::IxHash::Easy' );
 	tie( %daily, 'Tie::IxHash::Easy' );
 
-	foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
+	foreach my $fid ( sort{$a cmp $b} keys( %{ $fo->{Config}->{server} } ))
 	{
 		my $rid = fid2rid( $fid );
 
@@ -293,10 +295,10 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 		foreach my $year ( sort{$a <=> $b} keys(%ping) )
 		{
 			next if( !($year =~ /^[0-9]+$/ ));
-			foreach my $month ( sort{$a <=> $b} keys($ping{$year}) )
+			foreach my $month ( sort{$a <=> $b} keys( %{ $ping{$year} } ))
 			{
 				next if( !($month =~ /^[0-9]+$/ ));
-				foreach my $day ( sort{$a <=> $b} keys($ping{$year}{$month}) )
+				foreach my $day ( sort{$a <=> $b} keys( %{ $ping{$year}{$month} } ))
 				{
 					next if( !($day =~ /^[0-9]+$/ ));
 					next if(!exists($ping{$year}{$month}{$day}{$fid}) ||
@@ -318,15 +320,15 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 		my( $first_year, $first_month, $first_day, $last_year, $last_month, $last_day );
 		foreach my $year ( sort{$a <=> $b} keys(%server_history) )
 		{
-			next if( !($year =~ /^[0-9]+$/ ));
+			next if( !($year =~ /^[0-9]+$/ ) || !$year );
 
-			foreach my $month ( sort{$a <=> $b} keys($server_history{$year}) )
+			foreach my $month ( sort{$a <=> $b} keys( %{ $server_history{$year} } ))
 			{
-				next if( !($month =~ /^[0-9]+$/ ));
+				next if( !($month =~ /^[0-9]+$/ ) || !$month );
 
-				foreach my $day ( sort{$a <=> $b} keys($server_history{$year}{$month}) )
+				foreach my $day ( sort{$a <=> $b} keys( %{ $server_history{$year}{$month} } ))
 				{
-					next if( !($day =~ /^[0-9]+$/ ));
+					next if( !($day =~ /^[0-9]+$/ ) || !$day );
 
 					my $online = int( $server_history{$year}{$month}{$day} );
 
@@ -407,14 +409,14 @@ if( $options{rebuild} ) # that thing slowly becomes meh
 	foreach my $year ( sort{$a <=> $b} keys(%daily) )
 	{
 		next if( !($year =~ /^[0-9]+$/ ));
-		foreach my $month ( sort{$a <=> $b} keys($daily{$year}) )
+		foreach my $month ( sort{$a <=> $b} keys( %{ $daily{$year} } ))
 		{
 			next if( !($month =~ /^[0-9]+$/ ));
-			foreach my $day ( sort{$a <=> $b} keys($daily{$year}{$month}) )
+			foreach my $day ( sort{$a <=> $b} keys( %{ $daily{$year}{$month} } ))
 			{
 				next if( !($day =~ /^[0-9]+$/ ));
 
-				foreach my $server ( keys( $daily{$year}{$month}{$day}{server} ))
+				foreach my $server ( keys( %{ $daily{$year}{$month}{$day}{server} } ))
 				{
 					$daily{$year}{$month}{$day}{servers}++;
 					$daily{$year}{$month}{$day}{players} +=

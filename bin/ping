@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use lib '.';
+
 use File::Basename qw( dirname );
 use IO::Socket;
 use FOstatus;
@@ -102,7 +104,7 @@ $result{fonline}{status}{servers} = int( 0 );
 $result{fonline}{status}{players} = int( 0 );
 
 print( "[Ping]\n" );
-foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
+foreach my $fid ( sort{$a cmp $b} keys( %{ $fo->{Config}->{server} } ))
 {
 	my $server = $fo->{Config}->{server}{$fid};
 
@@ -119,7 +121,15 @@ foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
 		{ $result{fonline}{status}{server}{$fid}{seen} = int( -1 ); }
 
 	printf( "%s : ", $server->{name} );
-	if( $result{fonline}{status}{server}{$fid}{uptime} > 0 )
+
+	# faked stats
+	if( $result{fonline}{status}{server}{$fid}{players} > 3000 )
+	{
+		$result{fonline}{status}{server}{$fid}{uptime} = 0;
+		$result{fonline}{status}{server}{$fid}{players} = 0;
+	}
+
+	if( $result{fonline}{status}{server}{$fid}{uptime} >= 0 )
 	{
 		printf( "%d player%s",
 			$result{fonline}{status}{server}{$fid}{players},
@@ -152,7 +162,7 @@ foreach my $fid ( sort{$a cmp $b} keys( $fo->{Config}->{server} ))
 
 save( \%result, $data_dir.$fo->GetPath( 'status' ));
 
-foreach my $fid ( sort{$a cmp $b} keys($result{fonline}{status}{server}) )
+foreach my $fid ( sort{$a cmp $b} keys( %{ $result{fonline}{status}{server} } ))
 {
 	my $server = $result{fonline}{status}{server}{$fid};
 	next if( $server->{players} < 0 );

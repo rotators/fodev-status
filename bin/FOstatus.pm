@@ -95,7 +95,7 @@ sub GetPath($$;%)
 			$result = $self->{Config}->{files}{$name};
 			if( exists($self->{Config}->{dirs}) )
 			{
-				foreach my $dir ( keys( $self->{Config}->{dirs} ))
+				foreach my $dir ( keys( %{$self->{Config}->{dirs}} ))
 				{
 					my $from = '{DIR:'.$dir.'}';
 					my $to = $self->{Config}->{dirs}{$dir};
@@ -155,13 +155,14 @@ sub YMDHashToArray($$)
 	my @content;
 
 	my $last_day = undef;
-	foreach my $year ( sort{$a <=> $b} keys($db) )
+	foreach my $year ( sort{$a <=> $b} keys( %{ $db } ))
 	{
-		next if( !($year =~ /^[0-9]+$/ ));
-		foreach my $month ( sort{$a <=> $b} keys($db->{$year}) )
+		next if( !length( $year ) || !($year =~ /^[0-9]+$/ ) || !$year );
+
+		foreach my $month ( sort{$a <=> $b} keys( %{ $db->{$year} } ))
 		{
 			next if( !($month =~ /^[0-9]+$/ ));
-			foreach my $day ( sort{$a <=> $b} keys($db->{$year}{$month}) )
+			foreach my $day ( sort{$a <=> $b} keys( %{ $db->{$year}{$month} } ))
 			{
 				next if( !($day =~ /^[0-9]+$/ ));
 				
@@ -197,6 +198,7 @@ sub YMDHashToArray($$)
 sub Timestamp($$$)
 {
 	my( $self, $year, $month, $day ) = @_;
+
 	return( Date_to_Time( $year, $month, $day, 0, 0, 0 ));
 }
 
