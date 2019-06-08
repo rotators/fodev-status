@@ -142,6 +142,14 @@
 					"color": "#ca9d00",
 					"closed": true
 				},
+				"parareal":
+				{
+					"name": "Parareal",
+					"host": "89.203.248.236",
+					"port": 2238,
+					"website": "http://fonlineparareal.forumzdarma.cz/",
+					"link": "https://fodev.net/forum/index.php/topic,30080.0.html"
+				},
 				"phoenix" :
 				{
 					"name": "Ashes of Phoenix",
