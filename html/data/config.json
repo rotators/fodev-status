@@ -12,14 +12,13 @@
 					"port": 2238,
 					"website": "http://fonline-aftertimes.net/",
 					"link": "http://fodev.net/forum/index.php/topic,29923.msg261891.html#new",
-					"irc": "#Aftertimes",
+					"source": "https://fodev.net/forum/index.php/topic,30057.0.html",
 					"color": "#595595"
 				},
 				"arcanum":
 				{
 					"name": "Arcanum Reborn",
 					"website": "http://www.arcreborn.ru/",
-					"irc": "#ArcReborn",
 					"closed": true
 				},
 				"asylum":
@@ -35,8 +34,7 @@
 					"name": "Australia",
 					"link": "http://www.moddb.com/games/fallout-online-australia",
 					"host": "120.88.146.63",
-					"port": 7771,
-					"irc": "#FOAustralia"
+					"port": 7771
 				},
 				"battleground":
 				{
@@ -66,7 +64,6 @@
 					"website": "http://fo2238.fodev.net/",
 					"source": "https://github.com/rotators/fo2238/",
 					"librarian": "",
-					"irc": "#2238",
 					"color": "#00aa00",
 					"closed": true
 				},
@@ -75,7 +72,6 @@
 					"name": "Desert Europe",
 					"website": "http://fode.eu/",
 					"librarian": "fode",
-					"irc": "#FODE",
 					"color": "#0e5e7e",
 					"closed": true
 				},
@@ -86,7 +82,6 @@
 					"port": 4000,
 					"website": "http://fonline2.com/",
 					"librarian": "fo2",
-					"irc": "#FO2",
 					"color": "#705055"
 				},
 				"forever":
@@ -138,7 +133,6 @@
 					"host": "62.75.213.100",
 					"port": 4000,
 					"website": "http://www.fonextday.ru/",
-					"irc": "#NextDay",
 					"color": "#ca9d00",
 					"closed": true
 				},
@@ -158,7 +152,6 @@
 					"website": "http://fonline-aop.net/",
 					"link": "http://fodev.net/forum/index.php/topic,29493.0.html",
 					"librarian": "aop",
-					"irc": "#AshesOfPhoenix",
 					"color": "#2f8aa9"
 				},
 				"racial":
@@ -179,7 +172,6 @@
 					"source": "http://forum.fonline-reloaded.net/index.php?topic=9569.0",
 					"link": "http://fodev.net/forum/index.php/topic,29419.0.html",
 					"librarian": "fore",
-					"irc": "#Reloaded",
 					"color": "#70a08a"
 				},
 				"requiem":
@@ -237,7 +229,6 @@
 					"website": "http://fallout2online.com/",
 					"link": "http://fodev.net/forum/index.php/topic,28460.0.html",
 					"librarian": "tlamk2",
-					"irc": "#TLAmk2",
 					"color": "#a5000f"
 				},
 				"tmh":
@@ -265,8 +256,7 @@
 				{
 					"name": "What Remains",
 					"link": "http://www.rpgcodex.net/forums/?forums/43/",
-					"singleplayer": true,
-					"irc": "#WhatRemains"
+					"singleplayer": true
 				},
 				"wasteland":
 				{
