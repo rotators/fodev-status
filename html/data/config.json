@@ -174,6 +174,14 @@
 					"librarian": "fore",
 					"color": "#70a08a"
 				},
+				"reloaded_cz":
+				{
+					"name": "Reloaded CZ",
+					"host": "game.fonline.cz",
+					"port": 2238,
+					"website": "http://fonline.cz",
+					"link": "https://fodev.net/forum/index.php/topic,30056.0.html"
+				},
 				"requiem":
 				{
 					"name": "Requiem",
