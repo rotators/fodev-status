@@ -44,12 +44,12 @@
 					"port": 5000
 				},
 				"battleroyale":
-                                {
-                                        "name": "Battle Royale",
-                                        "link": "https://fodev.net/forum/index.php/topic,29973.0.html",
-                                        "host": "77.55.226.94",
-                                        "port": 2238
-                                },
+				{
+					"name": "Battle Royale",
+					"link": "https://fodev.net/forum/index.php/topic,29973.0.html",
+					"host": "77.55.226.94",
+					"port": 2238
+				},
 				"fallen":
 				{
 					"name": "Battle of the Fallen",
