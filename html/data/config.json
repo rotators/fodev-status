@@ -193,7 +193,7 @@
 				"requiem":
 				{
 					"name": "Requiem",
-					"host": "81.177.6.218",
+					"host": "game.fallout-requiem.ru",
 					"port": 6112,
 					"website": "http://www.fallout-requiem.ru/",
 					"librarian": "requiem",
