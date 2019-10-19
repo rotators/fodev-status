@@ -10,15 +10,15 @@
 					"name": "Aftertimes",
 					"host": "game.fonline-aftertimes.net",
 					"port": 2238,
-					"website": "http://fonline-aftertimes.net/",
-					"link": "http://fodev.net/forum/index.php/topic,29923.0.html",
+					"website": "https://fonline-aftertimes.net/",
+					"link": "https://fodev.net/forum/index.php/topic,29923.0.html",
 					"source": "https://fodev.net/forum/index.php/topic,30057.0.html",
 					"color": "#595595"
 				},
 				"arcanum":
 				{
 					"name": "Arcanum Reborn",
-					"website": "http://www.arcreborn.ru/",
+					"website": "https://www.arcreborn.ru/",
 					"closed": true
 				},
 				"asylum":
@@ -26,20 +26,20 @@
 					"name": "New Asylum",
 					"host": "fonewasylum.ddns.net",
 					"port": 2238,
-					"link": "http://fodev.net/forum/index.php/topic,29522.0.html",
+					"link": "https://fodev.net/forum/index.php/topic,29522.0.html",
 					"closed": true
 				},
 				"australia":
 				{
 					"name": "Australia",
-					"link": "http://www.moddb.com/games/fallout-online-australia",
+					"link": "https://www.moddb.com/games/fallout-online-australia",
 					"host": "120.88.146.63",
 					"port": 7771
 				},
 				"battleground":
 				{
 					"name": "Battleground",
-					"link": "http://forum.fonline-reloaded.net/index.php?topic=11904.0",
+					"link": "https://forum.fonline-reloaded.net/index.php?topic=11904.0",
 					"host": "europe.fonline.org",
 					"port": 5000
 				},
@@ -61,7 +61,7 @@
 				"fo2238":
 				{
 					"name": "FOnline: 2238",
-					"website": "http://fo2238.fodev.net/",
+					"website": "https://fo2238.fodev.net/",
 					"source": "https://github.com/rotators/fo2238/",
 					"librarian": "",
 					"color": "#00aa00",
@@ -80,7 +80,7 @@
 					"name": "FOnline 2",
 					"host": "game.fonline2.com",
 					"port": 4000,
-					"website": "http://fonline2.com/",
+					"website": "https://fonline2.com/",
 					"librarian": "fo2",
 					"color": "#705055"
 				},
@@ -132,7 +132,7 @@
 					"host": "fonlineforfun.zapto.org",
 					"port": 4000,
 					"website": "http://fols.your-talk.com/forum",
-					"link": "http://fodev.net/forum/index.php/topic,29390.0.html",
+					"link": "https://fodev.net/forum/index.php/topic,29390.0.html",
 					"closed": true
 				},
 				"nextday":
@@ -140,7 +140,7 @@
 					"name": "Next Day",
 					"host": "62.75.213.100",
 					"port": 4000,
-					"website": "http://www.fonextday.ru/",
+					"website": "https://www.fonextday.ru/",
 					"color": "#ca9d00",
 					"closed": true
 				},
@@ -157,8 +157,8 @@
 					"name": "Ashes of Phoenix",
 					"host": "play.fonline-aop.net",
 					"port": 4000,
-					"website": "http://fonline-aop.net/",
-					"link": "http://fodev.net/forum/index.php/topic,29493.0.html",
+					"website": "https://fonline-aop.net/",
+					"link": "https://fodev.net/forum/index.php/topic,29493.0.html",
 					"librarian": "aop",
 					"color": "#2f8aa9"
 				},
@@ -168,7 +168,7 @@
 					"host": "fonline.dyndns.info",
 					"port": 4000,
 					"website": "http://fonlinerw.sosbb.ru/",
-					"source": "http://code.google.com/p/fonline-racial-wars/",
+					"source": "https://code.google.com/p/fonline-racial-wars/",
 					"closed": true
 				},
 				"reloaded":
@@ -176,9 +176,9 @@
 					"name": "Reloaded",
 					"host": "play.fonline-reloaded.net",
 					"port": 2238,
-					"website": "http://fonline-reloaded.net/",
-					"source": "http://forum.fonline-reloaded.net/index.php?topic=9569.0",
-					"link": "http://fodev.net/forum/index.php/topic,29419.0.html",
+					"website": "https://fonline-reloaded.net/",
+					"source": "https://forum.fonline-reloaded.net/index.php?topic=9569.0",
+					"link": "https://fodev.net/forum/index.php/topic,29419.0.html",
 					"librarian": "fore",
 					"color": "#70a08a"
 				},
@@ -214,14 +214,14 @@
 				"survivors":
 				{
 					"name": "Survivors",
-					"link": "http://fodev.net/forum/index.php/topic,29400.0.html",
+					"link": "https://fodev.net/forum/index.php/topic,29400.0.html",
 					"closed": true
 				},
 				"tangut":
 				{
 					"name": "The Tangut Prophecy",
-					"link": "http://www.moddb.com/mods/the-tangut-prophecy/",
-					"link_fodev": "http://fodev.net/forum/index.php/topic,28470.0.html",
+					"link": "https://www.moddb.com/mods/the-tangut-prophecy/",
+					"link_fodev": "https://fodev.net/forum/index.php/topic,28470.0.html",
 					"singleplayer": true
 				},
 				"teleport":
@@ -243,7 +243,7 @@
 						"connect": 30
 					},
 					"website": "http://fallout2online.com/",
-					"link": "http://fodev.net/forum/index.php/topic,28460.0.html",
+					"link": "https://fodev.net/forum/index.php/topic,28460.0.html",
 					"librarian": "tlamk2",
 					"color": "#a5000f"
 				},
@@ -258,20 +258,14 @@
 				"vanburen":
 				{
 					"name": "Van Buren",
-					"link": "http://fodev.net/forum/index.php/topic,29525.0.html",
+					"link": "https://fodev.net/forum/index.php/topic,29525.0.html",
 					"singleplayer": true
 				},
 				"vault112":
 				{
 					"name": "Vault 112",
-					"link": "http://fodev.net/forum/index.php/topic,29307.0.html",
+					"link": "https://fodev.net/forum/index.php/topic,29307.0.html",
 					"source": "https://github.com/wladimiiir/vault112/",
-					"singleplayer": true
-				},
-				"whatremains":
-				{
-					"name": "What Remains",
-					"link": "http://www.rpgcodex.net/forums/?forums/43/",
 					"singleplayer": true
 				},
 				"wasteland":
@@ -279,6 +273,12 @@
 					"name": "Wasteland 2155",
 					"website": "http://wasteland2155.net/",
 					"closed": true
+				},
+				"whatremains":
+				{
+					"name": "What Remains",
+					"link": "https://www.rpgcodex.net/forums/?forums/43/",
+					"singleplayer": true
 				}
 			},
 			"files":
