@@ -18,7 +18,7 @@ jobs:
   steps:
 
   - name: Clone repository
-    uses: actions/checkout
+    uses: actions/checkout@master
     with:
      fetch-depth: 1
 
