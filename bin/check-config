@@ -1,0 +1,217 @@
+#!/bin/bash
+#
+# NOTE: proper tests via jq --run-tests would be more pro solution (and much faster), but they're so horrible to read/write/update it's not even funny
+#
+
+set -e
+
+if [ "$CONFIG_JSON" == "" ]; then
+	CONFIG_JSON=$1
+fi
+
+if [ ! -f "$CONFIG_JSON" ]; then
+	echo "USAGE: check-config path/to/config.json"
+	exit 1
+fi
+
+# output grouping, for GitHub Actions
+function group_start()
+{
+	if [ -n "$CI" ]; then
+		echo "::group::$@"
+	else
+		echo "$@"
+	fi
+}
+
+# output grouping, for GitHub Actions
+function group_end()
+{
+	if [ -n "$CI" ]; then
+		echo "::endgroup::"
+	else
+		echo ""
+	fi
+}
+
+# get for-friendly FIDs list
+function get_fid_list()
+{
+	local fids=$(jq -c ".fonline.config.server | keys[]" $CONFIG_JSON | sed -e 's!\n!!g' | tr -d '"')
+
+	echo "$fids"
+}
+
+# get unquoted field type, for nicer ifs
+function get_field_type()
+{
+	local field=$1
+	local type=$(jq "$field | type" $CONFIG_JSON | tr -d '"')
+
+	echo "$type"
+}
+
+# get unquoted field value, for nicer ifs
+function get_field_value()
+{
+	local field=$1
+	local value=$(jq "$field" $CONFIG_JSON | tr -d '"')
+
+	echo "$value"
+}
+
+# just load json or die trying
+# jq report is good enough to not reinvent wheel here
+function check_load()
+{
+	group_start "Check load"
+
+	jq '' $CONFIG_JSON >/dev/null || exit 1
+        echo "- $CONFIG_JSON ... OK"
+
+	group_end
+}
+
+# check base structure
+function check_structure()
+{
+	group_start "Check structure"
+
+	local path=
+	for p in . fonline .config .server; do
+		path="$path$p"
+		local type=$(get_field_type $path)
+		if [ "$type" != "object" ]; then
+			echo "- $path ... ERROR expected<object> found<$type>"
+			exit 1
+		fi
+		echo "- $path ... OK ($type)"
+	done
+
+	group_end
+}
+
+# check FID structure
+function check_structure_fid()
+{
+	local fid=$1
+
+	group_start "Check structure (.fonline.config.server.$fid)"
+
+	# PASS #1
+	# check for (almost) all allowed FID fields
+	# field type can be null at this stage (except 'name')
+	for field in \
+		"name         string"       \
+		"host         string null"  \
+		"port         number null"  \
+		"website      string null"  \
+		"link         string null"  \
+		"source       string null"  \
+		"color        string null"  \
+		"closed       boolean null" \
+		"singleplayer boolean null" \
+		"librarian    string null"
+	do
+		check_structure_fid_field $fid $field
+	done
+
+	# PASS #2
+	# check for deprecated FID fields
+	for field in \
+		"irc null"
+	do
+		check_structure_fid_field $fid $field
+	done
+
+	group_end
+
+	group_start "Check structure [links] (.fonline.config.server.$fid)"
+
+	# PASS #3
+	# check for required FID fields (at least one of)
+	local ok=0
+	for field in website source link; do
+		local type=$(get_field_type .fonline.config.server.$fid.$field)
+		if [ "$type" == "string" ]; then
+			local value=$(get_field_value .fonline.config.server.$fid.$field)
+			local ok_res=
+			local ok_val=
+			if [[ "$value" =~ ^https:// ]]; then
+				ok_res=OK
+			elif [[ "$value" =~ ^http:// ]]; then
+				# at some point non-https should be invalid
+				ok_res=PASS
+				ok_val=" ($value)"
+			else
+				echo "- $field ... ERROR field value<$value> not a valid link"
+				exit 1
+			fi
+
+			echo "- $field ... $ok_res ($type)$ok_val"
+			ok=1
+		elif [ "$type" == "null" ]; then
+			echo "- $field ... SKIP ($type)"
+		else
+			echo "- $field ... INTERNAL ERROR"
+			exit 1
+		fi
+	done
+	if [ "$ok" == 0 ]; then
+		echo "  ERROR at least one field<website/link/source> required"
+		exit 1
+	fi
+
+	group_end
+
+	# PASS #4
+	# filter out closed servers/singleplayer games
+	if [ $(get_field_type .fonline.config.server.$fid.closed) != "null" ] || [ $(get_field_type .fonline.config.server.$fid.singleplayer) != "null" ]; then
+		return
+	fi
+
+	group_start "Check structure [connection] (.fonline.config.server.$fid)"
+
+	# PASS #5
+	# check for required FID fields
+	for field in \
+		"host string" \
+		"port number"
+	do
+		check_structure_fid_field $fid $field
+	done
+
+	group_end
+}
+
+# check structure/type of single FID field
+# throws error if given field type does not match any provided type
+function check_structure_fid_field()
+{
+	local fid=$1
+	local field_name=$2
+	local field_types=${@:3}
+
+	local ok=0
+	type=$(get_field_type .fonline.config.server.$fid.$field_name)
+	for field_type in ${field_types[@]}; do
+		if [ "$type" == "$field_type" ]; then
+			ok=1
+			break
+		fi
+	done
+
+	if [ "$ok" == 1 ]; then
+		echo "- $field_name ... OK ($type)"
+	else
+		echo "- $field_name ... ERROR expected<$(echo $field_types | tr " " "/")> found<$type>"
+		exit 1
+	fi
+}
+
+check_load
+check_structure
+
+for fid in $(get_fid_list); do
+	check_structure_fid $fid
+done

@@ -1,0 +1,26 @@
+name: Validate
+
+on:
+ push:
+  paths:
+  - '.github/workflows/Validate.yml'
+  - 'bin/check-config'
+  - 'html/data/config.json'
+ pull_request:
+
+jobs:
+
+ Config:
+  runs-on: ubuntu-latest
+  env:
+   CONFIG_JSON: html/data/config.json
+
+  steps:
+
+  - name: Clone repository
+    uses: actions/checkout
+    with:
+     fetch-depth: 1
+
+  - name: Run tests
+    run:  bin/check-config
