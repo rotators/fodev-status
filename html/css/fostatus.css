@@ -123,3 +123,47 @@ a:focus, a:active
 	font-family: 'JH_FalloutRegular';
 	font-size: 9px;
 }
+
+#game_table
+{
+	border: 1px solid #332e2e;
+	width: 60%; 
+	margin:auto; 
+	text-align: left; 
+	margin-top: 30px; 
+	border-collapse: collapse; 
+	font-size: 11px;
+}
+
+#game_table tr:hover {
+	filter:  sepia(25%);
+}
+
+#game_table tr.online {
+	background-color: #004500;
+}
+
+#game_table tr.online td {
+	color: #0c1;
+}
+
+#game_table tr.offline {
+	background-color: #300000;
+}
+
+#game_table tr.offline td {
+	color: #c40000;
+}
+
+#game_table tr.single {
+	background-color: #09081a;
+}
+
+#game_table tr.single td {
+	color: #0090c0;
+}
+
+#game_table tr td, tr th
+{
+	padding-left: 10px;
+}

@@ -46,6 +46,8 @@ class About extends FOstatusModule
 			'jQuery'		=> 'https://jquery.com/',
 			'Highcharts'		=> 'http://www.highcharts.com/products/highcharts/',
 			'Highstock'		=> 'http://www.highcharts.com/products/highstock/',
+			'*3'            => "\n\t<hr>\nArt<br>",
+			'Fugue Icons'   => 'https://p.yusukekamiyamane.com/' 
 		);
 
 		foreach( $software as $name => $link )

@@ -423,21 +423,3 @@ else if( typeof(window.Prototype) !== 'undefined' )
 		}});
 	}
 }
-/*
-else if( typeof(window.MooTools) !== 'undefined' )
-{
-	// This is not json loader, this is just a tribute;
-	// MooTools does not (?) allow loading json from other domain
-
-	FOstatus.prototype.JSONLoader = function( url, callback )
-	{
-		var request = new Request.JSON({ url: url, method: 'get', async: true,
-		onSuccess: function( data )
-		{
-			if( data != null )
-				callback( data );
-		}
-		}).send();
-	};
-}
-*/

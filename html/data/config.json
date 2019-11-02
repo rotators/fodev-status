@@ -13,7 +13,10 @@
 					"website": "https://fonline-aftertimes.net/",
 					"link": "https://fodev.net/forum/index.php/topic,29923.0.html",
 					"source": "https://fodev.net/forum/index.php/topic,30057.0.html",
-					"color": "#595595"
+					"color": "#595595",
+					"discord": "m8HZcG9",
+					"download": "https://forum.fonline-aftertimes.net/index.php?topic=176.0", 
+					"youtube": "UC9ow0dgrJi57691DUi-HI9A"
 				},
 				"arcanum":
 				{
@@ -82,15 +85,23 @@
 					"port": 4000,
 					"website": "https://fonline2.com/",
 					"librarian": "fo2",
-					"color": "#705055"
+					"color": "#705055",
+					"discord": "0rSEo4GUvjk0owT4",
+					"download": "https://fonline2.com/en/download-fonline-2/",
+					"twitter": "fonline2",
+					"youtube": "UCYDgw2q1XmnUClUSmcIV9KA"
 				},
 				"fonline3":
 				{
 					"name": "FOnline 3",
 					"host": "164.132.205.164",
 					"port": 2238,
+					"website": "https://www.fonline3.com/",
 					"link": "https://fodev.net/forum/index.php/topic,29857.0.html",
-					"color": "#e586b2"
+					"color": "#e586b2",
+					"discord": "U7uXqag",
+					"youtube": "UC5JDaP_XwqbSDv6-IzmW-aw",
+					"download": "https://www.fonline3.com/download.html#header4-12"
 				},
 				"forever":
 				{
@@ -99,6 +110,14 @@
 					"port": 2238,
 					"website": "http://fonline.hadelmia.com/",
 					"color": "#bf923b"
+				},
+				"forp":
+				{
+					"name": "FoRP",
+					"host": "fo4rp.frp.su",
+					"port": 4000,
+					"website": "https://frp.su/",
+					"discord": "qD6WYFY"
 				},
 				"goon":
 				{
@@ -160,6 +179,8 @@
 					"website": "https://fonline-aop.net/",
 					"link": "https://fodev.net/forum/index.php/topic,29493.0.html",
 					"librarian": "aop",
+					"download": "https://fonline-aop.net/site/index.php?p=download",
+					"discord": "kzCHpb",
 					"color": "#2f8aa9"
 				},
 				"racial":
@@ -180,7 +201,11 @@
 					"source": "https://forum.fonline-reloaded.net/index.php?topic=9569.0",
 					"link": "https://fodev.net/forum/index.php/topic,29419.0.html",
 					"librarian": "fore",
-					"color": "#70a08a"
+					"color": "#70a08a",
+					"discord": "qj4wVv7",
+					"download": "https://forum.fonline-reloaded.net/index.php?topic=1.0",
+					"twitter": "FOnlineReloaded",
+					"youtube": "UCezlO9-f5o-fHxgZE8tqYsQ"
 				},
 				"reloaded_cz":
 				{
@@ -198,6 +223,9 @@
 					"website": "http://www.fallout-requiem.ru/",
 					"librarian": "requiem",
 					"color": "#5c009a",
+					"discord": "TR6Fka",
+					"youtube": "UCHveDn-Trp9QbOMdThzzAGg",
+					"download": "http://fallout-requiem.ru/fonline_requiem.zip",
 					"timeout":
 					{
 					    "connect": 30
