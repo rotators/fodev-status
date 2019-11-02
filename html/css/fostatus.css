@@ -124,16 +124,23 @@ a:focus, a:active
 	font-size: 9px;
 }
 
+#games_list {
+	margin-top: 30px;
+}
+
 #game_table
 {
 	border: 1px solid #332e2e;
 	width: 60%; 
 	margin:auto; 
 	text-align: left; 
-	margin-top: 30px; 
 	border-collapse: collapse; 
 	font-size: 11px;
 }
+
+#game_table tr:last-child td {
+	padding-bottom: 7px;
+} 
 
 #game_table tr:hover {
 	filter:  sepia(25%);

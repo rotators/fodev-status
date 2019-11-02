@@ -12,31 +12,31 @@ function start()
 
 	fo.ConfigURL = configFile;
 
-	update( true );
+	update( true, true );
 
 	$('#show_offline').click( function()
 	{
-		update(false);
+		update(false, true);
 	});
 
 	$('#display_table').click(function() {
-		update(false);
+		update(false, true);
 	});
 
 	$('#show_closed').click( function()
 	{
-		update(false);
+		update(false, true);
 	});
 
 	$('#show_singleplayer').click( function()
 	{
-		update(false);
+		update(false, true);
 	});
 
 	$('#games').show();
 	$('#footer').show();
 
-	setInterval( update, 60000 );
+	setInterval(function() { update(false, false) }, 60000 );
 }
 
 function renderGames(status, average)
@@ -205,7 +205,7 @@ function renderGames(status, average)
 				return;
 			if(closed && !show_closed)
 				return;
-			if(!online && !show_offline)
+			if(!online && !singleplayer && !closed && !show_offline)
 				return;
 
 			var download = '';
@@ -316,15 +316,15 @@ function renderGames(status, average)
 		
 		var cols = '';
 		cols += '<th>Game</th><th>Server</th><th>Status</th><th>Links</th>';
-		$('#games_list').html('<table id="game_table"><thead><tr>'+cols+'</tr></thead><tbody>'+rows+'</tbody></table>');
+		$('#games_list').html('<table id="game_table" style="font-size: 10px;"><thead><tr>'+cols+'</tr></thead><tbody>'+rows+'</tbody></table>');
 	}
 }
 
-function update( first_time )
+function update( first_time, force )
 {
 	fo.defaultArgument( first_time, false );
 
-	if( !first_time && !$('#auto_update').prop( 'checked' ))
+	if( !first_time && !$('#auto_update').prop( 'checked' ) && !force)
 		return;
 
 	ShowInfo( (first_time ? 'Load' : 'Updat')+'ing...' );
@@ -334,7 +334,6 @@ function update( first_time )
 		var status = result.status;
 		var average = result.average_short;
 		result = null;
-		console.log(status);
 
 		if( status.servers == null || status.players == null || status.server == null )
 		{
