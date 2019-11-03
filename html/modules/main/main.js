@@ -213,22 +213,22 @@ function renderGames(status, average)
 			var twitter = '';
 			var discord = '';
 			if(server.download != null) {
-				download = '<a href="'+server.download+'"><img src="gfx/download-cloud.png" style="float: right;" title="Download" /></a>';
+				download = '<a href="'+server.download+'" style="display: table-cell; width: 24px;"><img src="gfx/download-cloud.png" style="float: right;" title="Download" /></a>';
 			}
 			if(server.youtube != null) {
-				yt = '<a href="https://www.youtube.com/channel/'+server.youtube+'"><img src="gfx/film-youtube.png" style="float: right; margin-right: 3px;" title="YouTube" /></a>';
+				yt = '<a href="https://www.youtube.com/channel/'+server.youtube+'" style="display: table-cell; width: 24px;"><img src="gfx/film-youtube.png" style="float: right; " title="YouTube" /></a>';
 			}
 			if(server.twitter != null) {
-				twitter = '<a href="https://twitter.com/'+server.twitter+'"><img src="gfx/balloon-twitter-left.png" style="float: right; margin-right: 3px;" title="Twitter" /></a>';
+				twitter = '<a href="https://twitter.com/'+server.twitter+'" style="display: table-cell; width: 24px;"><img src="gfx/balloon-twitter-left.png" style="float: right; " title="Twitter" /></a>';
 			}
 			if(server.discord != null) {
-				discord = '<a href="https://discord.gg/'+server.discord+'"><img src="gfx/discord.png" style="float: right; margin-right: 3px;" title="Discord" /></a>';
+				discord = '<a href="https://discord.gg/'+server.discord+'" style="display: table-cell; width: 24px;"><img src="gfx/discord.png" style="float: right; " title="Discord" /></a>';
 			}
 
 			var cells = '';
-			cells += '<td><a href="server/'+server.id+'/" title="Details">' + server.name +'</a>'+download+yt+twitter+discord+'</td>';
+			cells += '<td><div style="display: table; width: 100%;"><a href="server/'+server.id+'/" title="Details" style="display: table-cell; vertical-align: middle; padding-right: 8px; white-space: nowrap;">' + server.name +'</a>'+yt+twitter+discord+download+'</div></td>';
 			if(!singleplayer && server.host != undefined) {
-				cells += '<td>' + server.host+':'+server.port+'</td>';
+				cells += '<td style="white-space: nowrap; padding-right: 5px;">' + server.host+':'+server.port+'</td>';
 			} else {
 				cells += '<td></td>';
 			}
@@ -277,7 +277,7 @@ function renderGames(status, average)
 						else
 							s += seen.getDate()+' '+months[seen.getMonth()]+' '+seen.getFullYear();
 					}
-					cells += '<td>'+s+'</td>';
+					cells += '<td style="white-space: nowrap; padding-right: 5px;">'+s+'</td>';
 				} else {
 					cells += '<td>Singleplayer game</td>';
 				}
@@ -302,7 +302,7 @@ function renderGames(status, average)
 				links.push( "<a href='https://discord.gg/"+server.discord+"'>Discord</a>" );
 
 			// append links
-				cells += '<td>'+(links.join( ' &#183; ' ))+'</td>';
+				cells += '<td style="white-space: nowrap; padding-right: 5px;">'+(links.join( ' &#183; ' ))+'</td>';
 
 			if(online) {
 				rows += '<tr class="online">'+cells+'</tr>';
