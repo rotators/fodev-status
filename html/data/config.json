@@ -44,7 +44,8 @@
 					"name": "Battleground",
 					"link": "https://forum.fonline-reloaded.net/index.php?topic=11904.0",
 					"host": "europe.fonline.org",
-					"port": 5000
+					"port": 5000,
+					"closed": true
 				},
 				"battleroyale":
 				{
@@ -195,7 +196,7 @@
 				"reloaded":
 				{
 					"name": "Reloaded",
-					"host": "play.fonline-reloaded.net",
+					"host": "europe.fonline.org",
 					"port": 2238,
 					"website": "https://fonline-reloaded.net/",
 					"source": "https://forum.fonline-reloaded.net/index.php?topic=9569.0",
