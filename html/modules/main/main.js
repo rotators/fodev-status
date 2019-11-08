@@ -11,26 +11,42 @@ function start()
 	$('#footer').hide();
 
 	fo.ConfigURL = configFile;
+	
+	$('#auto_update').prop('checked', localStorage.getItem('auto_update') == 1);
+	$('#show_offline').prop('checked', localStorage.getItem('show_offline') == 1);
+	$('#show_closed').prop('checked', localStorage.getItem('show_closed') == 1);
+	$('#show_singleplayer').prop('checked', localStorage.getItem('show_singleplayer') == 1);
+	$('#display_table').prop('checked', localStorage.getItem('display_table') == 1);
+	
+	
 
 	update( true, true );
 
-	$('#show_offline').click( function()
-	{
-		update(false, true);
+	$('#auto_update').change( function() {
+		localStorage.setItem('auto_update', $('#auto_update').prop('checked') ? '1' : '0');
 	});
 
-	$('#display_table').click(function() {
-		update(false, true);
-	});
-
-	$('#show_closed').click( function()
+	$('#show_offline').change( function()
 	{
 		update(false, true);
+		localStorage.setItem('show_offline', $('#show_offline').prop('checked') ? '1' : '0');
 	});
 
-	$('#show_singleplayer').click( function()
+	$('#display_table').change(function() {
+		update(false, true);
+		localStorage.setItem('display_table', $('#display_table').prop('checked') ? '1' : '0');
+	});
+
+	$('#show_closed').change( function()
 	{
 		update(false, true);
+		localStorage.setItem('show_closed', $('#show_closed').prop('checked') ? '1' : '0');
+	});
+
+	$('#show_singleplayer').change( function()
+	{
+		update(false, true);
+		localStorage.setItem('show_singleplayer', $('#show_singleplayer').prop('checked') ? '1' : '0');
 	});
 
 	$('#games').show();
