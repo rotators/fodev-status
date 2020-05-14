@@ -67,7 +67,7 @@
 					"name": "Battle of the Fallen",
 					"host": "93.79.236.160",
 					"port": 4000,
-					"link": "http://fonline.ru/forum/threads/3845/",
+					"link": "https://web.archive.org/web/20180104125550/https://fonline.ru/forum/threads/3845/",
 					"closed": true
 				},
 				"fo2238":
@@ -82,7 +82,7 @@
 				"fode":
 				{
 					"name": "Desert Europe",
-					"website": "http://fode.eu/",
+					"website": "https://web.archive.org/web/20130322092843/http://fode.eu/",
 					"librarian": "fode",
 					"color": "#0e5e7e",
 					"closed": true
@@ -133,7 +133,7 @@
 					"name": "Goon Haven",
 					"host": "goonhaven.ru",
 					"port": 5568,
-					"website": "http://goon-haven.ru/",
+					"website": "https://web.archive.org/web/20160309225413/http://www.goon-haven.ru",
 					"librarian": "gh",
 					"color": "#a1a400",
 					"closed": true
@@ -179,6 +179,7 @@
 					"port": 2238,
 					"website": "https://www.facebook.com/FOnline-CZSK-963435530531106/",
 					"link": "https://fodev.net/forum/index.php/topic,30080.0.html",
+					"download": "https://fodev.net/files/archive/parareal.txt",
 					"discord": "tYmDFdE"
 				},
 				"phoenix":
@@ -190,7 +191,7 @@
 					"link": "https://fodev.net/forum/index.php/topic,29493.0.html",
 					"librarian": "aop",
 					"download": "https://fonline-aop.net/site/index.php?p=download",
-					"discord": "kzCHpb",
+					"discord": "9sF7SkB",
 					"color": "#2f8aa9"
 				},
 				"racial":
@@ -233,7 +234,7 @@
 					"website": "http://www.fallout-requiem.ru/",
 					"librarian": "requiem",
 					"color": "#5c009a",
-					"discord": "TR6Fka",
+					"discord": "Bwrx4e",
 					"youtube": "UCHveDn-Trp9QbOMdThzzAGg",
 					"download": "http://fallout-requiem.ru/fonline_requiem.zip",
 					"timeout":
@@ -267,7 +268,7 @@
 					"name": "Teleport",
 					"host": "95.170.182.230",
 					"port": 5568,
-					"link": "http://fonline.ru/forum/threads/5079/",
+					"link": "https://web.archive.org/web/20170425005536/https://fonline.ru/forum/threads/5079/",
 					"color": "#0b3a4a",
 					"closed": true
 				},
