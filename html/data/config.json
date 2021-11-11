@@ -47,6 +47,13 @@
 					"host": "120.88.146.63",
 					"port": 7771
 				},
+				"awtd":
+				{
+					"name": "Another Way to Die",
+					"website": "http://anotherwaytodie.ru/",
+					"host": "fonline.anotherwaytodie.ru",
+					"port": 4002
+				},
 				"battleground":
 				{
 					"name": "Battleground",
