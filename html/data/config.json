@@ -52,7 +52,8 @@
 					"name": "Another Way to Die",
 					"website": "http://anotherwaytodie.ru/",
 					"host": "fonline.anotherwaytodie.ru",
-					"port": 4002
+					"port": 4002,
+					"discord": "MNcGJSy"
 				},
 				"battleground":
 				{
