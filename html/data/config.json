@@ -266,6 +266,15 @@
 					"website": "http://tnf.net.ru/",
 					"closed": true
 				},
+				"rpcorner":
+				{
+					"name": "RP Corner",
+					"host": "51.38.74.227",
+					"port": 4000,
+					"link": "http://tnf.net.ru/showthread.php?p=78620",
+					"source": "https://github.com/overc0de/FO4RP/",
+					"discord": "CghZJ5a"
+				},
 				"survivors":
 				{
 					"name": "Survivors",
