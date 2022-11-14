@@ -349,6 +349,15 @@
 					"link": "https://www.rpgcodex.net/forums/?forums/43/",
 					"singleplayer": true
 				}
+				"neverchanges":
+				{
+					"name":"Never Changes",
+					"website":"https://neverchanges.online",
+					"host": "neverchanges.online",
+					"port": 4040,
+					"discord": "VFE7tCrJhK"
+					
+				}
 			},
 			"files":
 			{
