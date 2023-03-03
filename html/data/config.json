@@ -356,6 +356,15 @@
 					"name": "What Remains",
 					"link": "https://www.rpgcodex.net/forums/?forums/43/",
 					"singleplayer": true
+				},
+				"tnf" :
+				{
+					"name": "The New Future",
+					"host": "217.144.98.79",
+					"port": 4000,
+					"website": "https://forp-tnf.fandom.com/ru/wiki/FOnline_RolePlay_TNF_%D0%92%D0%B8%D0%BA%D0%B8",
+					"color": "#595595",
+					"discord": "jHD7FhxE3v"					
 				}
 			},
 			"files":
