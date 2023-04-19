@@ -267,7 +267,8 @@
 					"host": "62.106.104.111",
 					"port": 4000,
 					"link": "https://fodev.net/forum/index.php/topic,30485.0.html",
-					"discord": "e3jSXZXERE"
+					"discord": "e3jSXZXERE",
+					"closed": true
 				},
 				"roleplay":
 				{
