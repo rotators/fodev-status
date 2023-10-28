@@ -195,7 +195,9 @@
 				{
 					"name": "Nenntoriata",
 					"host": "62.109.28.236",
-					"port": 4000
+					"port": 4000,
+					"link": "https://vk.com/nentorika",
+					"discord": "sCECFUJRHQ"
 				},
 				"parareal":
 				{
