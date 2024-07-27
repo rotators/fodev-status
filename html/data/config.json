@@ -24,7 +24,8 @@
 					"host": "37.230.112.12",
 					"port": 4040,
 					"link": "https://vk.com/public182483259",
-					"discord": "JgKEzpk"
+					"discord": "JgKEzpk",
+					"closed": true
 				},
 				"arcanum":
 				{
@@ -293,7 +294,8 @@
 					"port": 4000,
 					"link": "http://tnf.net.ru/showthread.php?p=78620",
 					"source": "https://github.com/overc0de/FO4RP/",
-					"discord": "CghZJ5a"
+					"discord": "CghZJ5a",
+					"closed": true
 				},
 				"survivors":
 				{
@@ -373,7 +375,8 @@
 					"port": 4000,
 					"website": "https://forp-tnf.fandom.com/ru/wiki/FOnline_RolePlay_TNF_%D0%92%D0%B8%D0%BA%D0%B8",
 					"color": "#595595",
-					"discord": "jHD7FhxE3v"					
+					"discord": "jHD7FhxE3v",
+					"closed": true
 				}
 			},
 			"files":
