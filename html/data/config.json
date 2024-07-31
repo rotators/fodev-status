@@ -180,6 +180,10 @@
 					"name":"Never Changes",
 					"website":"https://neverchanges.online",
 					"host": "neverchanges.online",
+					"timeout":
+					{
+						"connect": 30
+					},
 					"port": 4040,
 					"discord": "VFE7tCrJhK"
 				},
